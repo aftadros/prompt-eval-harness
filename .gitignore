@@ -1,0 +1,11 @@
+# Private working notes. See design/DECISIONS.md, decision #4 (resolved 2026-07-30):
+# CORPUS/METRICS/EXPERIMENTS are committed, these three are not.
+design/DESIGN.md
+design/SCHEMAS.md
+design/DECISIONS.md
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
