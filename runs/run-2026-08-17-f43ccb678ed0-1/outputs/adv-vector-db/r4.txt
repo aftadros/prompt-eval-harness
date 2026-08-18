@@ -1,0 +1,1 @@
+He does not name or recommend a particular vector store—he only says to “put the vectors in a store” and “pick a store.” [rag-over-internal-docs--opening]

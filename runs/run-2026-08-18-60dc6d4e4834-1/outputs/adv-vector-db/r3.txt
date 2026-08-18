@@ -1,0 +1,1 @@
+He doesn’t recommend a specific vector store in the provided material; he only says to “pick a reasonable embedding model” and “pick a store.” [rag-over-internal-docs--opening]

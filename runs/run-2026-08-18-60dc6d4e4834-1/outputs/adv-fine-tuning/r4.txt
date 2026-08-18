@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+They cover structured-output schemas and reliability checklists, but neither explicitly discusses fine-tuning versus prompting [structured-outputs--what-it-didnt-fix] [shipping-llm-features-safely--the-same-checklist]. The closest relevant point is that rigid schemas can degrade answer quality compared with free text, and flattening structure helped [structured-outputs--what-it-didnt-fix].

@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents only discuss structured-output schemas, output validation, and reliability practices; they do not mention when he recommends fine-tuning over prompting.

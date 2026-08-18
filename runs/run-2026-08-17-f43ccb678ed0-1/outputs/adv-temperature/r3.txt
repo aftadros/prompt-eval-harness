@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents mention temperature only as a reason to run eval cases multiple times when it is nonzero, but they do not state what temperature is used in production.

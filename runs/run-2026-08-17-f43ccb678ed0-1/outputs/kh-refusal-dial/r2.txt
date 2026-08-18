@@ -1,0 +1,1 @@
+No—not universally. Refusal is “a tradeoff to own out loud” and acts like “a precision/recall dial on trust,” so the right behavior depends on whether “a wrong answer costs more than a missed one.” For documentation people rely on for decisions, the author “lean[s] toward refusing when unsure.” [rag-over-internal-docs--the-honest-i-dont-know]

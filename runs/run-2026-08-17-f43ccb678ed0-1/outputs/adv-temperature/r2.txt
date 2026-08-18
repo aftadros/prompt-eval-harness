@@ -1,0 +1,2 @@
+I can't answer that from the sources provided.
+The documents only say to run each case more than once when temperature is nonzero; they don’t state what production temperature he uses.

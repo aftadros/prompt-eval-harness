@@ -1,0 +1,1 @@
+The sources don’t state an exact production temperature value. The only related guidance is to run each case more than once when the temperature is nonzero [evals-before-vibes--diffing-against-yesterdays-run].

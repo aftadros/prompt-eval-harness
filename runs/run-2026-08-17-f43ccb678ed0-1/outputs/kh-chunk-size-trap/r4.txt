@@ -1,0 +1,3 @@
+He doesn't pin down a specific token count as his recommendation. His approach is to **chunk along the document's own structure first** — splitting on headings, keeping list items with their parent, and keeping tables with their captions — with a token limit used only "as a fallback for when a single section is genuinely too long" [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+The 512-token figure that appears in the document is not his recommendation; it's an example of what fixed-window chunking does wrong, "glue[ing] the end of one policy onto the start of an unrelated one and embed[ding] the seam as if it were a single thought" [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].

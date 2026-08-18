@@ -1,0 +1,1 @@
+He doesn’t assume a single fixed dollar rate. His math multiplies token counts by the current input, cached-read, and output rates, then divides by 1,000,000—so the rates are effectively treated as per-million-token prices [llm-cost-per-request--one-line-item-per-call] [llm-cost-at-campus-scale--tokens-are-the-row-count]. The documents do not state a specific numerical rate.

@@ -12,10 +12,7 @@ beside it. That is the precise false signal the harness was built to prevent, an
 it would have been believed.
 """
 
-import json
-from unittest import mock
 
-import pytest
 
 from harness import model as model_mod
 from harness import report

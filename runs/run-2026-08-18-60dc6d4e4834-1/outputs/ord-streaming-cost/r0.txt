@@ -1,0 +1,3 @@
+No—not directly. Streaming doesn’t make the model cheaper or faster; you still pay for the same output tokens, and the model spends the same time producing them [llm-cost-at-campus-scale--streaming-and-retries].
+
+It can reduce cost indirectly by improving perceived latency: users are less likely to retry while waiting, avoiding a second paid generation for the same answer [llm-cost-at-campus-scale--streaming-and-retries]. It also changes timeout behavior because the connection stays open while tokens arrive [llm-api-from-php-in-production--two-timeouts].

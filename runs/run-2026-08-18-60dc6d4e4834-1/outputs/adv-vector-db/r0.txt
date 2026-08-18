@@ -1,0 +1,1 @@
+The documents don’t name a specific vector store. They only say to “pick … a store” as part of building the system [rag-over-internal-docs--opening].

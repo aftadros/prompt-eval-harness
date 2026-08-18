@@ -1,0 +1,5 @@
+You set two timeouts because an LLM call has two different failure modes: the provider may be unreachable, or it may be reachable but slow to finish generating [llm-api-from-php-in-production--two-timeouts].
+
+A short connect timeout lets you fail fast when the provider is down, while a longer total timeout gives a real answer more time to complete generation [llm-api-from-php-in-production--two-timeouts]. With only one timeout, you either wait too long during an outage or cut off a slow but valid response [llm-api-from-php-in-production--two-timeouts].
+
+For streaming calls, the total timeout changes meaning: instead of bounding the whole call, it bounds idle gaps between chunks while tokens are still arriving [llm-api-from-php-in-production--two-timeouts].

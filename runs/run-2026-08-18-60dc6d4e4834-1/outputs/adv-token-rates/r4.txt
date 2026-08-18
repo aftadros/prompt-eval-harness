@@ -1,0 +1,7 @@
+He doesn’t assume a single fixed numeric per-token rate. In his cost math, each call is priced with the **current** rates for:
+
+- uncached input tokens  
+- cached/prefix-cache reads  
+- output tokens  
+
+Each token count is multiplied by its corresponding rate, and the total is divided by 1,000,000 [llm-cost-per-request--one-line-item-per-call]. He also describes the general pricing as per-token, with input cheaper than output—output costs “several times more”—and says he attaches dollar figures at current per-token rates [llm-cost-at-campus-scale--tokens-are-the-row-count].

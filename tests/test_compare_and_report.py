@@ -8,6 +8,7 @@ ships. The assertions below are that it does not.
 
 import json
 import os
+import re
 
 import pytest
 
@@ -163,3 +164,39 @@ def test_plain_text_rendering_keeps_the_tables(tmp_path):
     plain = report.to_plain(report.run_report(rec))
     assert "**" not in plain
     assert "|" in plain
+
+
+def test_underpowered_verdict_refuses_a_null_reading(tmp_path):
+    """Four discordant pairs, all one direction: a real effect the exact test
+    structurally cannot certify. The verdict has to say which of those two things
+    it is, because 'p = 0.125' alone reads as 'nothing happened'."""
+    from harness.__main__ import build_flips, compare_stats
+
+    a_states = {f"adv-{i}": ("adversarial", 5) for i in range(4)}
+    b_states = {f"adv-{i}": ("adversarial", 0) for i in range(4)}
+    a_states.update({f"ord-{i}": ("ordinary", 5) for i in range(6)})
+    b_states.update({f"ord-{i}": ("ordinary", 5) for i in range(6)})
+    a = make_record(tmp_path, "a", a_states)
+    b = make_record(tmp_path, "b", b_states, "prompts/v2.txt")
+
+    st = compare_stats(a, b, build_flips(a, b))
+    assert st["buckets"]["ALL"]["b"] == 4 and st["buckets"]["ALL"]["c"] == 0
+    assert st["min_achievable_p"] == pytest.approx(0.125)
+    assert "UNDERPOWERED, NOT NULL" in st["verdict"]
+    assert "Do not report this as a null result." in st["verdict"]
+
+
+def test_report_never_prints_nan(tmp_path):
+    """find_mde returns nan when no effect reaches 80% power, which is true and
+    meaningful. Printing it as 'nan absolute' is neither."""
+    from harness.__main__ import build_flips, compare_stats
+
+    a = make_record(tmp_path, "a", {f"c{i}": ("ordinary", 5) for i in range(4)})
+    b = make_record(tmp_path, "b", {f"c{i}": ("ordinary", 0) for i in range(4)})
+    st = compare_stats(a, b, build_flips(a, b))
+    md = report.compare_report(a, b, build_flips(a, b), st)
+    # A word-boundary match, because "cannot" contains "nan" and the naive
+    # substring check fails on the very sentence this test exists to protect.
+    assert not re.search(r"\bnan\b", md, re.IGNORECASE), "NaN leaked into the report"
+    assert "smallest two-sided p" in md
+    assert "no effect is detectable at all" in md

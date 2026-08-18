@@ -1,0 +1,1 @@
+There isn’t one stated in the provided material. The document’s golden-set case for “What’s the refund window for enterprise plans?” says the answer should refuse because the corpus has no enterprise refund policy, and it must not invent a number like 30 or 60 days [evals-before-vibes--the-golden-set].

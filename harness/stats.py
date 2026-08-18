@@ -73,6 +73,24 @@ def binom_tail_two_sided(k: int, n: int) -> float:
     return min(1.0, 2 * tail)
 
 
+def min_achievable_p(discordant: int) -> float:
+    """The smallest two-sided p the exact test can produce at this discordance.
+
+    With b+c discordant pairs the most extreme result available is all of them in
+    one direction, which gives 2 / 2**(b+c). At four discordant pairs that floor
+    is 0.125, so the test cannot reach alpha = 0.05 no matter how unanimous the
+    evidence is.
+
+    This is the number that separates "no effect" from "no power", and it is the
+    single most useful thing a small paired comparison can print about itself. A
+    report that shows p = 0.125 and stops invites the reader to conclude nothing
+    happened, when the truth is that nothing *could* have registered.
+    """
+    if discordant <= 0:
+        return 1.0
+    return min(1.0, 2 / (2**discordant))
+
+
 @dataclass(frozen=True)
 class McNemar:
     b: int  # A passed, B failed

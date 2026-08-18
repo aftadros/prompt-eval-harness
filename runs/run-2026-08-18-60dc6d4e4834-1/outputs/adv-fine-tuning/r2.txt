@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents discuss structured outputs and reliability practices for LLM features, but neither mentions when to choose fine-tuning over prompting [structured-outputs--what-it-didnt-fix] [shipping-llm-features-safely--the-same-checklist].

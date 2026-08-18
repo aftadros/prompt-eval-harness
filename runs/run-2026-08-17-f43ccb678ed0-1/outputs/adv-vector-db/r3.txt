@@ -1,0 +1,1 @@
+I can't answer that from the sources provided. The author says only to "pick a store" as part of getting vector search working, but none of the supplied sections name or recommend any specific vector database [rag-over-internal-docs--opening].

@@ -1,0 +1,6 @@
+Because an LLM call can fail in two very different ways, and you don’t want the same wait time for both:
+
+- **Provider unreachable** — you should fail fast, typically in a second or two.
+- **Provider reachable but still generating** — you may be willing to wait much longer because a real answer is coming [llm-api-from-php-in-production--two-timeouts].
+
+So you separate `connect_timeout` from the overall `timeout`: one bounds “can we reach them at all,” and the other bounds “how long will this call take to finish” [llm-api-from-php-in-production--two-timeouts].

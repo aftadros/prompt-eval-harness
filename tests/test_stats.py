@@ -363,3 +363,43 @@ def test_every_public_stats_function_is_referenced_by_a_test():
     )
     missing = sorted(n for n in public if f"stats.{n}" not in suite)
     assert not missing, f"stats.py functions with no test: {missing}"
+
+
+# --- the achievable-p floor ----------------------------------------------
+# The number that separates "no effect" from "no power". With b+c discordant
+# pairs the most extreme available result is all one direction, so the smallest
+# two-sided p is 2 / 2**(b+c).
+
+
+@pytest.mark.parametrize(
+    "discordant,expected",
+    [(2, 0.5000), (4, 0.1250), (5, 0.0625), (6, 0.0312), (10, 0.0020)],
+)
+def test_min_achievable_p(discordant, expected):
+    assert round(stats.min_achievable_p(discordant), 4) == expected
+
+
+def test_six_discordant_pairs_is_where_significance_becomes_possible():
+    """Below six, no unanimous result can reach alpha = 0.05, however lopsided.
+
+    This is the same fact METRICS.md records from the other side: six discordant
+    all one direction gives p = 0.031, and a single contrary flip in eight pushes
+    it back to 0.070. A report that prints p without this invites a null-result
+    reading the data cannot support.
+    """
+    assert stats.min_achievable_p(4) == pytest.approx(0.125)
+    assert stats.min_achievable_p(5) == pytest.approx(0.0625)
+    assert stats.min_achievable_p(5) > 0.05
+    assert stats.min_achievable_p(6) <= 0.05
+    assert stats.min_achievable_p(6) == pytest.approx(stats.mcnemar_exact(6, 0).p)
+
+
+def test_the_floor_equals_a_unanimous_exact_test():
+    """The floor is not an approximation: it is what mcnemar_exact returns when
+    every discordant pair goes one way."""
+    for d in (3, 4, 6, 9):
+        assert stats.min_achievable_p(d) == pytest.approx(stats.mcnemar_exact(d, 0).p)
+
+
+def test_no_discordant_pairs_has_no_floor_below_one():
+    assert stats.min_achievable_p(0) == 1.0

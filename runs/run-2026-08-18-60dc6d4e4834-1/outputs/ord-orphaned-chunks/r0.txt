@@ -1,0 +1,3 @@
+An **orphaned chunk** is a fragment of an old document version—removed or rewritten—that remains in the index and can still win retrieval for some query [rag-over-internal-docs--freshness-is-an-indexing-problem].
+
+You should care because it causes stale answers: users may act on outdated guidance while nobody notices until something goes wrong. A pipeline that only adds chunks keeps every orphan forever, so deletes—plus a reconciliation job—are needed to keep retrieval current [rag-over-internal-docs--freshness-is-an-indexing-problem].

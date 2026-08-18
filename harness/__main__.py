@@ -93,7 +93,8 @@ def compare_stats(rec_a: dict, rec_b: dict, flips: list[dict]) -> dict:
     psi = (agg["b"] + agg["c"]) / n if n else 0.0
     mde = stats.find_mde(n, max(psi, 0.05), sims=800) if n else float("nan")
 
-    verdict = _verdict(agg, observed, ci, floor, mde)
+    floor_p = stats.min_achievable_p(agg["b"] + agg["c"])
+    verdict = _verdict(agg, observed, ci, floor, mde, floor_p)
     return {
         "buckets": buckets,
         "bootstrap": {
@@ -103,6 +104,7 @@ def compare_stats(rec_a: dict, rec_b: dict, flips: list[dict]) -> dict:
         "noise_floor": floor,
         "psi": psi,
         "mde": mde,
+        "min_achievable_p": floor_p,
         "verdict": verdict,
         "unpairable_cases": dropped,
         "empty_a": sum(e.get("empty", 0) for e in rec_a["summary"].values()),
@@ -110,25 +112,68 @@ def compare_stats(rec_a: dict, rec_b: dict, flips: list[dict]) -> dict:
     }
 
 
-def _verdict(agg: dict, observed: float, ci, floor, mde: float) -> str:
+def _verdict(agg: dict, observed: float, ci, floor, mde: float, floor_p: float) -> str:
     """The blunt sentence. Templated on purpose: a verdict written fresh each
     time is a verdict that drifts toward whatever the author hoped for."""
+    import math
+
     straddles = ci.lo <= 0 <= ci.hi
     sig = agg["p"] <= 0.05
+    discordant = agg["b"] + agg["c"]
+    outside_floor = floor and abs(observed) > floor["p95_mean_delta"]
     inside_floor = floor and abs(observed) <= floor["p95_mean_delta"]
+    underpowered = floor_p > 0.05
+    limit = "no effect at all" if math.isnan(mde) else f"about {mde:.2f}"
+
     if inside_floor:
         return (
             f"NOT distinguishable from rerun noise. The observed delta ({observed:+.3f}) is "
             f"inside the A/A noise floor ({floor['p95_mean_delta']:.3f}), which is what running "
             "the same prompt twice looks like on this rig. Do not ship on this delta."
         )
+
+    if underpowered and not straddles:
+        # The case this repo exists to make legible: a real, large, one-directional
+        # effect that the exact test structurally cannot certify.
+        return (
+            f"UNDERPOWERED, NOT NULL. Every one of the {discordant} discordant pair(s) went "
+            f"the same way, and with {discordant} the smallest two-sided p this test can "
+            f"produce is {floor_p:.4f}. It cannot reach 0.05 however unanimous the evidence "
+            f"is, so p = {agg['p']:.4f} here is a statement about the sample size and not "
+            f"about the prompt. The other two views do resolve it: the paired bootstrap "
+            f"{ci} excludes zero"
+            + (
+                f", and the delta ({observed:+.3f}) is "
+                + (
+                    f"{abs(observed) / floor['p95_mean_delta']:.1f}x the A/A noise floor "
+                    f"({floor['p95_mean_delta']:.3f})"
+                    if floor["p95_mean_delta"] > 0
+                    else "outside an A/A noise floor that is exactly zero, because every "
+                         "rerun of A agreed with itself"
+                )
+                if outside_floor
+                else ""
+            )
+            + ". Read the per-case table, then collect more cases before calling it "
+            "significant. Do not report this as a null result."
+        )
+
+    if underpowered:
+        return (
+            f"CANNOT BE CALLED, and not because the effect is small. With {discordant} "
+            f"discordant pair(s) the smallest achievable p is {floor_p:.4f}, so the exact "
+            f"test could not have rejected at 0.05 under any outcome. The bootstrap {ci} "
+            "straddles zero as well. This set has no power here; collect more cases."
+        )
+
     if not sig and straddles:
         return (
             f"CANNOT BE CALLED at this sample size. McNemar p = {agg['p']:.4f} and the bootstrap "
-            f"interval {ci} straddles zero. With {agg['b'] + agg['c']} discordant pairs the test "
-            f"cannot resolve an effect below about {mde:.2f}. This is not evidence of no effect; "
+            f"interval {ci} straddles zero. With {discordant} discordant pairs the test "
+            f"cannot resolve an effect below {limit}. This is not evidence of no effect; "
             "it is an absence of evidence either way. Do not ship on this delta."
         )
+
     if sig and not straddles:
         direction = "improvement" if observed > 0 else "regression"
         return (
@@ -136,10 +181,11 @@ def _verdict(agg: dict, observed: float, ci, floor, mde: float) -> str:
             f"{ci} excludes zero. Read the per-case table before acting on it, and check the "
             "correction family in METRICS.md before calling it significant."
         )
+
     return (
         f"MIXED. McNemar p = {agg['p']:.4f}, bootstrap {ci}. The two views of the same data "
-        "disagree, which usually means the effect sits near this set's resolution limit "
-        f"(about {mde:.2f}). Treat it as uncalled."
+        f"disagree, which usually means the effect sits near this set's resolution limit "
+        f"({limit}). Treat it as uncalled."
     )
 
 

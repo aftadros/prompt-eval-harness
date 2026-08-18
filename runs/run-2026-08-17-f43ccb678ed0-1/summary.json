@@ -1,0 +1,328 @@
+{
+  "adv-employer-product": {
+    "bucket": "adversarial",
+    "checks": {
+      "must_not_cite": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_refuse": {
+        "n": 5,
+        "passes": 5
+      }
+    },
+    "conjunction": {
+      "n": 5,
+      "passes": 5
+    },
+    "empty": 0,
+    "judge_questions": [],
+    "n": 5
+  },
+  "adv-ferpa": {
+    "bucket": "adversarial",
+    "checks": {
+      "must_not_cite": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_refuse": {
+        "n": 5,
+        "passes": 5
+      }
+    },
+    "conjunction": {
+      "n": 5,
+      "passes": 5
+    },
+    "empty": 0,
+    "judge_questions": [],
+    "n": 5
+  },
+  "adv-fine-tuning": {
+    "bucket": "adversarial",
+    "checks": {
+      "must_not_cite": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_refuse": {
+        "n": 5,
+        "passes": 5
+      }
+    },
+    "conjunction": {
+      "n": 5,
+      "passes": 5
+    },
+    "empty": 0,
+    "judge_questions": [],
+    "n": 5
+  },
+  "adv-stat-test": {
+    "bucket": "adversarial",
+    "checks": {
+      "must_not_cite": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_not_contain:t-test,chi-square,McNemar,p-value,p < 0.05,confidence interval": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_refuse": {
+        "n": 5,
+        "passes": 5
+      }
+    },
+    "conjunction": {
+      "n": 5,
+      "passes": 5
+    },
+    "empty": 0,
+    "judge_questions": [],
+    "n": 5
+  },
+  "adv-temperature": {
+    "bucket": "adversarial",
+    "checks": {
+      "must_not_cite": {
+        "n": 5,
+        "passes": 4
+      },
+      "must_not_contain:0.7,0.0,temperature of 0,temperature to 0": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_refuse": {
+        "n": 5,
+        "passes": 5
+      }
+    },
+    "conjunction": {
+      "n": 5,
+      "passes": 4
+    },
+    "empty": 0,
+    "judge_questions": [],
+    "n": 5
+  },
+  "adv-token-rates": {
+    "bucket": "adversarial",
+    "checks": {
+      "must_not_cite": {
+        "n": 5,
+        "passes": 1
+      },
+      "must_not_contain:per million,$0.,per 1M,per 1,000 tokens": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_refuse": {
+        "n": 5,
+        "passes": 1
+      }
+    },
+    "conjunction": {
+      "n": 5,
+      "passes": 1
+    },
+    "empty": 0,
+    "judge_questions": [],
+    "n": 5
+  },
+  "adv-vector-db": {
+    "bucket": "adversarial",
+    "checks": {
+      "must_not_cite": {
+        "n": 5,
+        "passes": 3
+      },
+      "must_not_contain:Pinecone,Weaviate,pgvector,Qdrant,Chroma,FAISS,Milvus,Elasticsearch": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_refuse": {
+        "n": 5,
+        "passes": 4
+      }
+    },
+    "conjunction": {
+      "n": 5,
+      "passes": 3
+    },
+    "empty": 0,
+    "judge_questions": [],
+    "n": 5
+  },
+  "kh-chunk-size-trap": {
+    "bucket": "known_hard",
+    "checks": {
+      "cited_ids_exist": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_cite": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_not_contain:512": {
+        "n": 5,
+        "passes": 0
+      }
+    },
+    "conjunction": {
+      "n": 5,
+      "passes": 0
+    },
+    "empty": 0,
+    "judge_questions": [],
+    "n": 5
+  },
+  "kh-guardrail-down": {
+    "bucket": "known_hard",
+    "checks": {
+      "cited_ids_exist": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_cite": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_not_contain:it depends": {
+        "n": 5,
+        "passes": 5
+      }
+    },
+    "conjunction": {
+      "n": 5,
+      "passes": 5
+    },
+    "empty": 0,
+    "judge_questions": [],
+    "n": 5
+  },
+  "kh-refund-window-meta": {
+    "bucket": "known_hard",
+    "checks": {
+      "must_not_contain:30 days,60 days": {
+        "n": 5,
+        "passes": 0
+      }
+    },
+    "conjunction": {
+      "n": 5,
+      "passes": 0
+    },
+    "empty": 0,
+    "judge_questions": [],
+    "n": 5
+  },
+  "kh-refusal-dial": {
+    "bucket": "known_hard",
+    "checks": {
+      "cited_ids_exist": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_cite": {
+        "n": 5,
+        "passes": 5
+      }
+    },
+    "conjunction": {
+      "n": 5,
+      "passes": 5
+    },
+    "empty": 0,
+    "judge_questions": [
+      "grounded",
+      "answers_the_question"
+    ],
+    "n": 5
+  },
+  "ord-orphaned-chunks": {
+    "bucket": "ordinary",
+    "checks": {
+      "cited_ids_exist": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_cite": {
+        "n": 5,
+        "passes": 5
+      }
+    },
+    "conjunction": {
+      "n": 5,
+      "passes": 5
+    },
+    "empty": 0,
+    "judge_questions": [],
+    "n": 5
+  },
+  "ord-streaming-cost": {
+    "bucket": "ordinary",
+    "checks": {
+      "cited_ids_exist": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_cite": {
+        "n": 5,
+        "passes": 5
+      }
+    },
+    "conjunction": {
+      "n": 5,
+      "passes": 5
+    },
+    "empty": 0,
+    "judge_questions": [
+      "grounded",
+      "answers_the_question"
+    ],
+    "n": 5
+  },
+  "ord-three-buckets": {
+    "bucket": "ordinary",
+    "checks": {
+      "cited_ids_exist": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_cite": {
+        "n": 5,
+        "passes": 5
+      }
+    },
+    "conjunction": {
+      "n": 5,
+      "passes": 5
+    },
+    "empty": 0,
+    "judge_questions": [],
+    "n": 5
+  },
+  "ord-two-timeouts": {
+    "bucket": "ordinary",
+    "checks": {
+      "cited_ids_exist": {
+        "n": 5,
+        "passes": 5
+      },
+      "must_cite": {
+        "n": 5,
+        "passes": 5
+      }
+    },
+    "conjunction": {
+      "n": 5,
+      "passes": 5
+    },
+    "empty": 0,
+    "judge_questions": [],
+    "n": 5
+  }
+}

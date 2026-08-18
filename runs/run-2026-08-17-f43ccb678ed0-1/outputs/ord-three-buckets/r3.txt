@@ -1,0 +1,7 @@
+Split the golden set into three labeled buckets:
+
+1. **Ordinary questions** — routine cases that should just work  
+2. **Known-hard questions** — cases that exposed a bug once  
+3. **Adversarial questions** — cases designed to try pulling the model off its guardrails  
+
+Source: [evals-before-vibes--the-golden-set]

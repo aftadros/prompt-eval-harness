@@ -1,0 +1,8 @@
+You set two timeouts because an LLM call can fail in two very different ways:
+
+- **The provider is unreachable** — you want to fail fast, after only a second or two, instead of hanging the page. That’s what `connect_timeout` handles.  
+- **The provider is reachable but still generating** — you may be willing to wait much longer because a real answer is actually coming. That’s what the longer total timeout (or idle-timeout for streaming) handles.  
+
+One timeout can’t distinguish “the network/provider is down” from “it’s just taking time to finish.” In the example, `connect_timeout => 2` acts as an outage tripwire, while `timeout => 30` gives a non-streaming call enough time to complete [llm-api-from-php-in-production--two-timeouts].
+
+For streaming calls, the longer bound is used differently: since tokens keep arriving over an open connection, you typically limit the **idle gap between chunks** rather than the whole request. That lets a slow-but-progressing response stay alive instead of failing and becoming a retry you also pay for [llm-api-from-php-in-production--two-timeouts] [llm-cost-at-campus-scale--streaming-and-retries].

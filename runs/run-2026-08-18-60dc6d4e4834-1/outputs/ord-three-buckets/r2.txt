@@ -1,0 +1,1 @@
+Split the golden set into three labeled buckets: ordinary questions that should just work, known-hard cases that exposed a bug once, and adversarial cases that try to pull the model off its guardrails [evals-before-vibes--the-golden-set].

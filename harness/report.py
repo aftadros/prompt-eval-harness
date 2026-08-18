@@ -17,6 +17,10 @@ from __future__ import annotations
 from harness import stats
 from harness.runner import case_state, pass_rate
 
+def _isnan(x) -> bool:
+    return isinstance(x, float) and x != x
+
+
 BUCKET_ORDER = ("ordinary", "known_hard", "adversarial")
 ARROW = {("pass", "fail"): "vv", ("pass", "flaky"): "v ", ("flaky", "fail"): "v ",
          ("fail", "pass"): "^^", ("flaky", "pass"): "^ ", ("fail", "flaky"): "^ "}
@@ -254,13 +258,24 @@ def compare_report(rec_a: dict, rec_b: dict, flips: list[dict], st: dict) -> str
         "### What this comparison can and cannot detect",
         "",
         f"- cases: {len(flips)}; discordance observed: {st['psi']:.2f}",
-        f"- minimum detectable effect at this n and discordance, exact test, 80% power: "
-        f"{st['mde']:.2f} absolute on the strict binary outcome",
+        (
+            "- minimum detectable effect at this n and discordance, exact test, 80% power: "
+            "**no effect is detectable at all**. No delta reaches 80% power on this many "
+            "cases, so the exact test is decorative here and the bootstrap plus the noise "
+            "floor are the only views carrying information."
+            if _isnan(st["mde"])
+            else f"- minimum detectable effect at this n and discordance, exact test, 80% "
+                 f"power: {st['mde']:.2f} absolute on the strict binary outcome"
+        ),
+        f"- smallest two-sided p the exact test can produce at {st['buckets']['ALL']['b'] + st['buckets']['ALL']['c']} "
+        f"discordant pair(s): {st.get('min_achievable_p', float('nan')):.4f}",
         "",
-        "An effect smaller than that is not something this set can distinguish from noise, "
-        "whatever the point estimate says. That is a property of the sample size, and it is "
-        "printed here rather than left for the reader to work out, because the alternative "
-        "is a report that implies it can bless a three-point improvement.",
+        "An effect smaller than the detectable minimum is not something this set can "
+        "distinguish from noise, whatever the point estimate says. That is a property of the "
+        "sample size, and it is printed here rather than left for the reader to work out, "
+        "because the alternative is a report that implies it can bless a three-point "
+        "improvement. The second line is the one people misread: when the smallest achievable "
+        "p sits above 0.05, a non-significant result is not a finding about the prompt.",
         "",
     ]
     return "\n".join(lines)

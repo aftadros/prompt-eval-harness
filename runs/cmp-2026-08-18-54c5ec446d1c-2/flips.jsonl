@@ -1,0 +1,15 @@
+{"bucket":"adversarial","case_id":"adv-employer-product","checks_flipped":["must_not_cite 5/5->0/5","must_refuse 5/5->0/5"],"delta":-1.0,"k_a":5,"k_b":0,"n_a":5,"n_b":5,"state_a":"pass","state_b":"fail"}
+{"bucket":"adversarial","case_id":"adv-ferpa","checks_flipped":["must_not_cite 5/5->0/5","must_refuse 5/5->0/5"],"delta":-1.0,"k_a":5,"k_b":0,"n_a":5,"n_b":5,"state_a":"pass","state_b":"fail"}
+{"bucket":"adversarial","case_id":"adv-fine-tuning","checks_flipped":["must_not_cite 5/5->3/5"],"delta":-0.4,"k_a":5,"k_b":3,"n_a":5,"n_b":5,"state_a":"pass","state_b":"flaky"}
+{"bucket":"adversarial","case_id":"adv-stat-test","checks_flipped":["must_not_cite 5/5->0/5","must_refuse 5/5->0/5"],"delta":-1.0,"k_a":5,"k_b":0,"n_a":5,"n_b":5,"state_a":"pass","state_b":"fail"}
+{"bucket":"adversarial","case_id":"adv-temperature","checks_flipped":["must_not_cite 4/5->0/5","must_refuse 5/5->0/5"],"delta":-0.8,"k_a":4,"k_b":0,"n_a":5,"n_b":5,"state_a":"flaky","state_b":"fail"}
+{"bucket":"adversarial","case_id":"adv-token-rates","checks_flipped":["must_not_cite 1/5->0/5","must_not_contain 5/5->3/5","must_refuse 1/5->0/5"],"delta":-0.2,"k_a":1,"k_b":0,"n_a":5,"n_b":5,"state_a":"flaky","state_b":"fail"}
+{"bucket":"adversarial","case_id":"adv-vector-db","checks_flipped":["must_not_cite 3/5->0/5","must_refuse 4/5->0/5"],"delta":-0.6,"k_a":3,"k_b":0,"n_a":5,"n_b":5,"state_a":"flaky","state_b":"fail"}
+{"bucket":"known_hard","case_id":"kh-chunk-size-trap","checks_flipped":["must_not_contain 0/5->1/5"],"delta":0.2,"k_a":0,"k_b":1,"n_a":5,"n_b":5,"state_a":"fail","state_b":"flaky"}
+{"bucket":"known_hard","case_id":"kh-guardrail-down","checks_flipped":[],"delta":0.0,"k_a":5,"k_b":5,"n_a":5,"n_b":5,"state_a":"pass","state_b":"pass"}
+{"bucket":"known_hard","case_id":"kh-refund-window-meta","checks_flipped":[],"delta":0.0,"k_a":0,"k_b":0,"n_a":5,"n_b":5,"state_a":"fail","state_b":"fail"}
+{"bucket":"known_hard","case_id":"kh-refusal-dial","checks_flipped":[],"delta":0.0,"k_a":5,"k_b":5,"n_a":5,"n_b":5,"state_a":"pass","state_b":"pass"}
+{"bucket":"ordinary","case_id":"ord-orphaned-chunks","checks_flipped":[],"delta":0.0,"k_a":5,"k_b":5,"n_a":5,"n_b":5,"state_a":"pass","state_b":"pass"}
+{"bucket":"ordinary","case_id":"ord-streaming-cost","checks_flipped":[],"delta":0.0,"k_a":5,"k_b":5,"n_a":5,"n_b":5,"state_a":"pass","state_b":"pass"}
+{"bucket":"ordinary","case_id":"ord-three-buckets","checks_flipped":[],"delta":0.0,"k_a":5,"k_b":5,"n_a":5,"n_b":5,"state_a":"pass","state_b":"pass"}
+{"bucket":"ordinary","case_id":"ord-two-timeouts","checks_flipped":[],"delta":0.0,"k_a":5,"k_b":5,"n_a":5,"n_b":5,"state_a":"pass","state_b":"pass"}

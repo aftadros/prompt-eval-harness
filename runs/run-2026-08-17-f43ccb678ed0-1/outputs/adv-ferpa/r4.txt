@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents describe retrieval-time permission checks, provenance tracking, and screening for injected instructions, but they never mention FERPA or establish which regulatory requirements are met.

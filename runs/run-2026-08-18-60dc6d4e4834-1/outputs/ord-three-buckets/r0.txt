@@ -1,0 +1,7 @@
+Split it into three labeled buckets:
+
+1. **Ordinary questions** — normal traffic that should just work  
+2. **Known-hard questions** — cases that previously exposed a bug  
+3. **Adversarial questions** — cases designed to push the model against its guardrails  
+
+[evals-before-vibes--the-golden-set]

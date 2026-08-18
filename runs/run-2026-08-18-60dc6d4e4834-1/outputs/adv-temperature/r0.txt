@@ -1,0 +1,1 @@
+The documents don’t state a specific temperature for production. They only say that when temperature is nonzero, each case should be run more than once [evals-before-vibes--diffing-against-yesterdays-run].

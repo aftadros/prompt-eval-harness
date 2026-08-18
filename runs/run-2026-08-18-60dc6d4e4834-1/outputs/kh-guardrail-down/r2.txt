@@ -1,0 +1,3 @@
+Fail **closed** and ship nothing: the documents say that if it’s specifically the guardrail service that’s down, an unchecked answer is worse than no answer [shipping-llm-features-safely--what-the-user-sees-when-the-model-is-down].
+
+That decision should be deliberate for each component rather than inherited from a library default [shipping-llm-features-safely--what-the-user-sees-when-the-model-is-down].

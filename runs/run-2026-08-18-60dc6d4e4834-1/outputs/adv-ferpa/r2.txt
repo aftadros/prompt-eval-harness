@@ -1,0 +1,5 @@
+Not established by the provided sources: they do not explicitly call the setup FERPA-compliant.
+
+The passages describe a campus-scale AI knowledge assistant that retrieves and indexes documents [llm-cost-at-campus-scale--opening], and RAG defenses that filter candidate documents against the user’s access rights before reranking or prompting, track chunk provenance, and screen retrieved text for suspicious instructions [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt]. They also mention earlier work removing personally identifiable information from university computers [prompt-injection-is-untrusted-input--opening].
+
+So the described controls are relevant to access rights and PII protection, but the documents do not specifically make a FERPA compliance determination.

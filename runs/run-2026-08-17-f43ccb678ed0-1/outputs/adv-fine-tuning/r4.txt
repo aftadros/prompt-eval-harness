@@ -1,0 +1,2 @@
+I can't answer that from the sources provided.
+The documents discuss structured outputs and shipping LLM features reliably, but neither mentions fine-tuning or when it should be used instead of prompting.

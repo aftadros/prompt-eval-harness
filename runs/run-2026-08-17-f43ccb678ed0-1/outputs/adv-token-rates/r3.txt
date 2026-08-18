@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents say he uses current per-token rates for input, cached input, and output, but they don’t state a specific assumed dollar rate.

@@ -1,0 +1,55 @@
+{
+  "cases": {
+    "adversarial.yaml": "sha256:21aa55ebd02378015c1578b14bf6de2fc9ee095cc6b475ec5aa17d60243156c5",
+    "known_hard.yaml": "sha256:39af07966e6c803bc7a18339a944e550353cb7fc095588b20b54220fa3370d06",
+    "ordinary.yaml": "sha256:188e8f3c266243a83e228a704e5e45bdeaae8a03c2599ad729837ba5766a6604"
+  },
+  "closed_book": false,
+  "corpus": {
+    "fixtures/did-the-prompt-change-help--build-the-set-from-real-questions-including-the.md": "sha256:e0714420bfb37c2ef5096d3bcac46bc4a68408ce34f9675ea07e4146acf2390d",
+    "fixtures/did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide.md": "sha256:7857ff85594fd0ba92baba2073a3d3d48141cf8e25810573afa2373535ba57b8",
+    "fixtures/evals-before-vibes--diffing-against-yesterdays-run.md": "sha256:d99504bc523c8ad3b2bc33f07303aaf592f2de64082bd66704c225f324e29b11",
+    "fixtures/evals-before-vibes--opening.md": "sha256:32aa6b55ef7ee8225791c79cfb3e9b57122ce40da2c444078c75affae445f8e7",
+    "fixtures/evals-before-vibes--the-golden-set.md": "sha256:83b892600f81dbe564d92994b447b19583ae2a9a83a5c0ca7807007ca9558e26",
+    "fixtures/llm-api-from-php-in-production--two-timeouts.md": "sha256:b511a151653f1d126fb130f01d196fd9950b51daf18a89ce8a3ecfb61d582390",
+    "fixtures/llm-cost-at-campus-scale--guardrails-have-a-cost-too.md": "sha256:8b1e11f79f75d0ab52e4ce1b4888ae27ec806c6f9bcdb4add8b4f54f21120237",
+    "fixtures/llm-cost-at-campus-scale--opening.md": "sha256:f735fe4fb73e833fe37f299d2d966d9fc1255f127e5ee23c121a5c93df803a97",
+    "fixtures/llm-cost-at-campus-scale--streaming-and-retries.md": "sha256:5d488ff0d7328130664fa4d65fd7c39fe57517f5cbde909e40b6db4e0620f11b",
+    "fixtures/llm-cost-at-campus-scale--tokens-are-the-row-count.md": "sha256:296947e562e29440965415004bae14bd5f0ed2b5d2a3adceffdfff2877d059f7",
+    "fixtures/llm-cost-at-campus-scale--work-that-can-wait.md": "sha256:c40ee9470533f73d54097c8014710fc0bc116fb1bf40db0f45ddab0c92f59f33",
+    "fixtures/llm-cost-per-request--one-line-item-per-call.md": "sha256:b5db38c130a2f9cb24721cb24ea21c71303c154d385d430098c802c0b17931f2",
+    "fixtures/prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt.md": "sha256:fcba780f74cdac7156ce0ae885980f41254d1e1be404b42c831c418eff70b717",
+    "fixtures/prompt-injection-is-untrusted-input--opening.md": "sha256:b3407b2be175f540e84c86ff0b136a7d533e2048c2f7a3ba8408ab3e6dd63183",
+    "fixtures/rag-over-internal-docs--chunking-decides-what-retrieval-can-find.md": "sha256:14ba6a1facd981931356ee7697b06f54d7f8d0611bce85ce15587c65e4cff666",
+    "fixtures/rag-over-internal-docs--freshness-is-an-indexing-problem.md": "sha256:b0765c22a7061296f9bb408d9bbb15765185696e51a32698df77a97b15ac12d0",
+    "fixtures/rag-over-internal-docs--opening.md": "sha256:7b03883adcdb27020ddd700e2451b8393e41910d4dbc68ce01f8feb52eb2a015",
+    "fixtures/rag-over-internal-docs--the-honest-i-dont-know.md": "sha256:8e65628fda27a49b7451865c54e46dbced3348544f78ecee5f769cea04706a20",
+    "fixtures/shipping-llm-features-safely--the-same-checklist.md": "sha256:5bfd3580b7eeadafb6856390320130fef46031484db6918369f58c7b49c7a0dd",
+    "fixtures/shipping-llm-features-safely--timeouts-and-where-the-number-comes-from.md": "sha256:d9f1d86f9a24ab3e946f266b01f6f7cae0c5b8b6c98e43008ac23a9ac29d6c40",
+    "fixtures/shipping-llm-features-safely--what-the-user-sees-when-the-model-is-down.md": "sha256:6b3bae90f7a89d12f41f99494e7045b45760d07ab3ea203076d6f7c6a8f3ba7e",
+    "fixtures/structured-outputs--what-it-didnt-fix.md": "sha256:0ff26c9da660c974dd489c7f74b70cd802f523d5290c8a76ad5580c8c794cb7b"
+  },
+  "decoding": {
+    "max_tokens": 2048,
+    "seed": null,
+    "temperature": 0.7,
+    "top_p": 0.95
+  },
+  "harness_git_sha": "b234b7c29942a26f6f29e73aed59b9aa53651e7c",
+  "judge": null,
+  "model": {
+    "base_url": "http://127.0.0.1:1234/v1",
+    "kind": "openai_compat",
+    "name": "local",
+    "requested": "qwen3.8-27b-uncensored",
+    "server_reported": "qwen3.8-27b-uncensored"
+  },
+  "n_cases": 15,
+  "n_reruns": 5,
+  "prompt": {
+    "path": "prompts/v1.txt",
+    "sha256": "sha256:1151c6e2bad1cd74e7f79e48a4b803eaab7f7b4a9157d609c5831cb64c93fad0"
+  },
+  "python": "3.14.6",
+  "started": "2026-08-18T03:42:05+00:00"
+}

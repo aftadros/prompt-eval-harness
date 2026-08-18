@@ -1,0 +1,6 @@
+You set two timeouts because an LLM API call has two very different failure modes:
+
+- **Provider unreachable:** You want to fail quickly, in a second or two, rather than hang on a down or unresponsive service.
+- **Provider reachable but slow:** The model is actually generating an answer, so you may be willing to wait longer for it to finish.
+
+With one timeout, you’d either give up too early on a real answer or keep waiting too long when the provider is effectively down. In the Guzzle example, `connect_timeout` handles the fast outage tripwire, while `timeout` sets the total ceiling for a non-streaming call [llm-api-from-php-in-production--two-timeouts].

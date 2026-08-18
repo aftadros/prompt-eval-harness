@@ -1,0 +1,1 @@
+There’s no stated refund window in the provided posts. The document includes a golden-set case for exactly that question and says the corpus has no enterprise refund policy, so the expected behavior is to refuse cleanly rather than invent a number such as “30 days” or “60 days” [evals-before-vibes--the-golden-set].

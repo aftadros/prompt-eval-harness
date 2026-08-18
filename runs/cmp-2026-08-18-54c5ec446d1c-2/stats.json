@@ -1,0 +1,52 @@
+{
+  "bootstrap": {
+    "ci": "[-0.533, -0.107]",
+    "iterations": 10000,
+    "observed": -0.32,
+    "seed": 20260817
+  },
+  "buckets": {
+    "ALL": {
+      "b": 4,
+      "c": 0,
+      "n": 15,
+      "p": 0.125,
+      "variant": "exact_binomial"
+    },
+    "adversarial": {
+      "b": 4,
+      "c": 0,
+      "n": 7,
+      "p": 0.125,
+      "variant": "exact_binomial"
+    },
+    "known_hard": {
+      "b": 0,
+      "c": 0,
+      "n": 4,
+      "p": 1.0,
+      "variant": "exact_binomial"
+    },
+    "ordinary": {
+      "b": 0,
+      "c": 0,
+      "n": 4,
+      "p": 1.0,
+      "variant": "exact_binomial"
+    }
+  },
+  "empty_a": 0,
+  "empty_b": 0,
+  "mde": NaN,
+  "min_achievable_p": 0.125,
+  "noise_floor": {
+    "max_mean_delta": 0.13333333333333333,
+    "n_cases": 15,
+    "p95_mean_delta": 0.1,
+    "p95_vote_delta": 2.0,
+    "splits": 1000
+  },
+  "psi": 0.26666666666666666,
+  "unpairable_cases": [],
+  "verdict": "UNDERPOWERED, NOT NULL. Every one of the 4 discordant pair(s) went the same way, and with 4 the smallest two-sided p this test can produce is 0.1250. It cannot reach 0.05 however unanimous the evidence is, so p = 0.1250 here is a statement about the sample size and not about the prompt. The other two views do resolve it: the paired bootstrap [-0.533, -0.107] excludes zero, and the delta (-0.320) is 3.2x the A/A noise floor (0.100). Read the per-case table, then collect more cases before calling it significant. Do not report this as a null result."
+}

@@ -1,0 +1,1 @@
+There’s no stated refund window for enterprise plans in the provided material. The golden-set case expects the assistant to refuse, because “the corpus has no enterprise refund policy,” and it must not invent a number like 30 or 60 days [evals-before-vibes--the-golden-set].

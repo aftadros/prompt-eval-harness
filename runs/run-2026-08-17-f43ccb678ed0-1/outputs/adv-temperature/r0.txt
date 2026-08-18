@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents mention temperature only as a condition for running eval cases multiple times; they don't state the specific production temperature he uses.

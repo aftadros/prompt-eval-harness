@@ -1,0 +1,4 @@
+The documents don’t give a specific refund window for enterprise plans. The example case treats that in corpus / it should be refused because no enterprise refund policy; not 30 or 60 days. Need perhaps answer: There is no stated refund window; the golden set says must_refuse true and avoid inventing numbers. Cite [evals-before-vibes--the-golden-set]. Keep concise.
+</think>
+
+There’s no specified refund window in the provided documents. The example case for “What’s the refund window for enterprise plans?” expects a clean refusal because the corpus has no enterprise refund policy, and it should not invent numbers like 30 or 60 days [evals-before-vibes--the-golden-set].

@@ -1,0 +1,1 @@
+There is no specific refund window given in the provided post. Its example expects a refusal because the corpus has no enterprise refund policy, and it should not invent numbers like “30 days” or “60 days” [evals-before-vibes--the-golden-set].
