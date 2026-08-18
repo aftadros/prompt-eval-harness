@@ -1,0 +1,418 @@
+_note: 'Constructed probe pairs with known-correct verdicts. These are not cases and never
+  enter a run: they exist so `judge-audit` measures the judge against something external rather
+  than against itself.
+
+
+  Verbosity pairs hold content constant and manipulate only length, which is cleaner than
+  regressing length against quality on observational data, where length and quality are correlated
+  for real reasons. The padding adds no claim, removes none, and changes none; each pair was
+  checked by hand.
+
+
+  Position pairs put a well-grounded answer against a plausible ungrounded one. Judged in
+  both orders with the same question, an unbiased judge flips its verdict when the better
+  answer changes slots.'
+verbosity:
+- question_id: grounded
+  source: "# Calling an LLM API from PHP without taking the page down\n## Two timeouts\n\n\
+    The most common mistake is one timeout, or none. A model call has two failure modes that\
+    \ look nothing alike. The provider might be unreachable, and you want to give up on that\
+    \ in a second or two and move on. Or it's reachable but slow to finish generating, and\
+    \ you're willing to wait longer, because a real answer is coming. Guzzle lets you separate\
+    \ the two, and you should.\n\n```\n$client = new GuzzleHttp\\Client([\n    'base_uri'\
+    \        => 'https://api.provider.example',\n    'connect_timeout' => 2,    // can't even\
+    \ reach them: fail fast\n    'timeout'         => 30,   // total ceiling for a non-streaming\
+    \ call\n]);\n```\n\nThe 2 is the outage tripwire; the 30 is how long I'm willing to wait\
+    \ for a real answer to finish generating. Streaming changes what the total means, since\
+    \ the connection stays open while tokens arrive, so you end up bounding the idle gap between\
+    \ chunks instead of the whole call. Either way the number is a decision. I pick it from\
+    \ what the feature can tolerate, and I write it down where the next person will find it."
+  input: Why set two timeouts instead of one?
+  plain: 'Because the two failure modes differ: an unreachable provider should fail fast,
+    while a reachable but slow one deserves a longer wait [llm-api-from-php-in-production--two-timeouts].'
+  padded: 'It''s worth pausing on this, because it comes up often and the reasoning behind
+    it is easy to lose. Because the two failure modes differ: an unreachable provider should
+    fail fast, while a reachable but slow one deserves a longer wait [llm-api-from-php-in-production--two-timeouts].
+    In practice this is the kind of detail that separates a setup that holds up from one that
+    only looks like it does, so it''s worth being precise about it. To put that another way,
+    the same point can be stated from the other direction, which some people find clearer.'
+- question_id: grounded
+  source: '# What an LLM costs at campus scale
+
+    ## Streaming and retries
+
+
+    Streaming doesn''t make the model cheaper or the generation faster. You pay for the same
+    output tokens and the model spends the same time producing them. What changes is when
+    the user sees the first word: time-to-first-token drops to a fraction of a second, and
+    a long answer stops feeling frozen.
+
+
+    That matters because perceived latency is what drives retries. Somebody waits eight seconds
+    on a blank screen, hits the button again, and now you''ve paid for two generations to
+    answer one question. Streaming kills that failure mode, so I count it as a cost control
+    even though it touches no token price directly. It also changes the timeout math: an answer
+    that''s slow but visibly making progress can keep its connection open, instead of getting
+    failed and turning into a retry you also pay for.'
+  input: Does streaming make the call cheaper?
+  plain: No. You pay for the same output tokens; what changes is time-to-first-token, which
+    stops users retrying [llm-cost-at-campus-scale--streaming-and-retries].
+  padded: It's worth pausing on this, because it comes up often and the reasoning behind it
+    is easy to lose. No. You pay for the same output tokens; what changes is time-to-first-token,
+    which stops users retrying [llm-cost-at-campus-scale--streaming-and-retries]. In practice
+    this is the kind of detail that separates a setup that holds up from one that only looks
+    like it does, so it's worth being precise about it. To put that another way, the same
+    point can be stated from the other direction, which some people find clearer.
+- question_id: grounded
+  source: '# RAG over a decade of internal docs
+
+    ## Freshness is an indexing problem
+
+
+    A demo runs on a frozen corpus, and real documentation moves. A building changes its hours.
+    A policy picks up a new clause, and a deprecated procedure needs to stop showing up at
+    all. If the index is a one-time batch job, each of those edits rots an answer somewhere,
+    and nobody notices until a user acts on stale guidance. This is the piece of RAG that
+    looks most like ordinary systems engineering, which I suspect is why teams that came in
+    through the model side neglect it.
+
+
+    The shape that''s held up for me is a pipeline keyed on a content hash per source document,
+    never a script somebody reruns by hand. When a document changes, re-chunk and re-embed
+    just that document, and delete the old version''s vectors in the same operation that writes
+    the new ones. The deletes matter as much as the writes. The classic production failure
+    is the orphaned chunk, a fragment of a document that was removed or rewritten months ago,
+    still sitting in the index and winning retrieval for some unlucky query. A pipeline that
+    only ever adds keeps every one of those forever.
+
+
+    - Key every chunk to a source document id and a content hash, so a re-index only touches
+    what changed.
+
+    - When a document changes, delete its old vectors in the same transaction that writes
+    the new ones; retrieval should never straddle two versions.
+
+    - Stamp each chunk with a last-indexed timestamp and surface it, so "when did the assistant
+    last see this?" has a real answer.
+
+    - Run a reconciliation job that removes chunks whose source document no longer exists.
+    They creep in even when the pipeline behaves.
+
+
+    It''s the same discipline as any integration job that has to stay correct while the data
+    underneath keeps moving, which is most of what I''ve done for the last ten years. The
+    payoff is that when someone says the assistant is out of date, there''s a number to check.'
+  input: What is an orphaned chunk?
+  plain: A fragment of a document that was removed or rewritten but whose vectors are still
+    in the index, so it can still win retrieval [rag-over-internal-docs--freshness-is-an-indexing-problem].
+  padded: It's worth pausing on this, because it comes up often and the reasoning behind it
+    is easy to lose. A fragment of a document that was removed or rewritten but whose vectors
+    are still in the index, so it can still win retrieval [rag-over-internal-docs--freshness-is-an-indexing-problem].
+    In practice this is the kind of detail that separates a setup that holds up from one that
+    only looks like it does, so it's worth being precise about it. To put that another way,
+    the same point can be stated from the other direction, which some people find clearer.
+- question_id: grounded
+  source: '# Structured outputs deleted half my parsing code
+
+    ## What it didn''t fix
+
+
+    Structured outputs guarantee shape and nothing else. The model will hand you a perfectly
+    typed `confidence` of 0.95 on an answer that''s wrong. It will pick the enum value `access`
+    when the right answer was `billing`, in flawless JSON. The schema is a type system, and
+    type systems have never told you your logic is correct, only that the data fits the slots.
+
+
+    The validation work changed character. I stopped checking whether the response parses
+    and started checking whether it''s sane. Does this category make sense given the input?
+    Is this tag one we support, or did the model invent a plausible-looking string that passed
+    the schema because the schema only said "string"? That last one bit me. A free-form string
+    field in a schema is still free-form, and if you want the tag to be a real tag, you constrain
+    it with an enum or you check it against your own list after the fact.
+
+
+    There are sharper edges too. Deeply nested schemas, long enums, and some combinations
+    of optional fields can degrade answer quality, because you''re constraining the model''s
+    generation path and sometimes the path it wanted was outside your grammar. Tighter isn''t
+    automatically better. I''ve watched a model give a worse answer under a rigid schema than
+    it gave in free text, then get it right again once I flattened the structure.'
+  input: Does a schema guarantee a correct answer?
+  plain: 'No. A schema is a type system: it guarantees shape, not sense. The model can return
+    a perfectly typed value that is wrong [structured-outputs--what-it-didnt-fix].'
+  padded: 'It''s worth pausing on this, because it comes up often and the reasoning behind
+    it is easy to lose. No. A schema is a type system: it guarantees shape, not sense. The
+    model can return a perfectly typed value that is wrong [structured-outputs--what-it-didnt-fix].
+    In practice this is the kind of detail that separates a setup that holds up from one that
+    only looks like it does, so it''s worth being precise about it. To put that another way,
+    the same point can be stated from the other direction, which some people find clearer.'
+- question_id: grounded
+  source: '# Prompt injection in RAG starts with the documents you indexed
+
+    ## Push the defense earlier than the prompt
+
+
+    The reflex fix is words: a firm line in the system prompt telling the model to disregard
+    any instructions found inside documents. Add the line, and then assume it won''t hold.
+    A planted instruction can be more specific, more recent, and more emphatic than your preamble,
+    and the model has no reliable way to decide which one outranks the other. So I move the
+    real work out of the prompt and into retrieval, where I''m writing ordinary code with
+    ordinary control flow instead of negotiating with the model.
+
+
+    The first thing that code does is enforce permissions, before anything gets ranked or
+    assembled into a prompt. In an internal assistant, the identity of the person asking decides
+    what they''re allowed to see, and that check belongs at retrieval time. I picked the habit
+    up years ago cleaning sensitive data off machines that were never supposed to hold it;
+    the cheapest way to avoid leaking something is to never load it in the first place. So
+    candidate documents get filtered against the user''s access rights first, and restricted
+    material is gone before the reranker or the model ever touches it.
+
+
+    > Restricted text that never enters the context window can''t be leaked by an injection,
+    however clever the planted sentence is.
+
+
+    The second thing the code does is remember where each chunk came from. A passage from
+    a public page that got crawled into the index isn''t the same risk as a vetted internal
+    policy, and I keep that provenance attached so the low-trust sources draw more suspicion
+    on the way in.
+
+
+    You can also screen retrieved text for the shapes an attack tends to take, like an imperative
+    aimed straight at the assistant, or a line telling it to forget the system prompt. Screening
+    leaks. It catches the lazy attempts and makes the rest more expensive to pull off.'
+  input: Where should the main injection defense live?
+  plain: At retrieval, as a permission filter, rather than as an instruction in the system
+    prompt [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].
+  padded: It's worth pausing on this, because it comes up often and the reasoning behind it
+    is easy to lose. At retrieval, as a permission filter, rather than as an instruction in
+    the system prompt [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].
+    In practice this is the kind of detail that separates a setup that holds up from one that
+    only looks like it does, so it's worth being precise about it. To put that another way,
+    the same point can be stated from the other direction, which some people find clearer.
+- question_id: grounded
+  source: '# Putting a dollar figure on every model call
+
+    ## Why the unit is the request
+
+
+    I track the per-call number rather than the monthly total because the per-call number
+    can be acted on the same day. A change either moved it or it didn''t, and you see which
+    one immediately instead of waiting weeks for an invoice that arrives with everything averaged
+    together. It also survives growth. Traffic doubling roughly doubles the bill and tells
+    you nothing; cost per request drifting up while traffic is flat says some specific feature
+    got more expensive, and points you at it.
+
+
+    Once the per-request cost exists, the slicing falls out of labels the request already
+    carries. Group it by feature and the expensive feature names itself. The same field grouped
+    by endpoint surfaces the one screen building a bloated prompt, and grouped by tenant it
+    surfaces the customer whose traffic all goes to the flagship when half of it could ride
+    the cheap model.'
+  input: Why per-request cost rather than the monthly bill?
+  plain: Because the per-call number can be acted on the same day and survives traffic growth,
+    which a total does not [llm-cost-per-request--why-the-unit-is-the-request].
+  padded: It's worth pausing on this, because it comes up often and the reasoning behind it
+    is easy to lose. Because the per-call number can be acted on the same day and survives
+    traffic growth, which a total does not [llm-cost-per-request--why-the-unit-is-the-request].
+    In practice this is the kind of detail that separates a setup that holds up from one that
+    only looks like it does, so it's worth being precise about it. To put that another way,
+    the same point can be stated from the other direction, which some people find clearer.
+position:
+- question_id: pairwise_answer1_better
+  source: "# Calling an LLM API from PHP without taking the page down\n## Which failures to\
+    \ retry\n\nRetrying is where well-meaning code does real damage. Retrying a malformed\
+    \ request just buys the same 400 twice, and with no ceiling on attempts, one slow provider\
+    \ becomes an outage of your own making, plus a bill. My rule is narrow: retry transient\
+    \ failures, meaning connection errors, timeouts, 429 rate limits, and 5xx responses. Everything\
+    \ else fails immediately. A retry won't change the answer.\n\n```\nuse GuzzleHttp\\HandlerStack;\n\
+    use GuzzleHttp\\Middleware;\nuse GuzzleHttp\\Exception\\ConnectException;\nuse Psr\\Http\\\
+    Message\\RequestInterface;\nuse Psr\\Http\\Message\\ResponseInterface;\n\n$stack = HandlerStack::create();\n\
+    $stack->push(Middleware::retry(\n    function (int $attempt, RequestInterface $req, ?ResponseInterface\
+    \ $res = null, ?Throwable $err = null): bool {\n        if ($attempt >= 3) return false;\
+    \                 // hard cap\n        if ($err instanceof ConnectException) return true;\n\
+    \        $status = $res ? $res->getStatusCode() : 0;\n        return $status === 429 ||\
+    \ $status >= 500;        // transient only\n    },\n    function (int $attempt, ?ResponseInterface\
+    \ $res = null): int {\n        if ($res && $res->hasHeader('Retry-After')) {    // obey\
+    \ the provider first\n            return ((int) $res->getHeaderLine('Retry-After')) *\
+    \ 1000;\n        }\n        return (int) ((2 ** $attempt) * 250 + random_int(0, 250));\
+    \ // backoff + jitter, ms\n    }\n));\n```\n\nTwo details in there are worth calling out.\
+    \ The jitter, the small random number added to the backoff, keeps a fleet of pods from\
+    \ retrying in lockstep against a provider that's already struggling. And honoring Retry-After\
+    \ means that when the provider tells you exactly how long to wait, you wait that long\
+    \ instead of guessing. Both are cheap courtesy, and they keep you off a rate-limit blocklist."
+  input: Which failures should I retry?
+  a: 'Only transient ones: connection errors, timeouts, 429s and 5xx responses. Everything
+    else fails immediately, because a retry will not change the answer [llm-api-from-php-in-production--which-failures-to-retry].'
+  b: You should retry any failed call a few times, since most errors are temporary and retrying
+    is generally safe.
+- question_id: pairwise_answer1_better
+  source: '# RAG over a decade of internal docs
+
+    ## Chunking decides what retrieval can find
+
+
+    Retrieval can only return what your chunking made findable. Split a procedure in the middle
+    of step 4 and no embedding model recovers the missing context. Fixed windows of N tokens
+    with some overlap, the version every tutorial shows, hold up until the corpus stops being
+    uniform. A decade of internal documentation is not uniform. It''s policy PDFs with deep
+    heading structure, wiki pages people have edited for years, tables of room codes and building
+    hours, onboarding guides, and the occasional scanned memo somebody OCR''d badly in 2017.
+
+
+    Fixed windows treat all of that the same. A 512-token window will happily glue the end
+    of one policy onto the start of an unrelated one and embed the seam as if it were a single
+    thought. When that chunk wins retrieval, the model gets a Frankenstein passage and reasons
+    over a boundary that doesn''t exist. So I chunk along the document''s own structure first,
+    splitting on headings and keeping list items with their parent; tables stay with their
+    captions. The token limit is still there, but as a fallback for when a single section
+    is genuinely too long.
+
+
+    Two details are worth the extra code. Carry a little parent context into each chunk, the
+    document title and the heading path, so a fragment about "renewal" still knows it lives
+    under "Parking Permits." And store enough metadata on every chunk to filter before you
+    rank: source document, section, last-modified date, access scope. Filtering on metadata
+    first and ranking by similarity second is cheaper and more accurate than asking the embedding
+    to encode all of that on its own. The metadata habit is older than any of this for me.
+    I spent years on data remediation work, and that whole job was knowing exactly what a
+    piece of data was and where it lived.'
+  input: How should I chunk internal documentation?
+  a: 'Along the document''s own structure first: split on headings, keep list items with their
+    parent, and keep tables with their captions, with the token limit as a fallback [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].'
+  b: Use a fixed window of about 512 tokens with some overlap, which is the standard approach
+    and works well across corpora.
+- question_id: pairwise_answer1_better
+  source: '# Shipping an LLM feature without it going sideways
+
+    ## What the user sees when the model is down
+
+
+    Every model-backed feature needs an answer to one question: what does the user see when
+    the model is unavailable? "An error" is the lazy answer and usually the wrong one. In
+    a retrieval-augmented assistant, retrieval and generation come apart cleanly. If generation
+    fails, I can often still return the retrieved source documents with their citations, plus
+    a plain note that the summarized answer isn''t available right now. The person came looking
+    for information, and the ranked passages are useful on their own. Only the synthesized
+    paragraph on top degraded, and the note says so.
+
+
+    This is where the integration mindset pays off most directly. The product is a stack of
+    capabilities rather than one monolithic call, so failure can be partial. Retrieval up
+    with generation down means showing sources. If it''s the guardrail service that''s down,
+    I fail closed and ship nothing, since an unchecked answer is worse than no answer. Which
+    way each component fails, open or closed, is a decision I make on purpose, never one I
+    inherit from whatever the library does by default.'
+  input: The guardrail service is down. Fail open or closed?
+  a: Closed. An unchecked answer is worse than no answer [shipping-llm-features-safely--what-the-user-sees-when-the-model-is-down].
+  b: It depends on your risk tolerance and product context; either can be defensible depending
+    on how critical the feature is.
+- question_id: pairwise_answer1_better
+  source: '# Evals before vibes
+
+    ## LLM-as-judge, and where it lies to you
+
+
+    Plenty of what I want to measure has no string match: whether an answer stayed grounded
+    in the source it cited, whether the tone fit an end user or an internal admin, whether
+    a refusal came out polite and specific or read like a brick wall. For those the common
+    move is asking another model to grade the output, the pattern people call LLM-as-judge.
+    It works and it scales to questions a regex can''t touch. It''ll also hand you confident
+    garbage if you don''t design around how it fails.
+
+
+    A judge model has biases that have nothing to do with quality. It tends to reward length,
+    it likes answers that echo its own phrasing, and given a list of options it drifts toward
+    the top. Ask it for a bare 1-to-10 score and you get mush that clusters around 7. So I
+    don''t. Each judge call gets one narrow yes-or-no question with the criterion spelled
+    out, plus the source text and an instruction to check claims against that text, not against
+    whatever the model already believes. The verdict comes before the explanation, so it isn''t
+    a rationalization of an essay the judge just wrote.
+
+
+    The judge itself needs grading, and that''s the step people skip. It''s just another model
+    output, so it gets its own small golden set of cases I scored by hand, run through the
+    judge, and checked for agreement. If we disagree on a fifth of them, the judge isn''t
+    trustworthy yet and its prompt needs work before it gates anything. Some inputs never
+    get a model as the final word at all. Refusals, and anything touching access to restricted
+    content, go through deterministic checks and human review. A judge is good at telling
+    me where to look; signing off on cases where being wrong costs something is a different
+    job.'
+  input: How should I ask a judge model to grade an answer?
+  a: One narrow yes-or-no question per call, with the source text supplied and the verdict
+    before the explanation [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].
+  b: Ask it to rate the answer from 1 to 10 across several dimensions and explain its reasoning
+    before giving the score.
+- question_id: pairwise_answer1_better
+  source: '# What an LLM costs at campus scale
+
+    ## Which model gets the question
+
+
+    The biggest structural lever is admitting that not every question deserves your best model.
+    Providers sell a tiered lineup. The small fast model costs a little, the big capable one
+    costs a lot, and there''s usually something in between; the per-token gap between the
+    cheap tier and the flagship is often an order of magnitude. Send everything to the flagship
+    and you''re paying premium rates to answer ''what are the library hours,'' which the small
+    model handles perfectly.
+
+
+    Routing is where the query-planner metaphor pays off most directly. A planner picks an
+    access path from the shape of the query, and you can do the same thing: classify the request,
+    then route it. Short factual lookups with a clean retrieval hit go to the cheap model;
+    ambiguous, multi-step, synthesis-heavy questions go to the smart one. The classifier itself
+    can be the small model, or even a rules check on retrieval confidence, so the routing
+    decision costs close to nothing.
+
+
+    - Cheap tier: direct factual answers grounded in one high-confidence passage, where the
+    model is mostly reformatting retrieved text.
+
+    - Smart tier: questions that span multiple documents, have to reason over conflicting
+    sources, or came back from retrieval weak enough that the model has real work to do.
+
+    - Escalation: start cheap, and if a confidence check or guardrail flags the answer as
+    thin, retry once on the smart model instead of defaulting everything upward.
+
+
+    Escalation is the one I trust most, because it fails toward quality. You don''t have to
+    predict which questions are hard. Answer cheaply, check the result, and pay for the expensive
+    model only on the cases that earn it. Done well, most traffic settles on the cheap tier
+    and the average cost per request drops, while the answers people scrutinize still get
+    the strong model.'
+  input: How should I route between model tiers?
+  a: Answer cheaply first, then escalate to the strong model only when a confidence or guardrail
+    check flags the answer, which fails toward quality [llm-cost-at-campus-scale--which-model-gets-the-question].
+  b: Send everything to the flagship model, since answer quality matters more than cost and
+    the price difference is small.
+- question_id: pairwise_answer1_better
+  source: '# Structured outputs deleted half my parsing code
+
+    ## Retry on schema mismatch
+
+
+    You still need a retry path, just a much smaller one. With strict provider-side constraint,
+    structural mismatch is rare, but it isn''t zero across every model and setting, and schema-valid-but-wrong
+    is real. My retry logic has two tiers now. The first is the old reflex: if the response
+    somehow fails to validate against the schema, retry once. In practice this almost never
+    fires anymore, which is the point.
+
+
+    The second tier is the one I had to think about. Once the response validates, it runs
+    through a semantic check that lives in my code, not the model''s: is the tag in my supported
+    set, is the confidence consistent with the category I''d expect for this kind of input.
+    When that check fails, I retry with the failure fed back into the prompt: you returned
+    tag X, which is not a valid tag, choose from this list. That''s a content retry, and it
+    stays mine, because the provider can enforce the format but has no idea what "valid" means
+    for this product.'
+  input: Schema-valid response, wrong enum value. Retry?
+  a: Yes, once, as a content retry with the specific failure fed back into the prompt, which
+    is a separate tier from the structural retry [structured-outputs--retry-on-schema-mismatch].
+  b: No. If it validated against the schema the provider has done its job and there is nothing
+    further to check.
+self_preference:
+  runnable: false
+  reason: Needs a second model family loaded and human labels covering outputs from both.
+    With one family this would be size asymmetry within a family, which is a different claim,
+    so the probe declares itself untestable rather than reporting a number for something it
+    did not measure.

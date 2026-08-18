@@ -1,0 +1,285 @@
+# Ordinary bucket: 20 questions a practitioner would actually ask, each answered
+# completely by one section of one post, phrased the way someone with the problem
+# would phrase it rather than the way the heading is worded.
+#
+# Every case carries at least one distractor fixture from a different post. That
+# is the falsifiability rule doing work: a case whose checks cannot fail given
+# its own context is decoration, and a single-fixture ordinary case passes
+# must_cite by having nothing else to cite.
+
+- id: ord-two-timeouts
+  input: "Why would I set two different timeouts on an LLM API call instead of just one?"
+  context:
+    - doc: llm-api-from-php-in-production--two-timeouts
+    - doc: llm-cost-at-campus-scale--streaming-and-retries
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    Connect-versus-total is answered completely by one section. The distractor is a
+    streaming passage from a different post that shares the words "retries" and
+    "connection", so an answer that pattern-matches on vocabulary rather than
+    reading will cite it and fail cited_ids_exist against the wrong post.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-streaming-cost
+  input: "Does streaming the response make the model call cheaper?"
+  context:
+    - doc: llm-cost-at-campus-scale--streaming-and-retries
+    - doc: llm-api-from-php-in-production--two-timeouts
+  checks:
+    - must_cite
+    - cited_ids_exist
+  judge: [grounded, answers_the_question]
+  why: >
+    The answer is no, and the reason is a second-order one: streaming is a cost
+    control because it stops impatient users generating a second request, not
+    because it changes any token price. A model that reads "cost control" and
+    stops there gets the verdict right for the wrong reason, which the grounded
+    judge question catches and a keyword check would not.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-cache-ordering
+  input: "How should I order my prompt so prefix caching actually pays off?"
+  context:
+    - doc: llm-cost-at-campus-scale--caching-the-stable-prefix
+    - doc: llm-cost-per-request--one-line-item-per-call
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    Stable first, volatile last. The distractor is the cost-accounting post's
+    cached-versus-uncached token split, which is adjacent enough to look like an
+    answer and does not contain the ordering rule.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-orphaned-chunks
+  input: "What's an orphaned chunk and why should I care about them?"
+  context:
+    - doc: rag-over-internal-docs--freshness-is-an-indexing-problem
+    - doc: llm-cost-at-campus-scale--work-that-can-wait
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    Answered completely in one section. The distractor also discusses offline
+    reindexing, so it is topically adjacent without defining the term.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-log-fields
+  input: "What should I be logging on every model call?"
+  context:
+    - doc: llm-api-from-php-in-production--log-enough-to-reconstruct-one-call
+    - doc: structured-outputs--the-parsing-layer
+  checks: [must_cite, cited_ids_exist]
+  judge: [grounded, answers_the_question]
+  why: >
+    A concrete field list sits in one section. Worth having in the ordinary bucket
+    because it is the kind of question where a model happily supplements the
+    source with generic observability advice, which grounded should catch.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-200-not-success
+  input: "Why isn't a 200 response from a model API necessarily a success?"
+  context:
+    - doc: llm-api-from-php-in-production--a-200-is-not-success
+    - doc: llm-cost-per-request--why-the-unit-is-the-request
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    One section answers it. The distractor shares the request-level framing and
+    says nothing about response validity.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-indirect-injection
+  input: "What is indirect prompt injection, and how is it different from the direct kind?"
+  context:
+    - doc: prompt-injection-in-rag--opening
+    - doc: prompt-injection-is-untrusted-input--the-data-instruction-boundary
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    The distinction is stated outright in the first fixture. The second is a
+    genuinely related passage from a different post about the same subject, which
+    makes cited_ids_exist meaningful: both are valid ids, so the check only fails
+    if the model invents a third.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-enum-deletion
+  input: "How did putting an enum in the schema end up deleting code?"
+  context:
+    - doc: structured-outputs--schema-constrained-generation
+    - doc: llm-json-in-php--check-the-values-before-anything-else-touches-th
+  checks: [must_cite, cited_ids_exist]
+  judge: [grounded, answers_the_question]
+  why: >
+    The enum-deletes-the-normalizer story lives in one section. The distractor is
+    the PHP post's value-checking code, which also checks an enum against an
+    allow-list and is doing the opposite thing: checking after the fact rather
+    than constraining generation.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-three-buckets
+  input: "What buckets should I split a golden set into?"
+  context:
+    - doc: evals-before-vibes--the-golden-set
+    - doc: did-the-prompt-change-help--build-the-set-from-real-questions-including-the
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    Three labeled buckets, named in one sentence of the first fixture. The
+    distractor is the other post's account of building the same set, which
+    describes seeding and properties but never names the three buckets.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-repair-once
+  input: "The model keeps returning malformed JSON. How many times should I retry before giving up?"
+  context:
+    - doc: llm-json-in-php--one-repair-attempt
+    - doc: llm-api-from-php-in-production--which-failures-to-retry
+  checks:
+    - must_cite
+    - cited_ids_exist
+  why: >
+    One repair attempt with the error fed back, then fall through to the no-model
+    path. The distractor is the transport-level retry policy from a different
+    post, whose hard cap of three attempts is a real number about a different
+    kind of retry, so an answer that grabs the nearest digit gets it wrong.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-escalation-routing
+  input: "What's the pattern for routing between a cheap model and an expensive one?"
+  context:
+    - doc: llm-cost-at-campus-scale--which-model-gets-the-question
+    - doc: shipping-llm-features-safely--what-the-user-sees-when-the-model-is-down
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    Cheap first, escalate on a confidence or guardrail flag, because it fails
+    toward quality. The distractor is a degradation passage from a different post
+    that also describes falling back between paths, for unrelated reasons.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-kill-switch
+  input: "What does a kill switch for an AI feature actually look like in practice?"
+  context:
+    - doc: shipping-llm-features-safely--the-kill-switch
+    - doc: llm-cost-at-campus-scale--guardrails-have-a-cost-too
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    One config flag read per request with no cache in front of it, dropping to the
+    degradation path. Concrete enough that invented detail is visible.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-jitter
+  input: "Why add jitter to retry backoff?"
+  context:
+    - doc: llm-api-from-php-in-production--which-failures-to-retry
+    - doc: shipping-llm-features-safely--the-circuit-breaker
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    Keeps a fleet from retrying in lockstep against a provider that is already
+    struggling. The distractor is the breaker section, which is the other half of
+    the same defense and does not mention jitter.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-citation-validation
+  input: "Should I check the model's citations before showing them to a user?"
+  context:
+    - doc: rag-over-internal-docs--citations-end-to-end
+    - doc: evals-before-vibes--the-golden-set
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    Yes, and the reason is stated: a citation that does not resolve to a retrieved
+    document is worse than no citation because it manufactures confidence. This
+    case is also self-referential in a useful way, since cited_ids_exist is the
+    check that enforces the same rule on the answer to it.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-metadata-filter
+  input: "Is it better to filter chunks on metadata or let the embedding handle it?"
+  context:
+    - doc: rag-over-internal-docs--chunking-decides-what-retrieval-can-find
+    - doc: prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt
+  checks: [must_cite, cited_ids_exist]
+  judge: [grounded, answers_the_question]
+  why: >
+    Filter first, rank second, because it is cheaper and more accurate than asking
+    the embedding to encode access scope and dates. The distractor filters at
+    retrieval too, for security rather than accuracy, which is a genuinely close
+    call and the reason this case sits at the top of the ordinary bucket's
+    difficulty range.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-judge-protocol
+  input: "How should I phrase the question I send to an LLM judge?"
+  context:
+    - doc: evals-before-vibes--llm-as-judge-and-where-it-lies-to-you
+    - doc: did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    One narrow yes-or-no question, source in hand, verdict before explanation. The
+    distractor is about reading results rather than producing them.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-properties-over-judges
+  input: "When should I use a property check instead of having a model grade the answer?"
+  context:
+    - doc: did-the-prompt-change-help--build-the-set-from-real-questions-including-the
+    - doc: evals-before-vibes--llm-as-judge-and-where-it-lies-to-you
+  checks: [must_cite, cited_ids_exist]
+  judge: [grounded, answers_the_question]
+  why: >
+    Properties anywhere the question allows, fuzzy grading saved for answers that
+    need real judgment, because properties are cheaper to write, cheaper to run,
+    and do not drift between runs. Both fixtures are genuinely relevant, so this
+    tests synthesis without the traps of the known-hard bucket.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-per-request-unit
+  input: "Why track cost per request rather than just watching the monthly bill?"
+  context:
+    - doc: llm-cost-per-request--why-the-unit-is-the-request
+    - doc: llm-cost-at-campus-scale--tokens-are-the-row-count
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    Acted on the same day, and it survives traffic growth in a way a total does
+    not. The distractor from the other cost post covers token pricing and touches
+    the same metric without making the argument for the unit.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-least-privilege-tools
+  input: "How should I scope the tools I give a model that reads retrieved documents?"
+  context:
+    - doc: prompt-injection-is-untrusted-input--least-privilege-for-tools
+    - doc: rag-over-internal-docs--citations-end-to-end
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    Narrowest scope that still works, confirmation on destructive or outbound
+    actions, tool arguments validated as if a stranger typed them, and distance in
+    the flow between untrusted text and a loaded tool.
+  source: constructed
+  added: 2026-08-17
+
+- id: ord-schema-valid-not-correct
+  input: "If I use structured outputs, do I still need to validate the response?"
+  context:
+    - doc: structured-outputs--what-it-didnt-fix
+    - doc: llm-json-in-php--send-the-schema
+  checks: [must_cite, cited_ids_exist]
+  judge: [grounded, answers_the_question]
+  why: >
+    Yes: the schema is a type system and guarantees shape, never sense. Both
+    fixtures support the answer from different angles, so the case tests whether
+    the model can hold "the format problem is solved" and "the value problem is
+    not" at the same time.
+  source: constructed
+  added: 2026-08-17

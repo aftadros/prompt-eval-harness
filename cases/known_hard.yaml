@@ -1,0 +1,242 @@
+# Known-hard bucket: 15 cases mined from the places the corpus overlaps itself,
+# contradicts itself, or deliberately withholds a number.
+#
+# These are the questions that have a right answer the retrieved passage does not
+# hand over. Several carry a must_not_contain naming a span that sits inside the
+# retrieved text as a counter-example, which is the sharpest instrument in the
+# repo: a model that pattern-matches on the passage will emit it, and a model
+# that read the passage will not.
+
+- id: kh-retry-count-tension
+  input: "How many retry attempts do these posts recommend for a model call?"
+  context:
+    - doc: llm-api-from-php-in-production--which-failures-to-retry
+    - doc: shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger
+  checks: [must_cite, cited_ids_exist]
+  judge: [grounded, answers_the_question]
+  why: >
+    A genuine tension between two posts by the same author: the PHP code hard-caps
+    at three attempts, and the reliability post says bounded, usually at two. A
+    good answer reflects both and notes they are the same policy at different
+    ceilings. The failure this guards is asserting a single number as "the"
+    recommendation, which is what a model does when it reads only whichever
+    fixture ranked first.
+  source: constructed
+  added: 2026-08-17
+
+- id: kh-chunk-size-trap
+  input: "What chunk size does he recommend for RAG over internal docs?"
+  context:
+    - doc: rag-over-internal-docs--chunking-decides-what-retrieval-can-find
+  checks:
+    - must_not_contain: ["512"]
+    - must_cite
+    - cited_ids_exist
+  why: >
+    The post recommends a strategy and deliberately no number. "512" appears in
+    the retrieved passage exactly once, as the naive counter-example being argued
+    against. Guards against confident misreading of the very passage retrieved,
+    which is the failure mode most invisible to a citation check: the answer cites
+    correctly and says the opposite of the source.
+  source: constructed
+  added: 2026-08-17
+
+- id: kh-refund-window-meta
+  input: "What's the refund window for enterprise plans, according to these posts?"
+  context:
+    - doc: evals-before-vibes--the-golden-set
+  checks:
+    - must_not_contain: ["30 days", "60 days"]
+  why: >
+    The retrieved fixture contains both "30 days" and "60 days" because it prints
+    an example eval case about a question the corpus cannot answer. The correct
+    response is to say the posts use this as an illustration of an unanswerable
+    question, not to answer it. The published example is reused here with the
+    twist that the model now has to notice it is standing inside it.
+  source: handbook
+  added: 2026-08-17
+
+- id: kh-schema-valid-wrong-retry
+  input: "The response is valid against my schema but the enum value is wrong for the input. Do I retry?"
+  context:
+    - doc: structured-outputs--retry-on-schema-mismatch
+    - doc: llm-json-in-php--one-repair-attempt
+    - doc: shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger
+  checks: [must_cite, cited_ids_exist]
+  judge: [grounded, answers_the_question]
+  why: >
+    Three-post synthesis. Yes, once, as a content retry with the specific failure
+    fed back, which is a different tier from the structural retry; and the third
+    fixture classifies an unusable 200 as a validation failure that routes to
+    fallback rather than a transient error. An answer drawing on only one fixture
+    is incomplete rather than wrong, which is why this needs a judge.
+  source: constructed
+  added: 2026-08-17
+
+- id: kh-deadline-vs-retries
+  input: "I added retries and my worst-case latency tripled. What did I miss?"
+  context:
+    - doc: llm-api-from-php-in-production--a-deadline-on-the-whole-operation
+    - doc: llm-api-from-php-in-production--two-timeouts
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    A deadline on the whole operation, separate from the per-call timeout. Phrased
+    as the symptom rather than the term, so the model has to recognize the problem
+    before it can retrieve the name for it.
+  source: reported
+  added: 2026-08-17
+
+- id: kh-cited-vs-grounded
+  input: "If an answer cites a source, is it grounded?"
+  context:
+    - doc: rag-over-internal-docs--citations-end-to-end
+    - doc: evals-before-vibes--llm-as-judge-and-where-it-lies-to-you
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    No. A citation that does not support the claim it is attached to is worse than
+    none, because it manufactures confidence. The trap is that "cited" and
+    "grounded" are near-synonyms in ordinary use and the reflexive answer is yes.
+  source: constructed
+  added: 2026-08-17
+
+- id: kh-load-bearing-defense
+  input: "What's the single most important defense against prompt injection in a RAG system?"
+  context:
+    - doc: prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt
+    - doc: prompt-injection-in-rag--the-prompt-and-the-output
+    - doc: prompt-injection-is-untrusted-input--the-data-instruction-boundary
+  checks: [must_cite, cited_ids_exist]
+  judge: [grounded, answers_the_question]
+  why: >
+    The permission filter at retrieval, named as the load-bearing piece in the
+    second fixture. The trap is that the reflexive answer, a firm instruction in
+    the system prompt, is explicitly demoted in the first fixture ("add the line,
+    and then assume it won't hold"), and the third fixture spends its length on
+    delimiting, which is real and is not the answer.
+  source: constructed
+  added: 2026-08-17
+
+- id: kh-judge-gates-refusals
+  input: "Can I let the LLM judge sign off on my refusal cases?"
+  context:
+    - doc: evals-before-vibes--llm-as-judge-and-where-it-lies-to-you
+    - doc: rag-over-internal-docs--the-honest-i-dont-know
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    No. Refusals and anything touching restricted content go through deterministic
+    checks and human review; a judge is good at telling you where to look, not at
+    signing off where being wrong costs something. The trap is that the retrieved
+    passage is mostly an endorsement of judges, and the exception is one sentence
+    near the end.
+  source: constructed
+  added: 2026-08-17
+
+- id: kh-cost-regression-no-error
+  input: "Our model spend climbed after a refactor and nothing is erroring. Where do I look first?"
+  context:
+    - doc: llm-cost-per-request--what-it-catches
+    - doc: llm-cost-at-campus-scale--caching-the-stable-prefix
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    A broken cache prefix, from a per-request value moving to the top of the
+    prompt. Both fixtures describe it, one as a symptom and one as a mechanism, so
+    a complete answer joins them. Phrased as an on-call question with no
+    vocabulary overlap with the answer.
+  source: reported
+  added: 2026-08-17
+
+- id: kh-guardrail-down
+  input: "Our guardrail service is down. Should the assistant fail open or fail closed?"
+  context:
+    - doc: shipping-llm-features-safely--what-the-user-sees-when-the-model-is-down
+    - doc: llm-cost-at-campus-scale--guardrails-have-a-cost-too
+  checks:
+    - must_cite
+    - cited_ids_exist
+    - must_not_contain: ["it depends"]
+  why: >
+    Closed. The corpus is unequivocal ("an unchecked answer is worse than no
+    answer"), so the failure guarded here is hedging: a model asked an
+    operational question with an obvious both-sides shape will reach for "it
+    depends" even when the source decided. The distractor discusses guardrail cost
+    and never touches the failure direction.
+  source: constructed
+  added: 2026-08-17
+
+- id: kh-refusal-dial
+  input: "Should the assistant always refuse when it's unsure?"
+  context:
+    - doc: rag-over-internal-docs--the-honest-i-dont-know
+  checks: [must_cite, cited_ids_exist]
+  judge: [grounded, answers_the_question]
+  why: >
+    Not a flat yes. It is a precision/recall dial on trust, and the source leans
+    toward refusing under a stated condition: documentation people use to make
+    decisions, where a wrong answer costs more than a missed one. Both a flat yes
+    and a flat no are wrong, and the passage supplies the condition that makes the
+    answer conditional.
+  source: constructed
+  added: 2026-08-17
+
+- id: kh-streaming-timeout-semantics
+  input: "Does turning on streaming change what my timeout is measuring?"
+  context:
+    - doc: llm-api-from-php-in-production--two-timeouts
+    - doc: shipping-llm-features-safely--timeouts-and-where-the-number-comes-from
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    Yes: with the connection held open you bound the idle gap between chunks
+    rather than the whole call, and the second fixture adds the two-clock version,
+    time-to-first-token plus total, with a stall defined as silence on the wire.
+    The two fixtures agree and are worded differently enough that an answer
+    covering only one reads as thin rather than wrong.
+  source: constructed
+  added: 2026-08-17
+
+- id: kh-cache-output-tokens
+  input: "If I get prompt caching working, does it bring down my output token cost too?"
+  context:
+    - doc: llm-cost-at-campus-scale--caching-the-stable-prefix
+    - doc: llm-cost-at-campus-scale--tokens-are-the-row-count
+  checks: [must_cite, cited_ids_exist]
+  judge: [grounded, answers_the_question]
+  why: >
+    No. Caching touches the input side only, and the second fixture is explicit
+    that output is priced separately and several times higher. The trap is that
+    the retrieved caching passage is full of enthusiastic cost language without
+    ever restricting itself to input, so the restriction has to come from joining
+    the two.
+  source: constructed
+  added: 2026-08-17
+
+- id: kh-mean-hides-regressions
+  input: "My eval average went up after a prompt change. Is that enough to ship?"
+  context:
+    - doc: did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide
+    - doc: evals-before-vibes--what-this-looks-like-on-a-normal-week
+  checks: [must_cite, cited_ids_exist]
+  judge: [grounded, answers_the_question]
+  why: >
+    No, on two counts that live in different fixtures: the mean can rise while a
+    category that matters regresses, and a small move is not distinguishable from
+    rerun noise. The conciseness anecdote in the second fixture is the concrete
+    instance. An answer giving only the noise half or only the per-category half
+    is incomplete.
+  source: constructed
+  added: 2026-08-17
+
+- id: kh-provenance-tiers
+  input: "Should retrieved chunks from different sources be treated the same in the prompt?"
+  context:
+    - doc: prompt-injection-is-untrusted-input--retrieved-content-is-hostile-input
+    - doc: prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt
+  checks: [must_cite, cited_ids_exist]
+  why: >
+    No: a curated write-restricted knowledge base earns more trust than a
+    user-uploaded file indexed an hour ago, and the source says the prompt should
+    reflect that difference rather than flattening everything into one wall of
+    context. The trap is that the same posts also say the prompt is not where the
+    real defense lives, so a model that has absorbed that lesson can overcorrect
+    into "it makes no difference".
+  source: constructed
+  added: 2026-08-17

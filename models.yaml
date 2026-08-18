@@ -1,0 +1,26 @@
+# Named model endpoints. Selected with --model <name>.
+#
+# `local` is the default so the repo runs end to end with no API key and no
+# network beyond loopback. The `model` value must match what the server is
+# actually serving: LM Studio will answer for an unknown id out of whatever
+# happens to be loaded, so the runner asserts the server-reported id against
+# this one and refuses the run on a mismatch.
+models:
+  local:
+    kind: openai_compat
+    base_url: "http://127.0.0.1:1234/v1"
+    model: qwen3.8-27b-uncensored
+  local-small:
+    kind: openai_compat
+    base_url: "http://127.0.0.1:1234/v1"
+    model: qwen3.8-4b
+  claude:
+    kind: anthropic
+    base_url: "https://api.anthropic.com"
+    model: claude-sonnet-4-5
+    api_key_env: ANTHROPIC_API_KEY
+
+# The judge is configured independently of the subject model. That separation is
+# what makes the self-preference probe meaningful at all.
+judge:
+  default: local

@@ -1,0 +1,50 @@
+# Judge questions, referenced by id from cases.
+#
+# One narrow yes/no question per pass. Not a rubric row, not a score, not a list
+# of things to consider. A judge asked one closed question with the source in
+# hand is doing something a model is good at; a judge asked to rate overall
+# quality from 1 to 10 is doing something nobody is good at, including people.
+#
+# `risk: high` means the judge may flag but never gate. Anything that carries
+# real consequence is checked deterministically or read by a human.
+
+- id: grounded
+  question: >
+    Does the ANSWER make any factual claim that is not supported by the SOURCE
+    text? Check each claim against the SOURCE, not against your own knowledge.
+  pass_when: "no"
+  risk: low
+
+- id: refusal_is_specific
+  question: >
+    Does the ANSWER, in refusing, tell the user specifically what is missing or
+    why it cannot be answered, rather than giving a generic brush-off?
+  pass_when: "yes"
+  risk: low
+
+- id: answers_the_question
+  question: >
+    Does the ANSWER address the question that was asked, rather than a related
+    topic that appears in the SOURCE?
+  pass_when: "yes"
+  risk: low
+
+- id: premise_corrected
+  question: >
+    The QUESTION asserts something as true. Does the ANSWER state that the SOURCE
+    says otherwise, rather than accepting the assertion?
+  pass_when: "yes"
+  risk: low
+
+# Probe-only. Never referenced by a case, and the loader would accept it if one
+# did, so the rule lives here: the production protocol grades one output at a
+# time against an absolute question. This pairwise question exists solely so
+# `judge-audit` can measure the position bias that pairwise grading is exposed
+# to, which is the evidence for not using pairwise grading in production.
+- id: pairwise_answer1_better
+  question: >
+    Is ANSWER 1 better grounded in the SOURCE than ANSWER 2? Judge only which of
+    the two is better supported by the SOURCE text.
+  pass_when: "yes"
+  risk: high
+  probe_only: true

@@ -1,0 +1,228 @@
+"""Report emitters.
+
+Section order is the argument. The per-case table comes first because that is
+where a regression is visible, the aggregates come second because that is where
+one hides, and the "can you call it?" verdict comes last because it is what the
+reader should leave with. A report that opened with "pass rate: 82% (+4)" would
+be technically complete and would still get a bad change shipped.
+
+Markdown into the record directory, aligned plain text to stdout, and nothing
+else. No HTML, no dashboard. A dashboard is a thing people look at; a file
+committed next to the code is a thing people diff.
+"""
+
+from __future__ import annotations
+
+import os
+from datetime import date
+
+from harness import records, stats
+from harness.runner import case_state, pass_rate
+
+BUCKET_ORDER = ("ordinary", "known_hard", "adversarial")
+ARROW = {("pass", "fail"): "vv", ("pass", "flaky"): "v ", ("flaky", "fail"): "v ",
+         ("fail", "pass"): "^^", ("flaky", "pass"): "^ ", ("fail", "flaky"): "^ "}
+SEVERITY = {"pass": 2, "flaky": 1, "fail": 0}
+
+
+def _table(rows: list[list[str]], headers: list[str]) -> str:
+    widths = [len(h) for h in headers]
+    for r in rows:
+        for i, cell in enumerate(r):
+            widths[i] = max(widths[i], len(cell))
+    out = ["| " + " | ".join(h.ljust(widths[i]) for i, h in enumerate(headers)) + " |"]
+    out.append("|" + "|".join("-" * (w + 2) for w in widths) + "|")
+    for r in rows:
+        out.append("| " + " | ".join(c.ljust(widths[i]) for i, c in enumerate(r)) + " |")
+    return "\n".join(out)
+
+
+def run_report(record: dict) -> str:
+    """Single-run report: per-bucket rates, flaky findings, per-check failures."""
+    m, summary = record["manifest"], record["summary"]
+    lines = [
+        f"# {record['name']}",
+        "",
+        f"- prompt: `{m['prompt']['path']}` ({m['prompt']['sha256'][:19]})",
+        f"- model: `{m['model']['requested']}` via `{m['model']['name']}` "
+        f"(server reported `{m['model']['server_reported']}`)",
+        f"- decoding: {m['decoding']}",
+        f"- reruns per case: {m['n_reruns']}   cases: {m['n_cases']}",
+        f"- harness: {m['harness_git_sha'][:12]}   started: {m['started']}",
+    ]
+    if m.get("closed_book"):
+        lines.append("- **closed book**: fixtures withheld; this is the contamination probe.")
+    lines += ["", "## Pass rate by bucket", ""]
+
+    rows = []
+    for bucket in BUCKET_ORDER:
+        entries = [e for e in summary.values() if e["bucket"] == bucket]
+        if not entries:
+            continue
+        strict = sum(1 for e in entries if case_state(e) == "pass")
+        mean_p = sum(pass_rate(e) for e in entries) / len(entries)
+        ci = stats.wilson(strict, len(entries))
+        rows.append([bucket, f"{strict}/{len(entries)}", f"{strict/len(entries):.2f}",
+                     str(ci), f"{mean_p:.3f}"])
+    strict_all = sum(1 for e in summary.values() if case_state(e) == "pass")
+    n_all = len(summary)
+    if n_all:
+        rows.append(["ALL", f"{strict_all}/{n_all}", f"{strict_all/n_all:.2f}",
+                     str(stats.wilson(strict_all, n_all)),
+                     f"{sum(pass_rate(e) for e in summary.values())/n_all:.3f}"])
+    lines.append(_table(rows, ["bucket", "strict", "rate", "Wilson 95%", "mean p-hat"]))
+    lines += [
+        "",
+        "Strict counts a case only when every rerun passed every check. The mean p-hat "
+        "column uses the full rerun distribution, so the gap between the two columns is "
+        "flakiness.",
+        "",
+    ]
+
+    flaky = [(cid, e) for cid, e in sorted(summary.items()) if case_state(e) == "flaky"]
+    lines += ["## Flaky cases", ""]
+    if not flaky:
+        lines.append("None. Every case was all-pass or all-fail across its reruns.")
+    else:
+        frows = []
+        for cid, e in flaky:
+            conj = e["conjunction"]
+            cp = stats.clopper_pearson(conj["passes"], conj["n"])
+            unstable = [n for n, v in sorted(e["checks"].items()) if 0 < v["passes"] < v["n"]]
+            frows.append([cid, e["bucket"], f"{conj['passes']}/{conj['n']}", str(cp),
+                          ", ".join(unstable) or "(conjunction only)"])
+        lines.append(_table(frows, ["case", "bucket", "k/n", "Clopper-Pearson 95%", "unstable checks"]))
+        lines += [
+            "",
+            "Flaky is a finding, not a rounding error: either the check is too strict or "
+            "the behavior is unstable. At this n the interval is wide enough that a 9/10 "
+            "case is not distinguishable from a stable one, so read the interval before "
+            "calling any single case unstable.",
+        ]
+    lines.append("")
+
+    lines += ["## Failing checks", ""]
+    failing = {}
+    for cid, e in summary.items():
+        for name, v in e["checks"].items():
+            if v["passes"] < v["n"]:
+                failing.setdefault(name.split(":")[0], []).append(cid)
+    if not failing:
+        lines.append("None.")
+    else:
+        lines.append(_table(
+            [[name, str(len(cids)), ", ".join(sorted(cids)[:4]) + ("..." if len(cids) > 4 else "")]
+             for name, cids in sorted(failing.items(), key=lambda kv: -len(kv[1]))],
+            ["check", "cases", "examples"],
+        ))
+    lines.append("")
+    return "\n".join(lines)
+
+
+def compare_report(rec_a: dict, rec_b: dict, flips: list[dict], st: dict) -> str:
+    """A/B report. Per-case first, aggregates second, verdict last."""
+    ma, mb = rec_a["manifest"], rec_b["manifest"]
+    lines = [
+        f"# {rec_a['name']}  ->  {rec_b['name']}",
+        "",
+        f"- A: `{ma['prompt']['path']}` ({ma['prompt']['sha256'][:19]})",
+        f"- B: `{mb['prompt']['path']}` ({mb['prompt']['sha256'][:19]})",
+        f"- model: `{ma['model']['server_reported']}` -> `{mb['model']['server_reported']}`",
+        f"- reruns: {ma['n_reruns']} / {mb['n_reruns']}   cases: {len(flips)}",
+        "",
+        "## Per-case changes, regressions first",
+        "",
+    ]
+
+    def sort_key(f):
+        return (SEVERITY[f["state_b"]] - SEVERITY[f["state_a"]], f["delta"], f["bucket"], f["case_id"])
+
+    rows = []
+    for f in sorted(flips, key=sort_key):
+        move = ARROW.get((f["state_a"], f["state_b"]), "  " if f["state_a"] == f["state_b"] else "??")
+        rows.append([
+            f["case_id"], f["bucket"], f["state_a"], move, f["state_b"],
+            f"{f['k_a']}/{f['n_a']}", f"{f['k_b']}/{f['n_b']}", f"{f['delta']:+.2f}",
+            ", ".join(f["checks_flipped"]) or "",
+        ])
+    lines.append(_table(rows, ["case", "bucket", "A", "", "B", "k/n A", "k/n B", "d p-hat", "checks flipped"]))
+    changed = [f for f in flips if f["state_a"] != f["state_b"]]
+    lines += [
+        "",
+        f"{len(changed)} of {len(flips)} cases changed state. Unchanged rows are included "
+        "on purpose: a comparison that prints only what moved cannot be checked against "
+        "the one that did not.",
+        "",
+        "## Per-bucket totals",
+        "",
+    ]
+
+    brows = []
+    for bucket in BUCKET_ORDER + ("ALL",):
+        sub = flips if bucket == "ALL" else [f for f in flips if f["bucket"] == bucket]
+        if not sub:
+            continue
+        pa = sum(1 for f in sub if f["state_a"] == "pass")
+        pb = sum(1 for f in sub if f["state_b"] == "pass")
+        s = st["buckets"][bucket]
+        brows.append([
+            bucket, f"{pa}/{len(sub)}", str(stats.wilson(pa, len(sub))),
+            f"{pb}/{len(sub)}", str(stats.wilson(pb, len(sub))),
+            f"{s['b']}/{s['c']}", f"{s['p']:.4f}",
+        ])
+    lines.append(_table(brows, ["bucket", "A strict", "Wilson A", "B strict", "Wilson B", "b/c", "McNemar p"]))
+    lines += [
+        "",
+        "b = passed under A and failed under B. c = the reverse. Concordant cases carry no "
+        "information about the difference and are not in the test.",
+        "",
+        "## Can you call it?",
+        "",
+    ]
+
+    agg = st["buckets"]["ALL"]
+    lines += [
+        f"- discordant pairs: b={agg['b']} (A pass, B fail), c={agg['c']} (A fail, B pass)",
+        f"- exact McNemar ({agg['variant']}): p = {agg['p']:.4f}",
+        f"- paired bootstrap on per-case p-hat: delta = {st['bootstrap']['observed']:+.4f}, "
+        f"95% CI {st['bootstrap']['ci']} "
+        f"(B={st['bootstrap']['iterations']}, seed={st['bootstrap']['seed']})",
+    ]
+    floor = st.get("noise_floor")
+    if floor and floor.get("splits"):
+        lines.append(
+            f"- A/A noise floor from {floor['splits']} random half-splits of A's own reruns: "
+            f"95th percentile |delta| = {floor['p95_mean_delta']:.4f}"
+        )
+    else:
+        lines.append(
+            "- A/A noise floor: not computed. It needs at least 4 reruns per case in arm A; "
+            "with fewer, a half-split has nothing left to compare."
+        )
+    lines += ["", "**" + st["verdict"] + "**", ""]
+    lines += [
+        "### What this comparison can and cannot detect",
+        "",
+        f"- cases: {len(flips)}; discordance observed: {st['psi']:.2f}",
+        f"- minimum detectable effect at this n and discordance, exact test, 80% power: "
+        f"{st['mde']:.2f} absolute on the strict binary outcome",
+        "",
+        "An effect smaller than that is not something this set can distinguish from noise, "
+        "whatever the point estimate says. That is a property of the sample size, and it is "
+        "printed here rather than left for the reader to work out, because the alternative "
+        "is a report that implies it can bless a three-point improvement.",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def to_plain(markdown: str) -> str:
+    """Markdown to stdout: strip the emphasis, keep the tables."""
+    out = []
+    for line in markdown.splitlines():
+        if line.startswith("#"):
+            text = line.lstrip("#").strip()
+            out += ["", text, "-" * len(text)]
+        else:
+            out.append(line.replace("**", ""))
+    return "\n".join(out).strip() + "\n"

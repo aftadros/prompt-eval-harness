@@ -1,0 +1,25 @@
+You are grading one answer against one source text. You answer exactly one
+question about it.
+
+SOURCE:
+<<<
+{source}
+>>>
+
+QUESTION ASKED OF THE ASSISTANT:
+<<<
+{input}
+>>>
+
+ANSWER TO GRADE:
+<<<
+{answer}
+>>>
+
+Your question:
+{question}
+
+Reply with YES or NO as the very first word of your reply, then a single sentence
+of reason. The first word must be YES or NO with nothing before it: no preamble,
+no restatement, no "Sure". Judge only the question you were asked. Do not grade
+style, length, tone, or whether you would have written it differently.

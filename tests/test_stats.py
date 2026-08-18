@@ -1,0 +1,280 @@
+"""Hand-rolled statistics against externally computed reference values.
+
+Every reference value here was computed independently of this implementation and
+the source is cited in the test that uses it. That citation is the whole point:
+"we hand-rolled the statistics" is a claim, and a test asserting a function
+against itself would not check it. These assertions are what makes the claim
+inspectable by someone who does not trust the author.
+"""
+
+import math
+
+import pytest
+
+from harness import stats
+
+
+# --- M1: Wilson score interval -------------------------------------------
+# Reference: Wilson (1927), and the two anchors recorded in METRICS.md, which
+# were computed with independent stdlib Python on 2026-07-27 before any of this
+# code existed.
+
+
+def test_wilson_matches_metrics_anchor_40_of_50():
+    ci = stats.wilson(40, 50)
+    assert round(ci.lo, 3) == 0.670
+    assert round(ci.hi, 3) == 0.888
+
+
+def test_wilson_matches_metrics_anchor_12_of_15():
+    ci = stats.wilson(12, 15)
+    assert round(ci.lo, 3) == 0.548
+    assert round(ci.hi, 3) == 0.930
+
+
+def test_wilson_does_not_collapse_at_the_boundary():
+    """The reason Wilson is here instead of Wald.
+
+    Wald gives [1.0, 1.0] for 15/15, which would print a perfect adversarial
+    bucket as a certainty. Wilson keeps a lower bound below 1.
+    """
+    ci = stats.wilson(15, 15)
+    assert ci.hi == 1.0
+    assert 0.7 < ci.lo < 1.0
+
+
+# --- M3: exact McNemar ----------------------------------------------------
+# Reference: the two-sided binomial test against Bin(b+c, 1/2). Each value below
+# is verifiable by hand from math.comb, and all six appear as power anchors in
+# METRICS.md, computed independently on 2026-07-27.
+
+
+@pytest.mark.parametrize(
+    "b,c,expected",
+    [
+        (9, 1, 0.0215),   # 10 discordant, 9-1 split
+        (8, 2, 0.1094),   # 10 discordant, 8-2 split
+        (6, 0, 0.0312),   # 6 discordant, all one direction
+        (7, 1, 0.0703),   # a single contrary flip costs you the result
+        (12, 3, 0.0352),  # 15 inconsistent items, position-bias anchor
+        (10, 2, 0.0386),  # 12 discordant, verbosity anchor
+    ],
+)
+def test_mcnemar_exact_anchors(b, c, expected):
+    assert round(stats.mcnemar_exact(b, c).p, 4) == expected
+
+
+def test_mcnemar_hand_computed_from_binomial_coefficients():
+    """2 * P(X <= 1) for X ~ Bin(10, 1/2) = 2 * (1 + 10) / 1024."""
+    assert stats.mcnemar_exact(9, 1).p == pytest.approx(2 * (1 + 10) / 1024)
+
+
+def test_mcnemar_is_symmetric_in_direction():
+    assert stats.mcnemar_exact(9, 1).p == stats.mcnemar_exact(1, 9).p
+
+
+def test_mcnemar_variant_switches_only_above_25_discordant():
+    """The rule is in the code so the analyst cannot pick the flattering variant."""
+    assert stats.mcnemar_exact(12, 12).variant == "exact_binomial"
+    assert stats.mcnemar_exact(13, 12).variant == "chi2_continuity"
+
+
+def test_mcnemar_no_discordant_pairs_is_p_one():
+    assert stats.mcnemar_exact(0, 0).p == 1.0
+
+
+# --- M4: paired bootstrap -------------------------------------------------
+
+
+def test_bootstrap_is_deterministic_under_a_fixed_seed():
+    a = [0.2, 0.4, 0.6, 0.8, 1.0] * 4
+    b = [0.3, 0.5, 0.7, 0.9, 1.0] * 4
+    first = stats.paired_bootstrap_delta(a, b, b_iters=500, seed=7)
+    second = stats.paired_bootstrap_delta(a, b, b_iters=500, seed=7)
+    assert first == second
+
+
+def test_bootstrap_observed_delta_is_the_plain_mean_difference():
+    a, b = [0.0, 0.5, 1.0], [0.5, 0.5, 1.0]
+    observed, _ = stats.paired_bootstrap_delta(a, b, b_iters=200, seed=1)
+    assert observed == pytest.approx(0.5 / 3)
+
+
+def test_bootstrap_refuses_unequal_case_sets():
+    with pytest.raises(ValueError):
+        stats.paired_bootstrap_delta([0.1, 0.2], [0.1], b_iters=10)
+
+
+def test_bootstrap_ci_brackets_the_observed_delta():
+    a = [0.9] * 20 + [0.1] * 20
+    b = [1.0] * 20 + [0.0] * 20
+    observed, ci = stats.paired_bootstrap_delta(a, b, b_iters=2000, seed=3)
+    assert ci.lo <= observed <= ci.hi
+
+
+def test_percentile_interpolates():
+    assert stats.percentile([0.0, 1.0], 50) == pytest.approx(0.5)
+    assert stats.percentile([0.0, 10.0, 20.0], 100) == 20.0
+
+
+# --- M6: kappa ------------------------------------------------------------
+# Reference: Cohen (1960). The base-rate table below is METRICS.md's centerpiece
+# and was computed independently on 2026-07-27.
+
+
+@pytest.mark.parametrize(
+    "pi,expected_pe,expected_kappa",
+    [
+        (0.50, 0.500, 0.600),
+        (0.70, 0.580, 0.524),
+        (0.80, 0.680, 0.375),
+        (0.85, 0.745, 0.216),
+        (0.90, 0.820, -0.111),
+    ],
+)
+def test_kappa_implied_by_eighty_percent_raw_agreement(pi, expected_pe, expected_kappa):
+    """The published rule of thumb, priced at each base rate.
+
+    At a 90% pass rate, agreeing on four cases in five is worse than chance.
+    """
+    p_e, kappa = stats.kappa_at(0.80, pi)
+    assert round(p_e, 3) == expected_pe
+    assert round(kappa, 3) == expected_kappa
+
+
+def test_kappa_of_perfect_agreement_is_one():
+    j = [True, True, False, False]
+    assert stats.cohens_kappa(j, j).kappa == pytest.approx(1.0)
+
+
+def test_kappa_worked_example():
+    """a=25 b=10 c=15 d=50: p_o = 0.75, p_e = 0.35*0.40 + 0.65*0.60 = 0.53,
+    kappa = (0.75 - 0.53) / 0.47 = 0.46808..."""
+    judge = [True] * 35 + [False] * 65
+    human = [True] * 25 + [False] * 10 + [True] * 15 + [False] * 50
+    ag = stats.cohens_kappa(judge, human)
+    assert ag.confusion == {"a": 25, "b": 10, "c": 15, "d": 50}
+    assert ag.raw == pytest.approx(0.75)
+    assert ag.kappa == pytest.approx((0.75 - 0.53) / 0.47, abs=1e-9)
+    assert ag.pabak == pytest.approx(0.5)
+
+
+def test_kappa_rejects_mismatched_vectors():
+    with pytest.raises(ValueError):
+        stats.cohens_kappa([True], [True, False])
+
+
+# --- M8: power ------------------------------------------------------------
+# Reference: Connor, R.J. (1987), "Sample size for testing differences in
+# proportions for the paired-sample design", Biometrics 43(1):207-211.
+
+
+def test_connor_closed_form_matches_metrics_anchor():
+    """psi = 0.2, delta = 0.16 -> n = 58.9, i.e. n=50 cannot see a 16-point move."""
+    assert round(stats.connor_n(0.2, 0.16), 1) == 58.9
+
+
+def test_connor_returns_infinity_when_the_effect_exceeds_discordance():
+    assert stats.connor_n(0.1, 0.5) == float("inf")
+
+
+def test_simulated_power_rises_with_sample_size():
+    small = stats.mde_simulate(30, 0.2, 0.15, sims=600, seed=11)
+    large = stats.mde_simulate(300, 0.2, 0.15, sims=600, seed=11)
+    assert large > small
+
+
+def test_simulated_power_at_zero_effect_is_near_alpha():
+    """A test that rejects the null at nowhere near 5% when nothing is happening
+    is a broken test, and this is the assertion that would catch it."""
+    power = stats.mde_simulate(50, 0.2, 0.0, sims=3000, seed=5)
+    assert power < 0.06
+
+
+def test_symmetric_label_noise_costs_power():
+    clean = stats.mde_simulate(200, 0.3, 0.15, sims=800, seed=9, label_noise=0.0)
+    noisy = stats.mde_simulate(200, 0.3, 0.15, sims=800, seed=9, label_noise=0.3)
+    assert noisy < clean
+
+
+# --- M9: flakiness --------------------------------------------------------
+
+
+def test_near_stable_cases_look_flaky_at_ten_reruns():
+    """METRICS.md anchor: a p=0.95 case fails at least once in 10 runs 40% of the
+    time, which is why the flaky classification is descriptive and not a test."""
+    assert round(stats.prob_at_least_one_failure(0.95, 10), 4) == 0.4013
+
+
+def test_flakiness_classification():
+    f = stats.flakiness([[True] * 10, [False] * 10, [True] * 7 + [False] * 3])
+    assert (f["stable_pass"], f["stable_fail"], f["flaky"]) == (1, 1, 1)
+    assert f["flaky_share"] == pytest.approx(1 / 3)
+
+
+def test_clopper_pearson_matches_published_interval():
+    """9/10 -> [0.5550, 0.9975]. Reference: the standard exact binomial interval,
+    tabulated in any statistics text and reproducible from the binomial tail."""
+    ci = stats.clopper_pearson(9, 10)
+    assert ci.lo == pytest.approx(0.5550, abs=5e-4)
+    assert ci.hi == pytest.approx(0.9975, abs=5e-4)
+
+
+def test_clopper_pearson_is_wider_than_wilson():
+    exact, score = stats.clopper_pearson(8, 10), stats.wilson(8, 10)
+    assert exact.lo < score.lo and exact.hi > score.hi
+
+
+# --- M13 and corrections --------------------------------------------------
+
+
+def test_fisher_exact_matches_reference_value():
+    """Table [[8,2],[3,7]] gives two-sided p = 0.06978, a standard worked example."""
+    assert stats.fisher_exact_2x2(8, 2, 3, 7) == pytest.approx(0.0698, abs=5e-4)
+
+
+def test_fisher_of_a_null_table_is_one():
+    assert stats.fisher_exact_2x2(5, 5, 5, 5) == pytest.approx(1.0)
+
+
+def test_holm_rejects_only_below_the_stepped_threshold():
+    """Reference: Holm (1979). With m=4 the smallest p is tested at 0.05/4."""
+    out = stats.holm_bonferroni({"a": 0.01, "b": 0.02, "c": 0.03, "d": 0.9})
+    assert out["a"]["threshold"] == pytest.approx(0.0125)
+    assert out["a"]["rejected"] is True
+    assert out["b"]["rejected"] is False  # 0.02 > 0.05/3
+    assert out["c"]["rejected"] is False  # stops at the first failure
+    assert out["d"]["rejected"] is False
+
+
+def test_holm_adjusted_values_are_monotone():
+    out = stats.holm_bonferroni({"a": 0.001, "b": 0.04, "c": 0.05, "d": 0.20})
+    by_rank = sorted(out.values(), key=lambda v: v["rank"])
+    adjusted = [v["adjusted"] for v in by_rank]
+    assert adjusted == sorted(adjusted)
+
+
+def test_holm_is_less_conservative_than_bonferroni():
+    p = {"a": 0.02, "b": 0.03, "c": 0.04}
+    out = stats.holm_bonferroni(p)
+    assert out["a"]["threshold"] > 0.05 / 3 or out["a"]["threshold"] == pytest.approx(0.05 / 3)
+    assert out["c"]["threshold"] == pytest.approx(0.05)
+
+
+# --- M5: A/A noise floor --------------------------------------------------
+
+
+def test_aa_floor_of_perfectly_stable_reruns_is_zero():
+    """If every rerun agrees, half-splitting can never produce a difference."""
+    floor = stats.aa_noise_floor([[True] * 10 for _ in range(20)], splits=100)
+    assert floor["p95_mean_delta"] == 0.0
+
+
+def test_aa_floor_is_positive_when_reruns_disagree():
+    floor = stats.aa_noise_floor([[True, False] * 5 for _ in range(20)], splits=200)
+    assert floor["p95_mean_delta"] > 0.0
+
+
+def test_aa_floor_skips_cases_with_too_few_reruns():
+    floor = stats.aa_noise_floor([[True], [False]], splits=10)
+    assert floor["n_cases"] == 0
