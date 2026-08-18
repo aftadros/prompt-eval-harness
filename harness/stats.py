@@ -231,10 +231,10 @@ def cohens_kappa(judge: list[bool], human: list[bool]) -> Agreement:
     n = len(judge)
     if n == 0:
         return Agreement(0, 0.0, 0.0, 0.0, {"a": 0, "b": 0, "c": 0, "d": 0})
-    a = sum(1 for j, h in zip(judge, human) if j and h)
-    b = sum(1 for j, h in zip(judge, human) if j and not h)
-    c = sum(1 for j, h in zip(judge, human) if not j and h)
-    d = sum(1 for j, h in zip(judge, human) if not j and not h)
+    a = sum(1 for j, h in zip(judge, human, strict=True) if j and h)
+    b = sum(1 for j, h in zip(judge, human, strict=True) if j and not h)
+    c = sum(1 for j, h in zip(judge, human, strict=True) if not j and h)
+    d = sum(1 for j, h in zip(judge, human, strict=True) if not j and not h)
     p_o = (a + d) / n
     pj, ph = (a + b) / n, (a + c) / n
     p_e = pj * ph + (1 - pj) * (1 - ph)

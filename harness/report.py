@@ -13,10 +13,8 @@ committed next to the code is a thing people diff.
 
 from __future__ import annotations
 
-import os
-from datetime import date
 
-from harness import records, stats
+from harness import stats
 from harness.runner import case_state, pass_rate
 
 BUCKET_ORDER = ("ordinary", "known_hard", "adversarial")

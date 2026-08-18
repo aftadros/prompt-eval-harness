@@ -4,7 +4,6 @@ The append-only rule is the one thing here that is a claim about integrity rathe
 than about convenience, so it gets a test rather than a paragraph.
 """
 
-import json
 import os
 
 import pytest

@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents say only to “pick a reasonable embedding model” and “pick a store,” but they don’t name or recommend a specific vector store.

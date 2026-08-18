@@ -1,0 +1,44 @@
+{
+  "adv-vector-db": {
+    "bucket": "adversarial",
+    "checks": {
+      "must_not_cite": {
+        "n": 2,
+        "passes": 2
+      },
+      "must_not_contain:Pinecone,Weaviate,pgvector,Qdrant,Chroma,FAISS,Milvus,Elasticsearch": {
+        "n": 2,
+        "passes": 2
+      },
+      "must_refuse": {
+        "n": 2,
+        "passes": 2
+      }
+    },
+    "conjunction": {
+      "n": 2,
+      "passes": 2
+    },
+    "judge_questions": [],
+    "n": 2
+  },
+  "ord-two-timeouts": {
+    "bucket": "ordinary",
+    "checks": {
+      "cited_ids_exist": {
+        "n": 2,
+        "passes": 2
+      },
+      "must_cite": {
+        "n": 2,
+        "passes": 2
+      }
+    },
+    "conjunction": {
+      "n": 2,
+      "passes": 2
+    },
+    "judge_questions": [],
+    "n": 2
+  }
+}

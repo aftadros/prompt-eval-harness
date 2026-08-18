@@ -7,6 +7,8 @@ make reruns meaningless, and a check that reports nothing on a pass makes a gree
 report unauditable.
 """
 
+import dataclasses
+
 import pytest
 
 import checks as checks_pkg
@@ -202,7 +204,7 @@ def test_every_check_reports_evidence_even_when_it_passes(name):
 def test_check_result_is_frozen(name):
     output, params = SAMPLES[name]
     result = checks_pkg.REGISTRY[name](output, make_case(), params)
-    with pytest.raises(Exception):
+    with pytest.raises(dataclasses.FrozenInstanceError):
         result.passed = False
 
 
