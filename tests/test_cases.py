@@ -250,3 +250,105 @@ def test_context_text_delimits_every_document(cases):
         rendered = c.context_text()
         for d in c.context:
             assert f'<document id="{d.id}">' in rendered
+
+
+def test_known_hard_traps_are_baited(cases):
+    """A known-hard `must_not_contain` span has to appear in the case's own
+    context, or it is not a trap.
+
+    The whole design of `kh-chunk-size-trap` is that "512" sits inside the very
+    passage the model was handed, as the counter-example being argued against. If
+    the span were absent from the context, the case would be testing whether the
+    model invents a number out of nowhere, which is a no-answer case and belongs
+    in the other bucket.
+    """
+    for c in cases:
+        if c.bucket != "known_hard":
+            continue
+        for name, params in c.checks:
+            if name != "must_not_contain":
+                continue
+            if (c.notes or "").strip().startswith("hedge-guard"):
+                # A hedge guard forbids a phrase the model supplies unprompted
+                # rather than one planted in the passage. It fails for the
+                # opposite reason a bait does, so it declares itself in `notes`.
+                continue
+            haystack = c.context_text().lower()
+            baited = [s for s in params if s.lower() in haystack]
+            assert baited, (
+                f"{c.id}: none of {params} appears in its own context, so nothing "
+                "tempts the model and the check cannot discriminate. If this is a "
+                "hedge guard, say so in `notes`."
+            )
+
+
+def test_no_answer_traps_are_absent_from_the_context(cases):
+    """The mirror rule. On a no-answer case the forbidden span must NOT be in the
+    context, or a model quoting its source correctly would fail."""
+    for c in cases:
+        names = {n for n, _ in c.checks}
+        if "must_refuse" not in names or c.adversarial:
+            continue
+        haystack = c.context_text().lower()
+        for name, params in c.checks:
+            if name != "must_not_contain":
+                continue
+            present = [s for s in params if s.lower() in haystack]
+            assert not present, (
+                f"{c.id}: {present} appears in its own context, so a model quoting "
+                "the source accurately would fail this check"
+            )
+
+
+def test_injection_payloads_are_never_stored_as_fixture_files(cases):
+    """Nothing doctored may sit in fixtures/ beside the verbatim excerpts, where
+    it could be read or indexed as something the author wrote."""
+    import os
+
+    for c in cases:
+        for d in c.context:
+            if d.tainted or d.restricted:
+                assert d.path is None, f"{c.id}: tainted doc {d.id} is a file at {d.path}"
+    adv_dir = os.path.join(REPO_ROOT, "fixtures", "adversarial")
+    if os.path.isdir(adv_dir):
+        stray = [f for f in os.listdir(adv_dir) if f.endswith(".md") and f != "README.md"]
+        assert not stray, f"doctored fixture files present: {stray}"
+
+
+def test_injection_cases_can_actually_detect_a_leak(cases):
+    """Every canary has to be unique across the whole set, or a leak on one case
+    would be attributable to another."""
+    seen: dict[str, str] = {}
+    for c in cases:
+        for canary in c.canaries():
+            assert canary not in seen, f"canary {canary} shared by {seen[canary]} and {c.id}"
+            seen[canary] = c.id
+    assert len(seen) == 4
+
+
+def test_the_forthcoming_edit_is_the_only_difference_between_the_prompts():
+    """P_A and P_B must differ in exactly one rule, or the A/B measures the wrong
+    thing and no per-bucket result can be attributed to the edit."""
+    import difflib
+    import os
+
+    a = open(os.path.join(REPO_ROOT, "prompts", "v1.txt")).read().splitlines()
+    b = open(os.path.join(REPO_ROOT, "prompts", "v2.txt")).read().splitlines()
+    changed_blocks = [
+        g for g in difflib.SequenceMatcher(None, a, b).get_opcodes() if g[0] != "equal"
+    ]
+    assert len(changed_blocks) <= 2, f"prompts differ in {len(changed_blocks)} places"
+    for line in b:
+        assert "—" not in line and "–" not in line
+
+
+def test_the_refusal_marker_matches_the_prompt_contract():
+    """checks/refusal.py defines the marker; the prompts have to use that exact
+    string or must_refuse silently falls back to the regex on every case."""
+    import os
+
+    from checks.refusal import REFUSAL_MARKER
+
+    for name in ("v1.txt", "v2.txt"):
+        text = open(os.path.join(REPO_ROOT, "prompts", name)).read()
+        assert REFUSAL_MARKER in text, f"prompts/{name} does not carry the refusal marker"

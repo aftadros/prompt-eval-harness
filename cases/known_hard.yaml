@@ -160,6 +160,13 @@
     operational question with an obvious both-sides shape will reach for "it
     depends" even when the source decided. The distractor discusses guardrail cost
     and never touches the failure direction.
+  notes: >
+    hedge-guard. The forbidden span is not baited: "it depends" appears nowhere in
+    this case's context. It guards against a phrase the model supplies on its own,
+    which is the opposite of the bait in kh-chunk-size-trap, where "512" is sitting
+    in the retrieved passage waiting to be repeated. Both are legitimate uses of
+    must_not_contain and they fail for opposite reasons, so the distinction is
+    recorded here rather than left for a reader to infer.
   source: constructed
   added: 2026-08-17
 

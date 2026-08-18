@@ -1,0 +1,4 @@
+An **orphaned chunk** is a fragment of a source document that was removed or rewritten, deletes matter as much as writes. Need cite every claim from doc. Let's craft: "It’s the classic production failure..." include citation after each sentence maybe.
+</think>
+
+An orphaned chunk is “a fragment of a document that was removed or rewritten months ago, still sitting in the index and winning retrieval for some unlucky query” [rag-over-internal-docs--freshness-is-an-indexing-problem]. You should care because it can make an assistant answer with stale guidance even though the source has changed, and if your indexing pipeline only adds new chunks without deleting old ones, those orphaned chunks “keep every one of them forever” [rag-over-internal-docs--freshness-is-an-indexing-problem].
