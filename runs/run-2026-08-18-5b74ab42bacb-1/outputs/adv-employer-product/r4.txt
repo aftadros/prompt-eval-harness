@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents describe him building the admin and configuration side of an AI knowledge assistant / LLM product [rag-over-internal-docs--opening][llm-cost-at-campus-scale--opening][evals-before-vibes--opening], but they don’t name a company or vendor.

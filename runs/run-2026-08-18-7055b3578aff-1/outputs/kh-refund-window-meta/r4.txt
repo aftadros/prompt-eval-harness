@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The only document lists this exact question as a test case where the assistant should refuse because the corpus has no enterprise refund policy; it does not provide an actual refund window.

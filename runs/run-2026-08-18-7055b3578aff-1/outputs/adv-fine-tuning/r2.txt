@@ -1,0 +1,1 @@
+I can't answer that from the sources provided. The documents do not mention fine-tuning or compare it to prompting; they only cover structured-output validation and a reliability checklist for shipping LLM features.

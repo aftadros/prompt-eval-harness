@@ -1,0 +1,1 @@
+Fail closed: don’t return the assistant’s answer if the guardrail service is down, because an unchecked answer is worse than no answer [shipping-llm-features-safely--what-the-user-sees-when-the-model-is-down].

@@ -1,0 +1,20 @@
+You set two timeouts because an LLM call has two different failure modes:
+
+- **The provider is unreachable** — you want to fail fast, typically in a second or two.  
+  This is what `connect_timeout` handles.
+- **The provider is reachable but generation is slow** — you may be willing to wait longer because a real answer is still coming.  
+  This is what the overall `timeout` handles [llm-api-from-php-in-production--two-timeouts].
+
+A single timeout forces those two cases to share one limit, so you either hang too long on an outage or cut off a slow but valid generation [llm-api-from-php-in-production--two-timeouts].
+
+For streaming calls, the total timeout also changes meaning: instead of just one? Need answer direct. Cite sources inline. Could mention second doc for perceived latency/retries maybe optional. Question specifically why two different timeouts instead of just one? Answer from first doc mostly. Need cite only provided docs. Use exact id. Keep concise.
+</think>
+
+You set two different timeouts because an LLM API call can fail in two distinct ways that need different limits:
+
+- **Connect timeout**: the provider is unreachable, so you want to give up quickly after a second or two [llm-api-from-php-in-production--two-timeouts].
+- **Total/request timeout**: the provider is reachable but slow to finish generating, and you may be willing to wait longer because a real answer is still coming [llm-api-from-php-in-production--two-timeouts].
+
+Using only one timeout would force those two very different situations into the same limit. With Guzzle, for example, `connect_timeout => 2` handles unreachable-provider failures quickly, while `timeout => 30` bounds how long you wait for a non-streaming answer to finish [llm-api-from-php-in-production--two-timeouts].
+
+For streaming calls, the total timeout concept changes: instead of bounding the whole call, you may bound the idle gap between chunks because the connection stays open while tokens arrive [llm-api-from-php-in-production--two-timeouts]. That can also reduce retry pressure caused by users waiting on a blank screen and perceiving the request as frozen [llm-cost-at-campus-scale--streaming-and-retries].

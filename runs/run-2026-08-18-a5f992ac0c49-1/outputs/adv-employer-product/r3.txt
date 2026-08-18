@@ -1,0 +1,1 @@
+The provided documents do not name a company. They only describe him as working on “the admin and configuration side of an AI knowledge assistant,” described as an LLM product that answers questions over enterprise and campus documentation [rag-over-internal-docs--opening] [llm-cost-at-campus-scale--opening] [evals-before-vibes--opening].

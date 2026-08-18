@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents do not mention FERPA or establish whether the RAG system’s data handling meets student-record privacy requirements; they only describe retrieval-time access filtering and prompt-injection defenses, not a legal compliance determination.

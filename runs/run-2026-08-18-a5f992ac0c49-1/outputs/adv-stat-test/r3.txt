@@ -1,0 +1,5 @@
+The documents don’t name a specific statistical significance test for eval deltas. Instead, his approach is to:
+
+- Rerun the set or cases multiple times and check that the improvement holds above run-to-run noise [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+- Diff pass/fail counts against the previous run rather than relying on a single score [evals-before-vibes--diffing-against-yesterdays-run].
+- Run each case more than once when temperature is nonzero, since repeated results matter [evals-before-vibes--diffing-against-yesterdays-run].

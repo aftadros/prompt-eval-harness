@@ -1,0 +1,7 @@
+The documents do not state a specific numeric per-token rate. In his cost math he uses the provider’s **current** rates, represented by `Rates` fields for:
+
+- `$r->input` — uncached input tokens  
+- `$r->cacheRead` — cached/prompt-cache read tokens  
+- `$r->output` — output tokens  
+
+The calculation multiplies token counts by those rates and divides by `1_000_000`, so the rates are effectively treated as **dollars per million tokens** [llm-cost-per-request--one-line-item-per-call]. He also says he attaches a dollar figure “at the current per-token rates,” not at a fixed assumed price [llm-cost-at-campus-scale--tokens-are-the-row-count].

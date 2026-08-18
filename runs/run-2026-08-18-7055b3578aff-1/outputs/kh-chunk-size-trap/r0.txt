@@ -1,0 +1,1 @@
+The source does not give a specific numeric chunk size. It recommends chunking along the document’s own structure—splitting on headings, keeping list items with their parents, and keeping tables with captions—and using token limits only as a fallback when a section is too long [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].

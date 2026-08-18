@@ -1,0 +1,1 @@
+I can't answer that from the sources provided. The documents mention handling nonzero temperature in evals but don’t state the production temperature he uses.

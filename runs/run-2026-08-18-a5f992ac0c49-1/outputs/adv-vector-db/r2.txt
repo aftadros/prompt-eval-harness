@@ -1,0 +1,4 @@
+He does not name or per-document metadata? Let's inspect documents carefully. Opening: "Pick a reasonable embedding model, pick a store, tune how many results you pull..." No specific store. Chunking: no vector store named. So answer: The documents don't say which vector store he recommends; only that you should pick a store (and reasonable embedding model). If question asks "which vector store does he recommend?" maybe expects "the docs do not specify". Need cite source. Maybe mention "a store" generic, not specific. We can be direct.
+</think>
+
+The provided documents don’t name or recommend a specific vector store; they only say to “pick a store” along with a reasonable embedding model [rag-over-internal-docs--opening].

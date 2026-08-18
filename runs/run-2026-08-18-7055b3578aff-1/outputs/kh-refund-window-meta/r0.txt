@@ -1,0 +1,1 @@
+I can't answer that from the sources provided. The only document references "What's the refund window for enterprise plans?" purely as a sample golden-set test case, and its expected outcome is `must_refuse: true` because "corpus has no enterprise refund policy" [evals-before-vibes--the-golden-set]. No actual refund-window value is stated in the document.

@@ -1,0 +1,3 @@
+No—not as an unconditional rule. Refusal is described as a precision/recall tradeoff: if retrieval results are weak or thin, the assistant should refuse or narrow the question rather than push ahead [rag-over-internal-docs--the-honest-i-dont-know]. But being too cautious makes it shrug at questions it could have answered and trains people to stop asking [rag-over-internal-docs--the-honest-i-dont-know].
+
+For documentation used to make decisions, the recommended stance is to lean toward refusing when unsure, because “I couldn’t find that in the docs” costs less than a confident wrong answer being acted on [rag-over-internal-docs--the-honest-i-dont-know].

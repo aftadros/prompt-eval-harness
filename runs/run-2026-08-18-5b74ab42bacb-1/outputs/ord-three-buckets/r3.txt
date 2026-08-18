@@ -1,0 +1,8 @@
+Split your golden set into **three labeled buckets**:
+
+1. **Ordinary questions** – everyday queries that should just work [document id="evals-before-vibes--the-golden-set"]. It says first artifact golden set, not exact string, pin checks. Cases come from real traffic. "Fifty good cases beat five hundred lazy ones". The question: "What buckets should I split a golden set into?" Answer: three labeled buckets: ordinary questions that should just work, known-hard ones that exposed a bug once, and adversarial ones that try to pull the model off its guardrails.
+
+Need cite inline [evals-before-vibes--the-golden-set]. Direct lead with answer. Ensure no outside knowledge.
+</think>
+
+Split it into three labeled buckets: ordinary questions that should just work, known-hard cases that exposed a bug once, and adversarial cases that try to pull the model off its guardrails [evals-before-vibes--the-golden-set].

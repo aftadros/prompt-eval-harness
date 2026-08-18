@@ -1,0 +1,3 @@
+He doesn’t assume a single fixed per-token dollar rate in the provided material. His cost math uses the current provider rates for each component: uncached input tokens, cached/prefix-cache reads, and output tokens—each token count multiplied by its applicable rate and divided by 1,000,000 [llm-cost-per-request--one-line-item-per-call].
+
+The only qualitative rate assumption stated is that input is cheap and plentiful while output costs several times more [llm-cost-at-campus-scale--tokens-are-the-row-count].

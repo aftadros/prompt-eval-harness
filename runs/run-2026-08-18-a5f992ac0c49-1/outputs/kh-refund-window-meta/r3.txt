@@ -1,0 +1,1 @@
+According to the provided material, there is **no stated refund window for enterprise plans**. The document’s example says the expected behavior is to refuse because “the corpus has no enterprise refund policy” [evals-before-vibes--the-golden-set].

@@ -1,0 +1,7 @@
+Split a golden set into three labeled buckets [evals-before-vibes--the-golden-set]:
+
+1. **Ordinary questions** that should just work  
+2. **Known-hard questions** that exposed a bug once  
+3. **Adversarial questions** that try to pull the model off its guardrails  
+
+Each case should be able to fail, and the set is strongest when it comes from real traffic [evals-before-vibes--the-golden-set][did-the-prompt-change-help--build-the-set-from-real-questions-including-the].

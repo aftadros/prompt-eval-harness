@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents describe retrieval-time permission checks and prompt-injection defenses, but they do not state whether the setup treats student data as education records or meets FERPA requirements.

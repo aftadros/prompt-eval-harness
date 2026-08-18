@@ -1,0 +1,3 @@
+The golden set should be split into three labeled buckets [evals-before-vibes--the-golden-set]:
+
+1. **Ordinary questions** – cases that should just work underived content, invent policies, or otherwise give bad answers after a change [evals-before-vibes--the-golden-set][did-the-prompt-change-help--build-the-set-from-real-questions-including-the]. Keeping known-hard and adversarial cases in the set helps make sure those failure modes stay visible over time [evals-before-vibes--the-golden-set].

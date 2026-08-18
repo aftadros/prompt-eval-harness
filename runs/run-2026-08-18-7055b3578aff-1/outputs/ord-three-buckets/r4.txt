@@ -1,0 +1,5 @@
+The document describes keeping **three labeled buckets**:
+
+1. **Ordinary questions** — everyday queries that should just work [evals-before-vibes--the-golden-set].
+2. **Known-hard ones** — cases that exposed a bug once and are kept as regression tests [evals-before-vibes--the-golden-set].
+3. **Adversarial ones** — inputs designed to try to pull the model off its guardrails [evals-before-vibes--the-golden-set].

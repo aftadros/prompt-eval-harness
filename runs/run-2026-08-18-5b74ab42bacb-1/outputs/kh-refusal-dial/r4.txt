@@ -1,0 +1,3 @@
+No—the documents do not say the assistant should *always* refuse when it is unsure. Refusal is a tradeoff: if tuned too eagerly, the assistant hallucinates; if too cautiously, it shrugs off questions it could have answered [rag-over-internal-docs--the-honest-i-dont-know].
+
+The right behavior depends on what’s at stake. For documentation people rely on to make decisions, the document says to “lean toward refusing when unsure,” because a confident wrong answer can be acted on and discovered later, while saying “I couldn’t find that in the docs” only costs someone a trip to a human [rag-over-internal-docs--the-honest-i-dont-know].

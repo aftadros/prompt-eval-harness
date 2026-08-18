@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents say only to “pick a store” and describe retrieval architecture in general terms; they do not name or recommend any specific vector store.

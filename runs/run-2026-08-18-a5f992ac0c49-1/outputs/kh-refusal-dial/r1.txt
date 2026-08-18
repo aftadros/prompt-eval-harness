@@ -1,0 +1,3 @@
+No — not always. The documents frame refusal as a tradeoff, not an absolute rule: it should be calibrated so the assistant says “I don’t know” when the docs do not cover the question, but does not become so cautious that it misses questions it could have answered [rag-over-internal-docs--the-honest-i-dont-know].
+
+In practice, the documents suggest refusing or narrowing the question when retrieval is weak or thin, and they emphasize being especially willing to refuse for documentation people use to make decisions, because a confident wrong answer can cost more than a missed one [rag-over-internal-docs--the-honest-i-dont-know].

@@ -1,0 +1,1 @@
+The documents don’t state a specific production temperature. They only mention that you should run each case more than once when the temperature is nonzero [rag-over-internal-docs--diffing-against-yesterdays-run].

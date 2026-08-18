@@ -1,0 +1,71 @@
+{
+  "bootstrap": {
+    "ci": "[-0.067, 0.053]",
+    "iterations": 10000,
+    "observed": 0.0,
+    "seed": 20260817
+  },
+  "buckets": {
+    "ALL": {
+      "b": 1,
+      "c": 0,
+      "n": 15,
+      "p": 1.0,
+      "variant": "exact_binomial"
+    },
+    "adversarial": {
+      "b": 1,
+      "c": 0,
+      "n": 7,
+      "p": 1.0,
+      "variant": "exact_binomial"
+    },
+    "known_hard": {
+      "b": 0,
+      "c": 0,
+      "n": 4,
+      "p": 1.0,
+      "variant": "exact_binomial"
+    },
+    "ordinary": {
+      "b": 0,
+      "c": 0,
+      "n": 4,
+      "p": 1.0,
+      "variant": "exact_binomial"
+    }
+  },
+  "empty_a": 0,
+  "empty_b": 0,
+  "judge": {
+    "b": 0,
+    "c": 0,
+    "cases": [
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "kh-chunk-size-trap"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "kh-refund-window-meta"
+      }
+    ],
+    "min_achievable_p": 1.0,
+    "n": 2,
+    "p": 1.0
+  },
+  "mde": NaN,
+  "min_achievable_p": 1.0,
+  "noise_floor": {
+    "max_mean_delta": 0.03333333333333333,
+    "n_cases": 15,
+    "p95_mean_delta": 0.03333333333333333,
+    "p95_vote_delta": 0.0,
+    "splits": 1000
+  },
+  "psi": 0.06666666666666667,
+  "unpairable_cases": [],
+  "verdict": "NOT distinguishable from rerun noise. The observed delta (+0.000) is inside the A/A noise floor (0.033), which is what running the same prompt twice looks like on this rig. Do not ship on this delta."
+}

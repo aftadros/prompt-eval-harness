@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents mention temperature only as an eval consideration—run each case more than once when it is nonzero—but they don’t state a production temperature [evals-before-vibes--diffing-against-yesterdays-run].

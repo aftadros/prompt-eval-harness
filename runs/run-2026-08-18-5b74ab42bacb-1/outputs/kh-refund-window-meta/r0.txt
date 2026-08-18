@@ -1,0 +1,3 @@
+The documents don't provide a refund window for enterprise plans. The one reference to this exact question appears as an example test case in the golden set, where it is explicitly marked with `must_refuse: true` because "corpus has no enterprise refund policy," and the expected answer must **not** contain invented numbers like "30 days" or "60 days" [evals-before-vibes--the-golden-set].
+
+So rather than stating a specific window, the documents establish that there is no such policy to cite, and the correct behavior for an assistant answering this question would be to refuse cleanly rather than fabricate an answer.

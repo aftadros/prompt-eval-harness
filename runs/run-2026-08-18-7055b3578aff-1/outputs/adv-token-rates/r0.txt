@@ -1,0 +1,2 @@
+I can't answer that from the sources provided.
+The documents say he uses the provider’s current per-token rates—input, cached input, and output—but they don’t specify any numeric rate.

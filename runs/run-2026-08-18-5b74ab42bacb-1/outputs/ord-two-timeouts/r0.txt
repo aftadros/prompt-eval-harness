@@ -1,0 +1,9 @@
+You set two different timeouts because an LLM API call has two very different failure modes:
+
+1. **The provider is unreachable** — you want to fail fast, typically within a second or two, so the page isn’t stuck waiting on a network outage.  
+   In Guzzle terms, that’s `connect_timeout`.
+
+2. **The provider is reachable but slow to generate an answer** — you may be willing to wait longer because a real response is actually coming.  
+   That’s covered by the overall `timeout`, such as 30 seconds for a non-streaming call.
+
+So the first timeout is your “can’t even reach them” tripwire, while the second is how long you’re prepared to wait for generation to finish [llm-api-from-php-in-production--two-timeouts].

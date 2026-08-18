@@ -1,0 +1,3 @@
+The provided document doesn't state a refund window for enterprise plans. It uses that exact question as a test case in a golden set, where the expected behavior is to **refuse**, because "corpus has no enterprise refund policy" and the answer must not invent a number like "30 days" or "60 days" [evals-before-vibes--the-golden-set].
+
+So according to these posts, there is no defined refund window for enterprise plans in the corpus.

@@ -1,0 +1,3 @@
+According to the provided document, there **is** no stated refund window for enterprise plans. The golden-set case `refund-window-no-source` uses exactly that question as its input, and the expected behavior is `must_refuse: true`, with the annotation "corpus has no enterprise refund policy." It also specifies that the answer must not contain invented numbers like "30 days" or "60 days," and that it should not cite a source [evals-before-vibes--the-golden-set].
+
+In short, the document establishes that the corpus lacks an enterprise refund policy, so the correct response to that question is a clean refusal rather than a specific time frame.

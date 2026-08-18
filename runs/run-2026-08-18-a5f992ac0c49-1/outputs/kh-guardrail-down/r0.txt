@@ -1,0 +1,3 @@
+Fail **closed** when the guardrail service is down: ship no answer, because an unchecked answer is worse than no answer [shipping-llm-features-safely--what-the-user-sees-when-the-model-is-down].
+
+That’s distinct from other partial failures—for example, if generation fails but retrieval still works, you can show the retrieved sources with citations and note that the synthesized answer isn’t available [shipping-llm-features-safely--what-the-user-sees-when-the-model-is-down]. The open/closed behavior should be a deliberate product decision for each component, not whatever the library defaults to [shipping-llm-features-safely--what-the-user-sees-when-the-model-is-down].

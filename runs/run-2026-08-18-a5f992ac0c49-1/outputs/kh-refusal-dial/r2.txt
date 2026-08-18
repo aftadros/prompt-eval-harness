@@ -1,0 +1,3 @@
+No—not as an unconditional rule. The documents frame refusal as a tradeoff: the assistant should refuse when the documentation does not cover the question or when retrieved results are weak or thin, but overly cautious refusal can make it “shrug at questions it could have answered” and discourage people from asking [rag-over-internal-docs--the-honest-i-dont-know].
+
+For decision-relevant documentation, the guidance is to lean toward refusing when unsure because a wrong answer may cost more than a missed one: “I couldn’t find that in the docs” only costs a trip to a human, while a confident wrong answer gets acted on [rag-over-internal-docs--the-honest-i-dont-know].

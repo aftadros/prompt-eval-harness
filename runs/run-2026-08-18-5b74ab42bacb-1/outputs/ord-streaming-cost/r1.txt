@@ -1,0 +1,3 @@
+No—not directly. Streaming does **not** make the model cheaper or faster: you still pay for the same output tokens, and the model still takes the same time to generate them [llm-cost-at-campus-scale--streaming-and-retries].
+
+It can reduce costs indirectly by improving perceived latency, which lowers user retries and failed-timeout repeats that would otherwise cost extra generations [llm-cost-at-campus-scale--streaming-and-retries].

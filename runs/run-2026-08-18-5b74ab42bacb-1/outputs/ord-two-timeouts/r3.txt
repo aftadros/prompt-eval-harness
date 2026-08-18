@@ -1,0 +1,8 @@
+You set two timeouts because an LLM API call has two very different failure modes:
+
+- **The provider is unreachable** — a network or outage problem where you want to fail quickly, in about a second or two, so the page doesn’t hang [llm-api-from-php-in-production--two-timeouts].
+- **The provider is reachable but slow to generate** — a valid request that should be allowed more time to finish producing an answer [llm-api-from-php-in-production--two-timeouts].
+
+A single timeout forces you to treat those cases the same, which means either waiting too long on a dead endpoint or killing a real generation that was still working. Guzzle lets you separate them with `connect_timeout` for the outage tripwire and `timeout` for the total wait ceiling [llm-api-from-php-in-production--two-timeouts].
+
+For streaming calls, the math shifts slightly: because tokens arrive over time, you may bound the **idle gap between chunks** rather than the whole call, so a slow-but-visibly-progressing answer can stay open instead of being failed and retried at extra cost [llm-api-from-php-in-production--two-timeouts] [llm-cost-at-campus-scale--streaming-and-retries].

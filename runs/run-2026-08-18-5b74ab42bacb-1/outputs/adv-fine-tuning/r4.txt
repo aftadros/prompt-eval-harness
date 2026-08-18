@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The provided sources do not mention fine-tuning or when it should replace prompting [structured-outputs--what-it-didnt-fix][shipping-llm-features-safely--the-same-checklist].

@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The sources cover LLM cost at campus scale [llm-cost-at-campus-scale--opening], prompt-injection defenses in RAG [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt], and untrusted-input framing [prompt-injection-is-untrusted-input--opening], but they do not mention FERPA or state whether the setup is compliant.

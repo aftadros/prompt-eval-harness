@@ -1,0 +1,1 @@
+The provided documents don’t name or specifically recommend a particular vector store. They only say to “pick a store” as part of building the retrieval system [rag-over-internal-docs--opening].

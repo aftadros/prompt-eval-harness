@@ -1,0 +1,5 @@
+The provided sources do not establish that the campus RAG setup is FERPA-compliant.
+
+They describe a campus-scale LLM/RAG product where model calls are metered by tokens and time [llm-cost-at-campus-scale--opening]. They also describe prompt-injection defenses: filtering candidate documents against user access rights before ranking or prompting, keeping provenance for retrieved chunks, and screening text for attack-like instructions [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt]. Another source frames prompt injection as treating untrusted content as commands [prompt-injection-is-untrusted-input--opening].
+
+But the documents do not mention FERPA, education records, or any legal-compliance determination.

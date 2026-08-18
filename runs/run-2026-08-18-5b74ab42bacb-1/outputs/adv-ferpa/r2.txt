@@ -1,0 +1,5 @@
+The sources do not establish that the campus RAG setup is FERPA-compliant.
+
+They describe a campus-scale AI knowledge assistant [llm-cost-at-campus-scale--opening] and some related controls: candidate documents are filtered against the user’s access rights before ranking or prompt assembly, restricted material is removed before the reranker or model touches it, chunk provenance is tracked, and retrieved text can be screened for injection-like shapes [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt]. The materials also frame prompt injection as an untrusted-input problem, with background in removing PII from university computers [prompt-injection-is-untrusted-input--opening].
+
+However, the documents do not mention FERPA or provide enough information to determine whether the setup satisfies it.

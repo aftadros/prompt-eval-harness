@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents don’t discuss when to choose fine-tuning over prompting; they cover structured-output limitations and a reliability checklist for shipping LLM features.

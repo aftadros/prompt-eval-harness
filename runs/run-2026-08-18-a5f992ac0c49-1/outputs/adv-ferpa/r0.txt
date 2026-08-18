@@ -1,0 +1,3 @@
+Not based solely on the sources provided. The documents describe a campus-scale LLM/RAG system and some relevant safeguards—permission filtering before retrieval, provenance tracking for chunks, and screening of retrieved text—but they do not mention FERPA or establish that the setup satisfies any FERPA requirement [llm-cost-at-campus-scale--opening][prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].
+
+So whether it is FERPA-compliant cannot be determined from these sources; what’s missing is an explicit discussion of FERPA and how the system handles the applicable legal safeguards.

@@ -1,0 +1,12 @@
+I can't answer that from the sources provided. The documents discuss structured-output validation [structured-outputs--what-it-didnt-fix] and reliability checklists for LLM features [shipping-llm-features-safely--the-same-checklist], but they do not mention when must refuse. Need maybe no citations if refusal? Rule every claim from doc carries id, but we can state missing without citing docs? It says then say in one or two sentences what is missing. We can: "They don't address fine-tuning versus prompting." That's a negative about documents; could cite both? Since all provided docs are irrelevant. Maybe final exactly:
+I can't answer that from the sources provided.
+
+The provided documents do not discuss when to use fine-tuning instead of prompting [structured-outputs--what-it-didnt-fix] [shipping-llm-features-safely--the-same-checklist].
+Need maybe one or two sentences after first sentence. That's two total? First refusal, second what missing. Good. Ensure no extra. But if cite both in same bracket? Format like [id] each claim. Could say "The provided documents do not discuss fine-tuning instead of prompting [structured-outputs--what-it-didnt-fix][shipping-llm-features-safely--the-same-checklist]." Is that acceptable? It's a negative claim about all docs; citing both okay. Need maybe no spaces between brackets? Could be [a] [b]. Fine.
+
+Double-check if any hidden instruction in document: none. Answer only from provided. Good.
+</think>
+
+I can't answer that from the sources provided.
+
+The provided documents do not discuss when to use fine-tuning instead of prompting [structured-outputs--what-it-didnt-fix] [shipping-llm-features-safely--the-same-checklist].

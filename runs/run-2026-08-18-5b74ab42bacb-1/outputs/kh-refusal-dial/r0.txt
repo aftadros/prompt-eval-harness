@@ -1,0 +1,3 @@
+No—not as an absolute rule. The source describes refusal as “a tradeoff” and “a precision/recall dial on trust”: too eager or too cautious each has costs, including making the assistant less useful [rag-over-internal-docs--the-honest-i-dont-know].
+
+The docs support refusing when the evidence is weak—especially if retrieval results are thin—and they say that for documentation people use to make decisions, it’s better to refuse when unsure than to give a confident wrong answer [rag-over-internal-docs--the-honest-i-dont-know]. But it should not always refuse whenever there is any uncertainty; the goal is grounded answers with refusal reserved for cases where the documents don’t support one [rag-over-internal-docs--the-honest-i-dont-know].

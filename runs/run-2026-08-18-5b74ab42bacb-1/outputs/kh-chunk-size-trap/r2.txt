@@ -1,0 +1,1 @@
+The documents don’t state a recommended numeric chunk size. He criticizes fixed windows—using “a 512-token window” as an example—and instead recommends chunking along the document’s structure first, with a token limit only as a fallback for sections that are genuinely too long [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].

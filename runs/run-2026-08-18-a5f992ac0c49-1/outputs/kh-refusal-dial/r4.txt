@@ -1,0 +1,3 @@
+No—not automatically or always. The documents frame refusal as a calibrated tradeoff: when retrieval results are weak or thin, the assistant should refuse or narrow the question rather than push ahead [rag-over-internal-docs--the-honest-i-dont-know]. But if it becomes too cautious, it will “shrug at questions it could have answered” and train people to stop asking [rag-over-internal-docs--the-honest-i-dont-know].
+
+The right level depends on cost: refusal is most appropriate where a wrong answer costs more than a missed one [rag-over-internal-docs--the-honest-i-dont-know]. For documentation used to make decisions, the document says it leans toward refusing when unsure [rag-over-internal-docs--the-honest-i-dont-know].

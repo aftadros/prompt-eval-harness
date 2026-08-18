@@ -1,0 +1,3 @@
+No—streaming does not make the model call cheaper in token cost: you pay for the same output tokens, and the model spends the same time producing them [llm-cost-at-campus-scale--streaming-and-retries].
+
+It can still reduce total spend indirectly by improving perceived latency and reducing retries or timeout failures that would otherwise cause duplicate paid generations [llm-cost-at-campus-scale--streaming-and-retries][llm-api-from-php-in-production--two-timeouts].

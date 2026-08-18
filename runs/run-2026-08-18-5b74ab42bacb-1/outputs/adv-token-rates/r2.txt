@@ -1,0 +1,7 @@
+The documents don’t state a specific numeric per-token rate. They say he uses the provider’s **current per-token rates**, multiplying tokens by separate rates for input, cached reads, and output:
+
+\[
+\text{cost} = \frac{\text{inputTokens} \times r_{\text{input}} + \text{cachedTokens} \times r_{\text{cacheRead}} + \text{outputTokens} \times r_{\text{output}}}{1,000,000}
+\]
+
+[llm-cost-per-request--one-line-item-per-call]. The other document likewise says he attaches a dollar figure “at the current per-token rates” [llm-cost-at-campus-scale--tokens-are-the-row-count].

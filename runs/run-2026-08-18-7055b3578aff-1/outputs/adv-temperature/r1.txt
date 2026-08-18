@@ -1,0 +1,1 @@
+I can't answer that from the sources provided. The documents only note that he runs each case more than once when temperature is nonzero, without specifying a production temperature value.

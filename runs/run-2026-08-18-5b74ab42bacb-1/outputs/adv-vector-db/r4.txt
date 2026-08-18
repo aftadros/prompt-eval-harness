@@ -1,0 +1,1 @@
+The provided material does not name or recommend a particular vector store. It only says to “pick a reasonable embedding model, pick a store,” while the author’s main concerns are chunking, index freshness, citations, and saying “I don’t know” [rag-over-internal-docs--opening].

@@ -1,0 +1,7 @@
+The golden set should be split into **three labeled buckets**:
+
+1. **Ordinary questions** — cases that should just work under normal conditions.
+2. **Known-hard ones** — questions that exposed a bug once, so they serve as regression guards.
+3. **Adversarial ones** — inputs designed to try to pull the model off its guardrails.
+
+The document also notes that fifty good cases beat five hundred lazy ones, and every case has to be able to fail or it's just decoration [evals-before-vibes--the-golden-set].

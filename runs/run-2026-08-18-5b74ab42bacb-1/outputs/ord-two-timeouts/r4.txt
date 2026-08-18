@@ -1,0 +1,8 @@
+Because an LLM call has two different failure modes, and you usually want to handle them differently:
+
+- **The provider is unreachable** — you want to fail fast, after only a second or two, so the page doesn’t hang waiting on a dead endpoint [llm-api-from-php-in-production--two-timeouts].
+- **The provider is reachable but slow to generate** — you may be willing to wait longer because a real answer is still coming [llm-api-from-php-in-production--two-timeouts].
+
+In Guzzle terms, that means separating `connect_timeout` from the overall request `timeout`: for example, 2 seconds for “can’t even reach them” and 30 seconds as the total ceiling for a non-streaming call [llm-api-from-php-in-production--two-timeouts]. With streaming, the total-time meaning changes because the connection stays open while tokens arrive, so you may instead bound the idle gap between chunks rather than the whole call [llm-api-from-php-in-production--two-timeouts].
+
+That also matters for retries: if a slow answer is visibly making progress, keeping its connection open can avoid failing it and causing an extra paid generation [llm-cost-at-campus-scale--streaming-and-retries].
