@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The provided documents discuss structured-output validation and shipping LLM features reliably, but they don’t say when he recommends fine-tuning over prompting.

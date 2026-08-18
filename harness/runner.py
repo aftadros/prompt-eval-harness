@@ -131,7 +131,9 @@ def run(cases: list[Case], cfg: RunConfig, *, quiet: bool = False) -> str:
 
     def do(task):
         case, rerun = task
-        completion = mdl.complete(system, build_user_message(case, cfg.closed_book), cfg.decoding)
+        completion = model_mod.complete_with_content(
+            mdl, system, build_user_message(case, cfg.closed_book), cfg.decoding
+        )
         # Written the moment it arrives, to its own path, so a crash at call 249
         # of 250 costs one call rather than the whole batch. The ordered pass
         # below reads them back; nothing here depends on completion order.
@@ -171,9 +173,31 @@ def run(cases: list[Case], cfg: RunConfig, *, quiet: bool = False) -> str:
             "checks": {},
             "judge_questions": list(case.judge),
             "conjunction": {"passes": 0, "n": 0},
+            "empty": 0,
         }
         for rerun in range(cfg.n_reruns):
             completion = outputs[(case.id, rerun)]
+            if completion.is_empty:
+                # Missing data, not a result. It lowers n rather than counting as
+                # a fail, and the report prints the count so a shrunken n is
+                # never silent.
+                case_summary["empty"] += 1
+                records.append_jsonl(
+                    results_path,
+                    {
+                        "case_id": case.id,
+                        "bucket": case.bucket,
+                        "rerun": rerun,
+                        "output_sha": records.sha256_text(completion.text),
+                        "output_chars": 0,
+                        "model_reported": completion.model_reported,
+                        "usage": completion.usage,
+                        "checks": [],
+                        "empty": True,
+                        "all_passed": None,
+                    },
+                )
+                continue
             check_results = run_checks(completion.text, case)
             records.append_jsonl(
                 results_path,
@@ -189,6 +213,7 @@ def run(cases: list[Case], cfg: RunConfig, *, quiet: bool = False) -> str:
                         {"name": r.name, "passed": r.passed, "evidence": r.evidence}
                         for r in check_results
                     ],
+                    "empty": False,
                     "all_passed": all(r.passed for r in check_results),
                 },
             )
@@ -216,7 +241,11 @@ def case_state(entry: dict) -> str:
     conj = entry.get("conjunction", {"passes": 0, "n": 0})
     k, n = conj["passes"], conj["n"]
     if n == 0:
-        return "fail"
+        # Every rerun came back empty, so there is no evidence either way. This
+        # is deliberately not "fail": a case with no data and a case that failed
+        # look identical on a report that has only three states, and the first
+        # one is a broken rig while the second is a broken prompt.
+        return "nodata"
     if k == n:
         return "pass"
     if k == 0:

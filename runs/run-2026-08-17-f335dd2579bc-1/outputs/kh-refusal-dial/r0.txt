@@ -1,0 +1,5 @@
+No—not automatically in every case. The document describes refusal as “a tradeoff to own out loud,” with risks of being too eager or too cautious, so it should be tuned rather than applied blindly [rag-over-internal-docs--the-honest-i-dont-know].
+
+The recommended approach is layered: weak or thin retrieval results signal that the assistant may need to refuse or narrow the question; the model should have explicit permission to say the documents don’t cover the issue; and a final check should confirm the answer is grounded in the retrieved passages [rag-over-internal-docs--the-honest-i-dont-know].
+
+That said, for documentation people use to make decisions, the document says it “leans toward refusing when unsure,” because an uncertain but correct-sounding wrong answer may get acted on [rag-over-internal-docs--the-honest-i-dont-know].

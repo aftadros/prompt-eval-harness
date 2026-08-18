@@ -77,6 +77,43 @@ def run_report(record: dict) -> str:
         "",
     ]
 
+    empties = {cid: e.get("empty", 0) for cid, e in summary.items() if e.get("empty")}
+    total_empty = sum(empties.values())
+    lines += ["## Empty generations", ""]
+    if not total_empty:
+        lines.append("None. Every rerun returned content.")
+    else:
+        planned = m["n_reruns"] * m["n_cases"]
+        lines.append(
+            f"**{total_empty} of {planned} generations came back empty** after retries and "
+            "were dropped from scoring rather than counted as failures."
+        )
+        lines.append("")
+        lines.append(_table(
+            [[cid, summary[cid]["bucket"], f"{n}/{m['n_reruns']}",
+              str(summary[cid]["conjunction"]["n"])]
+             for cid, n in sorted(empties.items(), key=lambda kv: -kv[1])],
+            ["case", "bucket", "empty", "reruns scored"],
+        ))
+        lines += [
+            "",
+            "An empty body is the model spending its whole token budget before it starts "
+            "answering, not an answer. Scoring one would be worse than dropping it: an "
+            "empty string fails must_refuse and passes must_not_cite and must_not_contain "
+            "vacuously, so it reads as a refusal regression with evidence attached. The "
+            "count is printed because dropping data quietly is its own dishonesty, and a "
+            "case whose n shrank has a wider interval than its row suggests.",
+        ]
+        nodata = [cid for cid, e in summary.items() if case_state(e) == "nodata"]
+        if nodata:
+            lines += [
+                "",
+                f"**{len(nodata)} case(s) have no usable rerun at all** and are reported as "
+                f"nodata rather than fail: {', '.join(sorted(nodata))}. Raise --max-tokens "
+                "and rerun before reading anything into these.",
+            ]
+    lines.append("")
+
     flaky = [(cid, e) for cid, e in sorted(summary.items()) if case_state(e) == "flaky"]
     lines += ["## Flaky cases", ""]
     if not flaky:
@@ -144,6 +181,21 @@ def compare_report(rec_a: dict, rec_b: dict, flips: list[dict], st: dict) -> str
             ", ".join(f["checks_flipped"]) or "",
         ])
     lines.append(_table(rows, ["case", "bucket", "A", "", "B", "k/n A", "k/n B", "d p-hat", "checks flipped"]))
+    if st.get("unpairable_cases"):
+        lines += [
+            "",
+            f"**{len(st['unpairable_cases'])} case(s) excluded as unpairable**: "
+            f"{', '.join(st['unpairable_cases'])}. Every rerun came back empty on one "
+            "side or the other, so there is nothing to compare. They are named here "
+            "rather than quietly dropped, because a comparison over a smaller set than "
+            "the reader thinks is the same error as a comparison over a different one.",
+        ]
+    if st.get("empty_a") or st.get("empty_b"):
+        lines.append(
+            f"\nEmpty generations dropped from scoring: {st.get('empty_a', 0)} in A, "
+            f"{st.get('empty_b', 0)} in B. Cases with a shrunken n carry more uncertainty "
+            "than their row shows."
+        )
     changed = [f for f in flips if f["state_a"] != f["state_b"]]
     lines += [
         "",

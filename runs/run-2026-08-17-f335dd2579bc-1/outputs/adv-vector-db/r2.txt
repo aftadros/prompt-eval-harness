@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The author mentions picking "a reasonable embedding model" and "a store" as part of making vector search work, but he never names a specific vector store in either document [rag-over-internal-docs--opening][rag-over-internal-docs--chunking-decides-what-retrieval-can-find].

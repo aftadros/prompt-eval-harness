@@ -1,0 +1,1 @@
+There’s no specified refund window for enterprise plans in these posts. The example case expects a clean refusal because “corpus has no enterprise refund policy,” and it should not invent numbers like 30 or 60 days [evals-before-vibes--the-golden-set].

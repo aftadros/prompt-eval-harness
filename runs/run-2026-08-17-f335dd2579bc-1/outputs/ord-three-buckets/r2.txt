@@ -1,0 +1,1 @@
+Split it into three labeled buckets: ordinary questions that should just work, known‑hard questions that exposed a bug before, and adversarial questions designed to push the model past its guardrails [evals-before-vibes--the-golden-set].

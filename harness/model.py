@@ -65,6 +65,20 @@ class Completion:
     usage: dict | None
     raw: dict
 
+    @property
+    def is_empty(self) -> bool:
+        """No content at all.
+
+        This happens on reasoning models when the whole `max_tokens` budget goes
+        to reasoning and the server strips those tokens from `content`. The
+        result is a completed HTTP 200 carrying nothing, which is a rig condition
+        rather than an answer, and it must never be scored as one: an empty
+        string fails `must_refuse` and passes `must_not_cite` and
+        `must_not_contain` vacuously, so it looks exactly like a refusal
+        regression with specific evidence behind it.
+        """
+        return not self.text.strip()
+
 
 class Model(Protocol):
     name: str
@@ -180,6 +194,24 @@ class OpenAICompat:
             usage=raw.get("usage"),
             raw=raw,
         )
+
+
+def complete_with_content(mdl, system: str, user: str, decoding: Decoding) -> Completion:
+    """Call the model, retrying an empty completion as the transient failure it is.
+
+    An empty body is not the model's answer to the question; it is the model
+    running out of budget before it started answering. Retrying is right for the
+    same reason retrying a 429 is right and retrying a 400 is not: the input was
+    fine and the condition is not about the input. If it is still empty after the
+    bounded retries, the caller records it as missing data rather than as a
+    failed check.
+    """
+    last = None
+    for _ in range(MAX_ATTEMPTS):
+        last = mdl.complete(system, user, decoding)
+        if not last.is_empty:
+            return last
+    return last
 
 
 class AnthropicMessages:

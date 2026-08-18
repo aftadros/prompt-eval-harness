@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents discuss structured output validation and LLM feature reliability, but neither mentions fine-tuning or compares it to prompting.

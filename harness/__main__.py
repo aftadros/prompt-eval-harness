@@ -37,6 +37,11 @@ def build_flips(rec_a: dict, rec_b: dict) -> list[dict]:
     flips = []
     for cid in shared:
         ea, eb = sa[cid], sb[cid]
+        if case_state(ea) == "nodata" or case_state(eb) == "nodata":
+            # Unpairable. A case with no usable rerun on either side carries no
+            # information about the difference, and pairing it against the other
+            # arm would invent one.
+            continue
         checks_flipped = []
         for name in sorted(set(ea["checks"]) | set(eb["checks"])):
             va = ea["checks"].get(name, {"passes": 0, "n": 0})
@@ -81,6 +86,10 @@ def compare_stats(rec_a: dict, rec_b: dict, flips: list[dict]) -> dict:
 
     agg = buckets.get("ALL", {"b": 0, "c": 0, "p": 1.0})
     n = len(flips)
+    dropped = sorted(
+        cid for cid in set(rec_a["summary"]) & set(rec_b["summary"])
+        if cid not in {f["case_id"] for f in flips}
+    )
     psi = (agg["b"] + agg["c"]) / n if n else 0.0
     mde = stats.find_mde(n, max(psi, 0.05), sims=800) if n else float("nan")
 
@@ -95,6 +104,9 @@ def compare_stats(rec_a: dict, rec_b: dict, flips: list[dict]) -> dict:
         "psi": psi,
         "mde": mde,
         "verdict": verdict,
+        "unpairable_cases": dropped,
+        "empty_a": sum(e.get("empty", 0) for e in rec_a["summary"].values()),
+        "empty_b": sum(e.get("empty", 0) for e in rec_b["summary"].values()),
     }
 
 
@@ -395,7 +407,7 @@ def main(argv=None) -> int:
     r.add_argument("--case", nargs="*", help="restrict to specific case ids")
     r.add_argument("--temperature", type=float, default=0.7)
     r.add_argument("--top-p", dest="top_p", type=float, default=0.95)
-    r.add_argument("--max-tokens", dest="max_tokens", type=int, default=1024)
+    r.add_argument("--max-tokens", dest="max_tokens", type=int, default=2048)
     r.add_argument("--seed", type=int, default=None)
     r.add_argument("--concurrency", type=int, default=1)
     r.add_argument("--closed-book", action="store_true",

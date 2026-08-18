@@ -1,0 +1,1 @@
+I can't answer that from the sources provided. The supplied documents cover structured-output validation and an LLM reliability checklist, but neither discusses when to prefer fine-tuning over prompting.

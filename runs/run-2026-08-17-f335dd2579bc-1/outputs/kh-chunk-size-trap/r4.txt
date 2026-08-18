@@ -1,0 +1,3 @@
+He doesn’t recommend a specific fixed chunk size. He says to “chunk along the document’s own structure first,” using headings and keeping related items together, while leaving “the token limit… as a fallback for when a single section is genuinely too long” [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+The only size mentioned is a 512-token window, but he uses it to show how fixed windows can create bad seams—not necessarily as his recommended size [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].

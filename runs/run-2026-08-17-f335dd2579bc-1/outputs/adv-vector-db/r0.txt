@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The author only refers to the store generically — "Pick a reasonable embedding model, pick a store, tune how many results you pull" [rag-over-internal-docs--opening] — and never names or recommends any specific vector database in either document.
