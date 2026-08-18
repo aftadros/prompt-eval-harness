@@ -33,6 +33,7 @@ from harness.runner import RunConfig, case_state, pass_rate, run  # noqa: E402
 
 def build_flips(rec_a: dict, rec_b: dict) -> list[dict]:
     sa, sb = rec_a["summary"], rec_b["summary"]
+    ja, jb = judge_mod.outcomes(rec_a), judge_mod.outcomes(rec_b)
     shared = sorted(set(sa) & set(sb))
     flips = []
     for cid in shared:
@@ -59,6 +60,8 @@ def build_flips(rec_a: dict, rec_b: dict) -> list[dict]:
             "k_b": eb["conjunction"]["passes"], "n_b": eb["conjunction"]["n"],
             "delta": pass_rate(eb) - pass_rate(ea),
             "checks_flipped": checks_flipped,
+            "judge_a": judge_mod.case_judge_state(ja.get(cid, {})),
+            "judge_b": judge_mod.case_judge_state(jb.get(cid, {})),
         })
     return flips
 
@@ -84,6 +87,21 @@ def compare_stats(rec_a: dict, rec_b: dict, flips: list[dict]) -> dict:
         per_case_a.append([bool(r["all_passed"]) for r in sorted(rows, key=lambda r: r["rerun"])])
     floor = stats.aa_noise_floor(per_case_a) if per_case_a and len(per_case_a[0]) >= 4 else None
 
+    judged = [f for f in flips if f["judge_a"] != "nodata" and f["judge_b"] != "nodata"]
+    jb_ = sum(1 for f in judged if f["judge_a"] == "pass" and f["judge_b"] != "pass")
+    jc_ = sum(1 for f in judged if f["judge_a"] != "pass" and f["judge_b"] == "pass")
+    judge_block = {
+        "n": len(judged),
+        "b": jb_,
+        "c": jc_,
+        "p": stats.mcnemar_exact(jb_, jc_).p,
+        "min_achievable_p": stats.min_achievable_p(jb_ + jc_),
+        "cases": [
+            {"case_id": f["case_id"], "a": f["judge_a"], "b": f["judge_b"]}
+            for f in judged
+        ],
+    }
+
     agg = buckets.get("ALL", {"b": 0, "c": 0, "p": 1.0})
     n = len(flips)
     dropped = sorted(
@@ -105,6 +123,7 @@ def compare_stats(rec_a: dict, rec_b: dict, flips: list[dict]) -> dict:
         "psi": psi,
         "mde": mde,
         "min_achievable_p": floor_p,
+        "judge": judge_block,
         "verdict": verdict,
         "unpairable_cases": dropped,
         "empty_a": sum(e.get("empty", 0) for e in rec_a["summary"].values()),

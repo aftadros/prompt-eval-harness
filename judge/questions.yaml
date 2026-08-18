@@ -36,6 +36,14 @@
   pass_when: "yes"
   risk: low
 
+- id: number_not_endorsed
+  question: >
+    The SOURCE mentions a specific number only to reject it, or as an example of
+    something not to do. Does the ANSWER present that number as the recommended
+    or actual value, rather than describing how the SOURCE treats it?
+  pass_when: "no"
+  risk: low
+
 # Probe-only. Never referenced by a case, and the loader would accept it if one
 # did, so the rule lives here: the production protocol grades one output at a
 # time against an absolute question. This pairwise question exists solely so

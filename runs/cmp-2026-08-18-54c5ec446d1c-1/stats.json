@@ -1,0 +1,51 @@
+{
+  "bootstrap": {
+    "ci": "[-0.533, -0.107]",
+    "iterations": 10000,
+    "observed": -0.32,
+    "seed": 20260817
+  },
+  "buckets": {
+    "ALL": {
+      "b": 4,
+      "c": 0,
+      "n": 15,
+      "p": 0.125,
+      "variant": "exact_binomial"
+    },
+    "adversarial": {
+      "b": 4,
+      "c": 0,
+      "n": 7,
+      "p": 0.125,
+      "variant": "exact_binomial"
+    },
+    "known_hard": {
+      "b": 0,
+      "c": 0,
+      "n": 4,
+      "p": 1.0,
+      "variant": "exact_binomial"
+    },
+    "ordinary": {
+      "b": 0,
+      "c": 0,
+      "n": 4,
+      "p": 1.0,
+      "variant": "exact_binomial"
+    }
+  },
+  "empty_a": 0,
+  "empty_b": 0,
+  "mde": NaN,
+  "noise_floor": {
+    "max_mean_delta": 0.13333333333333333,
+    "n_cases": 15,
+    "p95_mean_delta": 0.1,
+    "p95_vote_delta": 2.0,
+    "splits": 1000
+  },
+  "psi": 0.26666666666666666,
+  "unpairable_cases": [],
+  "verdict": "MIXED. McNemar p = 0.1250, bootstrap [-0.533, -0.107]. The two views of the same data disagree, which usually means the effect sits near this set's resolution limit (about nan). Treat it as uncalled."
+}

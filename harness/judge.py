@@ -259,3 +259,53 @@ def audit(judge_model: str = "local", samples: int = 5) -> dict:
                 "size asymmetry within a family, which is a different claim. Not run.",
     }
     return out
+
+
+def outcomes(record: dict) -> dict:
+    """Per-case judge results, derived from judge.jsonl at read time.
+
+    Deliberately a second outcome rather than a component of the first. The
+    deterministic conjunction stays exactly what it was, and the judge sits
+    beside it. Folding a judge verdict into the pass/fail number would let a
+    model's opinion gate a result the rubric says it may only flag, and it would
+    do so invisibly, which is the worse half.
+
+    Per (case, question) it returns k of n over reruns, the mean p_pass, and the
+    number of reruns where the judge was split rather than unanimous. That last
+    number is the one worth reading: a question answered 5-0 every time and a
+    question answered 3-2 every time both land on "pass", and only one of them is
+    a result you should act on.
+    """
+    per: dict[str, dict] = {}
+    for row in record.get("judge", []):
+        slot = per.setdefault(row["case_id"], {})
+        q = slot.setdefault(
+            row["question_id"],
+            {"passes": 0, "n": 0, "p_sum": 0.0, "split": 0, "unparseable": 0},
+        )
+        q["n"] += 1
+        q["passes"] += 1 if row["verdict"] == "pass" else 0
+        q["p_sum"] += row["p_pass"]
+        if 0.0 < row["p_pass"] < 1.0:
+            q["split"] += 1
+        q["unparseable"] += row.get("n_unparseable", 0)
+    for case in per.values():
+        for q in case.values():
+            q["mean_p_pass"] = q["p_sum"] / q["n"] if q["n"] else 0.0
+            del q["p_sum"]
+    return per
+
+
+def case_judge_state(case_outcome: dict) -> str:
+    """pass / flaky / fail over a case's judge questions, or nodata."""
+    if not case_outcome:
+        return "nodata"
+    total_n = sum(q["n"] for q in case_outcome.values())
+    if total_n == 0:
+        return "nodata"
+    total_k = sum(q["passes"] for q in case_outcome.values())
+    if total_k == total_n:
+        return "pass"
+    if total_k == 0:
+        return "fail"
+    return "flaky"

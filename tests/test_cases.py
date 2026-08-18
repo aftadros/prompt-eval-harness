@@ -157,8 +157,12 @@ def test_judge_routing_stays_a_minority(cases):
     """The rubric's own warning, enforced. If most cases are judge-routed, the
     harness has drifted into grading everything with a model."""
     routed = [c for c in cases if c.judge]
-    assert len(routed) == 15
+    # The invariant is that judging stays a minority, not that it stays at
+    # whatever number it happened to be on the day this was written. Pinning the
+    # count means the test fails every time a case is legitimately rerouted,
+    # which trains people to update the number instead of reading the rule.
     assert len(routed) < len(cases) / 2
+    assert len(routed) >= 10, "judge coverage has collapsed; the protocol is untested"
 
 
 def test_risky_checks_are_never_judge_gated(cases):

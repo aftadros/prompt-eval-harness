@@ -14,6 +14,7 @@ committed next to the code is a thing people diff.
 from __future__ import annotations
 
 
+from harness import judge as judge_mod
 from harness import stats
 from harness.runner import case_state, pass_rate
 
@@ -140,6 +141,45 @@ def run_report(record: dict) -> str:
         ]
     lines.append("")
 
+    judged = judge_mod.outcomes(record)
+    lines += ["## Judge verdicts", ""]
+    if not judged:
+        lines += [
+            "No judge questions have been run against this record. "
+            "`python -m harness judge <run>` fills this in.",
+            "",
+            "Nothing downstream treats that as a pass. The deterministic checks above are "
+            "the whole result until it is filled in, which is the intended default: the "
+            "judge is a second opinion on the cases that need one, not a prerequisite.",
+        ]
+    else:
+        jrows = []
+        for cid in sorted(judged):
+            for qid, q in sorted(judged[cid].items()):
+                jrows.append([
+                    cid, qid, f"{q['passes']}/{q['n']}", f"{q['mean_p_pass']:.2f}",
+                    str(q["split"]), str(q["unparseable"]),
+                ])
+        lines.append(_table(
+            jrows, ["case", "question", "k/n", "mean p_pass", "split reruns", "unparseable"]
+        ))
+        lines += [
+            "",
+            "`mean p_pass` is the judge sampled five times per rerun, so 1.00 means it said "
+            "the same thing every time and 0.60 means it did not. `split reruns` counts the "
+            "reruns where it was not unanimous. A question that is always split is not "
+            "measuring what its wording says it measures, whichever way the verdict lands.",
+        ]
+        stuck = sum(q["unparseable"] for c in judged.values() for q in c.values())
+        if stuck:
+            lines.append(
+                f"\n**{stuck} judge sample(s) did not start with YES or NO** and were "
+                "dropped. The protocol requires the verdict first, and a reply that buries "
+                "it is not recovered by searching further into the text: that would put "
+                "back exactly the rationalization the protocol removes."
+            )
+    lines.append("")
+
     lines += ["## Failing checks", ""]
     failing = {}
     for cid, e in summary.items():
@@ -254,6 +294,34 @@ def compare_report(rec_a: dict, rec_b: dict, flips: list[dict], st: dict) -> str
             "with fewer, a half-split has nothing left to compare."
         )
     lines += ["", "**" + st["verdict"] + "**", ""]
+
+    j = st.get("judge") or {}
+    lines += ["## Judge outcome, reported separately", ""]
+    if not j.get("n"):
+        lines += [
+            "Neither record has judge verdicts, or no case has them on both sides. "
+            "The deterministic result above stands on its own.",
+            "",
+        ]
+    else:
+        lines.append(_table(
+            [[c["case_id"], c["a"], "->", c["b"]] for c in j["cases"]],
+            ["case", "A", "", "B"],
+        ))
+        lines += [
+            "",
+            f"{j['n']} case(s) judged on both sides. b={j['b']}, c={j['c']}, "
+            f"exact McNemar p = {j['p']:.4f} "
+            f"(smallest achievable at this discordance: {j['min_achievable_p']:.4f}).",
+            "",
+            "This is a second outcome, not a component of the first. Nothing above changes "
+            "because of it. Folding a judge verdict into the pass/fail number would let a "
+            "model's opinion gate a result the rubric says it may only flag, and it would do "
+            "so without showing up anywhere a reader would look.",
+            "",
+        ]
+
+
     lines += [
         "### What this comparison can and cannot detect",
         "",

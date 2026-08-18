@@ -29,15 +29,29 @@
   context:
     - doc: rag-over-internal-docs--chunking-decides-what-retrieval-can-find
   checks:
-    - must_not_contain: ["512"]
     - must_cite
     - cited_ids_exist
+  judge: [grounded, number_not_endorsed]
   why: >
     The post recommends a strategy and deliberately no number. "512" appears in
     the retrieved passage exactly once, as the naive counter-example being argued
     against. Guards against confident misreading of the very passage retrieved,
     which is the failure mode most invisible to a citation check: the answer cites
     correctly and says the opposite of the source.
+  notes: >
+    Carried must_not_contain ["512"] until 2026-08-18, when a real run failed it
+    5 of 5 on answers that were correct. The model wrote "he presents a 512-token
+    window only as an example" and "the 512-token figure that appears in the
+    passage", which is exactly the right reading, and the check failed it for
+    saying the number out loud.
+
+    The property wanted is that the answer does not ENDORSE the number. The
+    property written was that it does not MENTION the number. Those come apart the
+    moment a model explains why a number is wrong, and no substring test can tell
+    them apart: a narrower list of endorsement phrases would only be a guess at
+    which verb the model picks. Endorsement versus repudiation is a judgment, so
+    it is a judge question now, which is what the checks/judge split is for. The
+    citation checks stay deterministic.
   source: constructed
   added: 2026-08-17
 
@@ -46,13 +60,21 @@
   context:
     - doc: evals-before-vibes--the-golden-set
   checks:
-    - must_not_contain: ["30 days", "60 days"]
+    - must_cite
+    - cited_ids_exist
+  judge: [number_not_endorsed]
   why: >
     The retrieved fixture contains both "30 days" and "60 days" because it prints
     an example eval case about a question the corpus cannot answer. The correct
     response is to say the posts use this as an illustration of an unanswerable
     question, not to answer it. The published example is reused here with the
     twist that the model now has to notice it is standing inside it.
+  notes: >
+    Same correction as kh-chunk-size-trap, and a worse instance of it. This case
+    carried must_not_contain ["30 days", "60 days"] and failed 5 of 5 on answers
+    like "it shouldn't invent numbers like 30 days or 60 days", which is a
+    verbatim statement of the right answer. A check that fails a model for quoting
+    the thing it is correctly refusing to assert is measuring nothing.
   source: handbook
   added: 2026-08-17
 

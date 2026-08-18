@@ -9,7 +9,13 @@ models:
   local:
     kind: openai_compat
     base_url: "http://127.0.0.1:1234/v1"
-    model: qwen3.8-27b-uncensored
+    # Updated 2026-08-18: the LM Studio instance swapped to this build
+    # mid-session and preflight refused the run rather than attributing it to
+    # the id below. That refusal is the feature. Both arms of a comparison
+    # have to run on the same build, and the manifest records the requested
+    # id and the server-reported id separately so a swap is visible after
+    # the fact as well as before it.
+    model: qwen3.8-27b-uncensored-hauhaucs-aggressive-mtp
   local-small:
     kind: openai_compat
     base_url: "http://127.0.0.1:1234/v1"

@@ -90,7 +90,9 @@ def test_run_report_says_none_when_there_are_none(tmp_path):
     from tests.test_compare_and_report import make_record
 
     rec = make_record(tmp_path, "r", {"c1": ("ordinary", 5)})
-    assert "Every rerun returned content." in report.run_report(rec)
+    md = report.run_report(rec)
+    assert "Every rerun returned content." in md
+    assert "No judge questions have been run against this record." in md
 
 
 def test_compare_excludes_unpairable_cases_and_names_them(tmp_path):
