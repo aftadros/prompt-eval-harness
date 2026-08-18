@@ -278,3 +278,88 @@ def test_aa_floor_is_positive_when_reruns_disagree():
 def test_aa_floor_skips_cases_with_too_few_reruns():
     floor = stats.aa_noise_floor([[True], [False]], splits=10)
     assert floor["n_cases"] == 0
+
+
+# --- functions the README claims are pinned ------------------------------
+# These three are reachable from production paths (the position probe, the
+# compare command, and calibrate respectively) and were untested when the README
+# first claimed every function was covered. The claim is now true.
+
+
+def test_binom_tail_two_sided_hand_computed():
+    """P(X <= 1) doubled for X ~ Bin(5, 1/2) = 2 * (1 + 5) / 32 = 0.375."""
+    assert stats.binom_tail_two_sided(1, 5) == pytest.approx(2 * 6 / 32)
+
+
+def test_binom_tail_two_sided_is_one_at_the_center():
+    assert stats.binom_tail_two_sided(5, 10) == 1.0
+
+
+def test_binom_tail_two_sided_folds_to_the_smaller_tail():
+    """k and n-k are the same test: the probe does not care which slot won."""
+    assert stats.binom_tail_two_sided(2, 10) == stats.binom_tail_two_sided(8, 10)
+
+
+def test_binom_tail_of_a_unanimous_split():
+    """6 discordant, all one direction: 2 / 64 = 0.03125, the METRICS anchor."""
+    assert stats.binom_tail_two_sided(0, 6) == pytest.approx(0.03125)
+
+
+def test_find_mde_returns_a_detectable_effect():
+    mde = stats.find_mde(50, 0.3, sims=400)
+    assert 0 < mde <= 0.3
+    assert stats.mde_simulate(50, 0.3, mde, sims=1500, seed=stats.DEFAULT_SEED) >= 0.75
+
+
+def test_find_mde_shrinks_as_the_sample_grows():
+    """The whole point of printing it: a bigger set resolves a smaller effect."""
+    small = stats.find_mde(40, 0.3, sims=300)
+    large = stats.find_mde(400, 0.3, sims=300)
+    assert large < small
+
+
+def test_find_mde_is_nan_when_no_effect_reaches_power():
+    assert math.isnan(stats.find_mde(3, 0.05, sims=100))
+
+
+def test_kappa_bootstrap_ci_brackets_the_point_estimate():
+    judge = [True] * 35 + [False] * 65
+    human = [True] * 25 + [False] * 10 + [True] * 15 + [False] * 50
+    point = stats.cohens_kappa(judge, human).kappa
+    ci = stats.kappa_bootstrap_ci(judge, human, b_iters=1500, seed=4)
+    assert ci.lo <= point <= ci.hi
+
+
+def test_kappa_bootstrap_ci_is_deterministic_under_a_seed():
+    j, h = [True, False] * 20, [True, True, False, False] * 10
+    assert stats.kappa_bootstrap_ci(j, h, b_iters=300, seed=2) == stats.kappa_bootstrap_ci(
+        j, h, b_iters=300, seed=2
+    )
+
+
+def test_kappa_bootstrap_ci_of_an_empty_set_is_degenerate():
+    ci = stats.kappa_bootstrap_ci([], [])
+    assert (ci.lo, ci.hi) == (0.0, 0.0)
+
+
+def test_every_public_stats_function_is_referenced_by_a_test():
+    """Guard on the README's claim, so it cannot quietly go stale.
+
+    A function added to stats.py without a test fails this, which is the only
+    way a claim like "every function is pinned" survives contact with time.
+    """
+    import inspect
+    import pathlib
+
+    public = {
+        name
+        for name, obj in vars(stats).items()
+        if inspect.isfunction(obj)
+        and not name.startswith("_")
+        and obj.__module__ == "harness.stats"
+    }
+    suite = "\n".join(
+        p.read_text() for p in pathlib.Path(__file__).parent.glob("test_*.py")
+    )
+    missing = sorted(n for n in public if f"stats.{n}" not in suite)
+    assert not missing, f"stats.py functions with no test: {missing}"
