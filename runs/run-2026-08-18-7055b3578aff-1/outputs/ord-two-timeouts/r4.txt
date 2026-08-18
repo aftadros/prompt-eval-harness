@@ -1,0 +1,6 @@
+You set two timeouts because an LLM call can fail in two different ways:
+
+1. **The provider is unreachable** — you want to fail quickly, e.g., a 2-second connect timeout [llm-api-from-php-in-production--two-timeouts].  
+2. **The provider is reachable but generation is slow** — you may be willing to wait longer for the real answer to finish, so you use a separate total or idle timeout, such as 30 seconds [llm-api-from-php-in-production--two-timeouts].
+
+With streaming, the second timeout typically bounds the **idle gap between chunks**, not the entire call [llm-api-from-php-in-production--two-timeouts]. This lets a slow but visibly progressing answer stay open instead of being failed and turned into an extra paid retry [llm-cost-at-campus-scale--streaming-and-retries].

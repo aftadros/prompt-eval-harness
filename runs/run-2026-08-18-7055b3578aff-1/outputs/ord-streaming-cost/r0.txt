@@ -1,0 +1,1 @@
+No. Streaming does not make the model or the call cheaper directly; you still pay for the same output tokens [llm-cost-at-campus-scale--streaming-and-retries].

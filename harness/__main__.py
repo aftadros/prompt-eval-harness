@@ -268,7 +268,9 @@ def cmd_compare(args) -> int:
 
 def cmd_judge(args) -> int:
     path = records.resolve(args.run)
-    rows = judge_mod.run_judge(path, judge_model=args.judge, samples=args.samples)
+    rows = judge_mod.run_judge(
+        path, judge_model=args.judge, samples=args.samples, case_ids=tuple(args.case or ())
+    )
     print(f"{len(rows)} judge verdict(s) written to {os.path.join(path, 'judge.jsonl')}")
     return 0
 
@@ -488,6 +490,7 @@ def main(argv=None) -> int:
     j.add_argument("run")
     j.add_argument("--judge", default="local")
     j.add_argument("--samples", type=int, default=5)
+    j.add_argument("--case", nargs="*", help="restrict judging to specific case ids")
     j.set_defaults(func=cmd_judge)
 
     lb = sub.add_parser("label", help="blinded human labeling")

@@ -80,7 +80,13 @@ def judge_one(
     decoding: model_mod.Decoding | None = None,
 ) -> dict:
     """Ask one question m times. Returns the distribution, not a verdict."""
-    decoding = decoding or model_mod.Decoding(temperature=0.7, max_tokens=200)
+    # 1024 rather than the couple of hundred a YES/NO plus one sentence needs.
+    # On a reasoning model the reasoning is generated first and stripped from the
+    # content field, so a budget sized for the visible answer gets spent before
+    # the answer starts and every sample comes back unparseable. The verdict-first
+    # instruction still does its job: what arrives in content begins with YES or
+    # NO, because the deliberation was never in content to begin with.
+    decoding = decoding or model_mod.Decoding(temperature=0.7, max_tokens=1024)
     prompt = render(
         template,
         source=source,
@@ -108,8 +114,19 @@ def judge_one(
     }
 
 
-def run_judge(record_dir: str, judge_model: str = "local", samples: int = 5, quiet: bool = False):
-    """Judge every judge-routed output in a run, appending to judge.jsonl."""
+def run_judge(
+    record_dir: str,
+    judge_model: str = "local",
+    samples: int = 5,
+    quiet: bool = False,
+    case_ids: tuple[str, ...] = (),
+):
+    """Judge the judge-routed outputs in a run, appending to judge.jsonl.
+
+    Resumable by construction: every (case, rerun, question) already present in
+    judge.jsonl is skipped, so an interrupted pass continues where it stopped
+    and a narrowed pass can be widened later without redoing work.
+    """
     from harness.cases import load_all
 
     record = records.load_record(record_dir)
@@ -128,6 +145,8 @@ def run_judge(record_dir: str, judge_model: str = "local", samples: int = 5, qui
     for result in record["results"]:
         case = cases.get(result["case_id"])
         if case is None or not case.judge:
+            continue
+        if case_ids and case.id not in case_ids:
             continue
         answer_path = os.path.join(
             record_dir, "outputs", case.id, f"r{result['rerun']}.txt"
