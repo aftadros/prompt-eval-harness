@@ -15,6 +15,7 @@ REPO="$(cd "$(dirname "$0")/.." && pwd)"
 PY="$REPO/.venv/bin/python"
 N="${1:-5}"
 CONC="${C1_CONCURRENCY:-6}"
+JCONC="${C1_JUDGE_CONCURRENCY:-3}"
 # Smoke-test hooks only: e.g. C1_RUN_EXTRA="--case ord-streaming-cost" C1_JUDGE_EXTRA="--samples 1"
 RUN_EXTRA="${C1_RUN_EXTRA:-}"
 JUDGE_EXTRA="${C1_JUDGE_EXTRA:-}"
@@ -43,10 +44,10 @@ say "arm A: prompts/v1.txt, n=$N, concurrency=$CONC"
 rcA=$?; cat $T/armA; RUN_A="$(record_of $T/armA)"
 [ $rcA -eq 0 ] && [ -n "$RUN_A" ] || { say "arm A failed (rc=$rcA); arm B is at $RUN_B; stopping"; exit 1; }
 
-say "judging both arms concurrently (judge is sequential per process; two processes share the server)"
-"$PY" -m harness judge "$RUN_A" $JUDGE_EXTRA > $T/judgeA 2>&1 &
+say "judging both arms concurrently, $JCONC items in flight per arm (6 on the server, the measured knee)"
+"$PY" -m harness judge "$RUN_A" --concurrency "$JCONC" $JUDGE_EXTRA > $T/judgeA 2>&1 &
 pa=$!
-"$PY" -m harness judge "$RUN_B" $JUDGE_EXTRA > $T/judgeB 2>&1 &
+"$PY" -m harness judge "$RUN_B" --concurrency "$JCONC" $JUDGE_EXTRA > $T/judgeB 2>&1 &
 pb=$!
 wait $pa; rja=$?; wait $pb; rjb=$?
 tail -3 $T/judgeA $T/judgeB

@@ -99,3 +99,84 @@ def test_unjudged_cases_are_excluded_from_the_judge_comparison(tmp_path):
     st = compare_stats(a, b, build_flips(a, b))
     assert st["judge"]["n"] == 1
     assert [c["case_id"] for c in st["judge"]["cases"]] == ["kh-x"]
+
+
+class _ScrambledFakeJudge:
+    """Deterministic verdicts, nondeterministic finish order.
+
+    Each call answers YES or NO from a hash of the prompt, so the verdict for a
+    given (output, question) never depends on timing, while a small hash-derived
+    sleep makes later items routinely finish before earlier ones under a pool.
+    """
+
+    model = "fake-judge"
+
+    def __init__(self):
+        import threading
+        self.calls = 0
+        self._lock = threading.Lock()
+
+    def preflight(self):
+        return self.model
+
+    def complete(self, system, user, decoding):
+        import hashlib
+        import time
+
+        from harness.model import Completion
+        h = hashlib.sha256(user.encode()).hexdigest()
+        time.sleep((int(h[:2], 16) % 7) / 1000)
+        with self._lock:
+            self.calls += 1
+        text = "YES because." if int(h[-1], 16) % 2 else "NO because."
+        return Completion(text=text, model_reported=self.model, usage=None, raw={})
+
+
+def _judge_run(tmp_path, name, case_id="ord-streaming-cost", n=4):
+    """A run record holding outputs for one judge-routed case."""
+    import json
+    d = tmp_path / name
+    (d / "outputs" / case_id).mkdir(parents=True)
+    (d / "manifest.json").write_text(json.dumps({"n_cases": 1, "n_reruns": n}))
+    with open(d / "results.jsonl", "w") as fh:
+        for r in range(n):
+            (d / "outputs" / case_id / f"r{r}.txt").write_text(f"answer number {r}\n")
+            fh.write(json.dumps({"case_id": case_id, "bucket": "ordinary", "rerun": r,
+                                 "output_sha": f"sha256:{case_id}{r}", "all_passed": True}) + "\n")
+    return str(d)
+
+
+def test_judge_concurrency_is_wall_clock_only(tmp_path, monkeypatch):
+    """judge.jsonl at concurrency 4 is byte-identical to concurrency 1: same rows,
+    same order, however the pool happened to finish them."""
+    import os
+    fake = _ScrambledFakeJudge()
+    monkeypatch.setattr(judge_mod.model_mod, "build", lambda name, config=None: fake)
+
+    serial = _judge_run(tmp_path, "serial")
+    judge_mod.run_judge(serial, samples=3, quiet=True, concurrency=1)
+    pooled = _judge_run(tmp_path, "pooled")
+    judge_mod.run_judge(pooled, samples=3, quiet=True, concurrency=4)
+
+    a = open(os.path.join(serial, "judge.jsonl")).read()
+    b = open(os.path.join(pooled, "judge.jsonl")).read()
+    assert a == b
+    assert a.count("\n") == 4 * 2  # four reruns, two judge questions on this case
+    # Both verdicts appear, so the equality above is not an artefact of a
+    # constant fake.
+    assert '"verdict":"pass"' in a and '"verdict":"fail"' in a
+
+
+def test_judge_resumes_under_concurrency(tmp_path, monkeypatch):
+    """A second pass skips every (case, rerun, question) already on disk, at any
+    concurrency, and makes no model calls for them."""
+    import os
+    fake = _ScrambledFakeJudge()
+    monkeypatch.setattr(judge_mod.model_mod, "build", lambda name, config=None: fake)
+    run = _judge_run(tmp_path, "resume")
+    first = judge_mod.run_judge(run, samples=2, quiet=True, concurrency=3)
+    calls_after_first = fake.calls
+    second = judge_mod.run_judge(run, samples=2, quiet=True, concurrency=3)
+    assert len(first) == 8 and second == []
+    assert fake.calls == calls_after_first
+    assert open(os.path.join(run, "judge.jsonl")).read().count("\n") == 8

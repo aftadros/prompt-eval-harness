@@ -269,7 +269,11 @@ def cmd_compare(args) -> int:
 def cmd_judge(args) -> int:
     path = records.resolve(args.run)
     rows = judge_mod.run_judge(
-        path, judge_model=args.judge, samples=args.samples, case_ids=tuple(args.case or ())
+        path,
+        judge_model=args.judge,
+        samples=args.samples,
+        case_ids=tuple(args.case or ()),
+        concurrency=args.concurrency,
     )
     print(f"{len(rows)} judge verdict(s) written to {os.path.join(path, 'judge.jsonl')}")
     return 0
@@ -494,6 +498,8 @@ def main(argv=None) -> int:
     j.add_argument("--judge", default="local")
     j.add_argument("--samples", type=int, default=5)
     j.add_argument("--case", nargs="*", help="restrict judging to specific case ids")
+    j.add_argument("--concurrency", type=int, default=1,
+                   help="items judged in parallel; rows are still written in a fixed order")
     j.set_defaults(func=cmd_judge)
 
     lb = sub.add_parser("label", help="blinded human labeling")

@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import os
 import re
+from concurrent import futures
 
 import yaml
 
@@ -120,12 +121,21 @@ def run_judge(
     samples: int = 5,
     quiet: bool = False,
     case_ids: tuple[str, ...] = (),
+    concurrency: int = 1,
 ):
     """Judge the judge-routed outputs in a run, appending to judge.jsonl.
 
     Resumable by construction: every (case, rerun, question) already present in
     judge.jsonl is skipped, so an interrupted pass continues where it stopped
     and a narrowed pass can be widened later without redoing work.
+
+    `concurrency` is wall-clock only. Items are judged in parallel but rows are
+    appended in case, rerun, question order, so judge.jsonl at concurrency 6 is
+    byte-identical to judge.jsonl at concurrency 1 given the same verdicts. The
+    five samples inside one item stay sequential; the parallelism is across
+    items. The cost is that a crash loses at most the in-flight items that
+    finished ahead of an earlier one still running, which the resumable skip
+    recovers on the next pass.
     """
     from harness.cases import load_all
 
@@ -141,48 +151,66 @@ def run_judge(
         (r["case_id"], r["rerun"], r["question_id"]) for r in records.read_jsonl(out_path)
     }
 
-    rows = []
+    items = []
     for result in record["results"]:
         case = cases.get(result["case_id"])
         if case is None or not case.judge:
             continue
         if case_ids and case.id not in case_ids:
             continue
+        for qid in case.judge:
+            if (case.id, result["rerun"], qid) in already:
+                continue
+            items.append((case, result, qid))
+
+    def do(item):
+        case, result, qid = item
         answer_path = os.path.join(
             record_dir, "outputs", case.id, f"r{result['rerun']}.txt"
         )
         answer = open(answer_path, encoding="utf-8").read()
-        for qid in case.judge:
-            if (case.id, result["rerun"], qid) in already:
-                continue
-            verdict = judge_one(
-                mdl,
-                template,
-                questions[qid],
-                source=case.context_text(),
-                question_input=case.input,
-                answer=answer,
-                samples=samples,
-            )
-            row = {
-                "case_id": case.id,
-                "bucket": case.bucket,
-                "rerun": result["rerun"],
-                "output_sha": result["output_sha"],
-                "judge_model": mdl.model,
-                "judge_prompt_sha": shas["prompt_sha"],
-                "judge_questions_sha": shas["questions_sha"],
-                "pair_order": None,
-                "swap_twin_verdict": None,
-                **verdict,
-            }
+        verdict = judge_one(
+            mdl,
+            template,
+            questions[qid],
+            source=case.context_text(),
+            question_input=case.input,
+            answer=answer,
+            samples=samples,
+        )
+        return {
+            "case_id": case.id,
+            "bucket": case.bucket,
+            "rerun": result["rerun"],
+            "output_sha": result["output_sha"],
+            "judge_model": mdl.model,
+            "judge_prompt_sha": shas["prompt_sha"],
+            "judge_questions_sha": shas["questions_sha"],
+            "pair_order": None,
+            "swap_twin_verdict": None,
+            **verdict,
+        }
+
+    if concurrency > 1:
+        pool = futures.ThreadPoolExecutor(max_workers=concurrency)
+        produced = pool.map(do, items)
+    else:
+        pool = None
+        produced = map(do, items)
+
+    rows = []
+    try:
+        for row in produced:
             records.append_jsonl(out_path, row)
             rows.append(row)
             if not quiet:
                 print(
-                    f"  judged {case.id} r{result['rerun']} {qid}: "
-                    f"{verdict['verdict']} (p={verdict['p_pass']:.2f})"
+                    f"  judged {row['case_id']} r{row['rerun']} {row['question_id']}: "
+                    f"{row['verdict']} (p={row['p_pass']:.2f})"
                 )
+    finally:
+        if pool is not None:
+            pool.shutdown(wait=True)
     return rows
 
 
