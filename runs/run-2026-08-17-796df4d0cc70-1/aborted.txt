@@ -4,10 +4,14 @@ The second full 50-case attempt with prompts/v1.txt, started 2026-08-18
 03:14 UTC, with the timeout fix applied in the working tree but not yet
 committed (the manifest's harness_git_sha reads c0f9c24; c60db1a, two
 minutes later, is where the fix landed). Six outputs arrived and are kept
-here.
-It was killed by hand a few minutes in: a process filter meant to stop a
-contending smoke test was too broad and took this batch with it, and the
-collection restarted on a 15-case subset (run-2026-08-17-f335dd2579bc-1).
+here. Stopped on purpose three minutes in: throughput under batch was half
+what had been measured, which made the full 50 x 2 x 5 collection an
+overnight job rather than an evening one, so the collection moved to a
+15-case stratified subset (run-2026-08-17-f335dd2579bc-1, itself partial;
+the first complete v1 subset run is run-2026-08-17-f43ccb678ed0-1).
 Outputs written the moment they arrive is what left the six behind. Kept
-for the same reason as its sibling: records are append-only, and the
-failure is part of the record.
+because records are append-only and the failure is part of the record.
+
+Corrected 2026-08-19: an earlier version of this note blamed a too-broad
+process filter. That kill happened later the same night to a different
+run; this one was a deliberate stop, per the session transcript.

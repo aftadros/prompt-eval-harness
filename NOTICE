@@ -1,0 +1,10 @@
+Code in this repository (harness/, checks/, tests/, scripts/, judge/ prompt
+and question files, cases/) is MIT licensed; see LICENSE.
+
+Not covered by the MIT grant:
+
+- corpus/ and fixtures/: excerpts of the author's published posts at
+  anthonytadros.me, included here as test fixtures only. All rights reserved.
+- runs/**/outputs/: model-generated text produced from those excerpts. Kept as
+  the record of each run, reproducible from the recipe in the run's manifest,
+  and not offered for reuse.

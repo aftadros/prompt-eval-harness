@@ -2,6 +2,8 @@
 
 Pre-registered: first committed 2026-07-30 (`c0f9c24`), before the first model call against the harness. `git log -p -- design/EXPERIMENTS.md` shows everything that changed after.
 
+Deviation, recorded 2026-08-19: every collection run so far is N=5 reruns per case, not the N=10 pinned for C1 below. The served model is a dense 27B on one Mac and a 50 x 2 x 10 grid did not fit a night; the first 50-case batch (2026-08-19 into 08-20) runs at N=5 so that both arms land on the same build in one sitting. No E-series claim is made off N=5, and C1 at N=10 is still owed. Every record's own `manifest.json` carries its `n_reruns`, so the number to trust is there, not here.
+
 Thesis: the practitioner heuristics published in *Evals before vibes* and *How to tell
 if a prompt change actually helped*, put under statistical test on the author's own
 corpus. Confirmations and refutations are equally publishable; the refutations are the

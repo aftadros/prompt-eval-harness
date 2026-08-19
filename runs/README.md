@@ -44,3 +44,20 @@ A partial record, one whose run died mid-batch, has `manifest.json` and some
 `outputs/` but no `summary.json`. Outputs are written the moment each generation
 arrives, so a crash costs one call rather than the batch, at the price of leaving
 these behind. They are not runs and nothing will compare against them.
+
+Three partial records from the first collection night (2026-08-18) are kept with
+an `aborted.txt` naming what stopped each one. Deleting them would be tidier
+and less true.
+
+## Records that predate a fix
+
+The verdict paragraph in a `cmp` record is templated code, and the template has
+changed. `cmp-2026-08-18-54c5ec446d1c-1` prints "about nan" where the
+detectability limit belongs, from before the report guarded that value; its
+`-2` twin over the same two runs was written after the fix. Comparisons written
+before 2026-08-19 can also carry the sentence "every one of the N discordant
+pairs went the same way" on a mixed split, which was wrong; `compare.json`
+carries `harness_git_sha` from that date on so the code behind a verdict is
+part of the record, and `report.md` recomputes the verdict from the stored
+numbers on regeneration. Old `stats.json` files are left as written.
+
