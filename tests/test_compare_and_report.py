@@ -200,3 +200,29 @@ def test_report_never_prints_nan(tmp_path):
     assert not re.search(r"\bnan\b", md, re.IGNORECASE), "NaN leaked into the report"
     assert "smallest two-sided p" in md
     assert "no effect is detectable at all" in md
+
+
+def test_report_regenerates_a_cmp_record(tmp_path, monkeypatch):
+    """`harness report <cmp-dir>` used to call load_record on the cmp directory
+    first and die on its missing manifest.json. A cmp record is recognised by
+    compare.json. Regeneration is derived from the stored flips and stats, so
+    the rewritten report is byte-identical to the one compare wrote."""
+    from harness.__main__ import cmd_compare, cmd_report
+
+    a = make_record(tmp_path, "run-a", {"c1": ("ordinary", 5)})
+    b = make_record(tmp_path, "run-b", {"c1": ("ordinary", 5)}, "prompts/v2.txt")
+    monkeypatch.setattr(records, "RUNS_DIR", str(tmp_path))
+
+    class CmpArgs:
+        run_a, run_b = a["path"], b["path"]
+
+    assert cmd_compare(CmpArgs()) == 0
+    cmp_dir = next(d for d in tmp_path.iterdir() if d.name.startswith("cmp-"))
+    first = (cmp_dir / "report.md").read_text()
+    (cmp_dir / "report.md").unlink()
+
+    class RepArgs:
+        record = str(cmp_dir)
+
+    assert cmd_report(RepArgs()) == 0
+    assert (cmp_dir / "report.md").read_text() == first

@@ -416,8 +416,11 @@ def cmd_judge_audit(args) -> int:
 
 def cmd_report(args) -> int:
     path = records.resolve(args.record)
-    rec = records.load_record(path)
     if os.path.exists(os.path.join(path, "compare.json")):
+        # A cmp record has compare.json and no manifest.json, so it cannot go
+        # through load_record. Everything report.md says comes from the stored
+        # flips.jsonl and stats.json; judge rows added to a run after the
+        # comparison belong in a new cmp record, not a rewritten one.
         info = json.load(open(os.path.join(path, "compare.json")))
         rec_a = records.load_record(records.resolve(info["run_a"]))
         rec_b = records.load_record(records.resolve(info["run_b"]))
@@ -425,7 +428,7 @@ def cmd_report(args) -> int:
         st = json.load(open(os.path.join(path, "stats.json")))
         md = report.compare_report(rec_a, rec_b, flips, st)
     else:
-        md = report.run_report(rec)
+        md = report.run_report(records.load_record(path))
     records.write_report(os.path.join(path, "report.md"), md)
     print(report.to_plain(md))
     return 0
