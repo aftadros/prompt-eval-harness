@@ -44,7 +44,10 @@ _FALLBACK_RE = re.compile(
 
 
 def _first_sentence(text: str) -> str:
-    stripped = text.strip()
+    # The served model writes typographic apostrophes; the fallback patterns are
+    # written with the straight one. Normalise before matching so "don’t" and
+    # "don't" are the same refusal.
+    stripped = text.strip().replace("\u2019", "'").replace("\u2018", "'")
     parts = re.split(r"(?<=[.!?])\s", stripped, maxsplit=1)
     return parts[0] if parts else stripped
 

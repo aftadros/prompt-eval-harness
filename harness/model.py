@@ -2,9 +2,10 @@
 
 Two HTTP endpoints, one Protocol, no vendor SDKs. Both providers here are a
 single POST with a JSON body; importing two heavyweight packages to make two POST
-requests would contradict the one architectural rule this repo has. The full
-response body is stored with every run anyway, so the SDKs' main convenience,
-typed access to fields, buys nothing that `raw["choices"][0]` does not.
+requests would contradict the one architectural rule this repo has. The fields
+a run keeps (text, the server-reported model id, usage) are three key lookups
+on the response body, so the SDKs' main convenience, typed access to fields,
+buys nothing that `raw["choices"][0]` does not.
 
 The adapters are deliberately dumb. Text in, text out. No retry policy beyond one
 attempt on a connection error, no streaming, no token accounting beyond what the
@@ -15,6 +16,7 @@ another variable to control for.
 
 from __future__ import annotations
 
+import http.client
 import json
 import os
 import time
@@ -115,11 +117,21 @@ def _post(url: str, payload: dict, headers: dict, timeout: int = DEFAULT_TIMEOUT
             detail = exc.read().decode("utf-8", "replace")[:500]
             if exc.code == 429 or exc.code >= 500:
                 last = exc
-                time.sleep(2**attempt)
-                continue
-            raise ModelError(f"{url} returned {exc.code}: {detail}") from exc
-        except (TimeoutError, urllib.error.URLError, ConnectionError) as exc:
+            else:
+                raise ModelError(f"{url} returned {exc.code}: {detail}") from exc
+        except (
+            TimeoutError,
+            urllib.error.URLError,
+            # OSError covers ConnectionError, ssl.SSLError and socket errors; the
+            # HTTPException branch is IncompleteRead and RemoteDisconnected when
+            # the server drops mid-body, which a local server reloading a model
+            # does; a non-JSON 200 (a proxy page) is the same transient shape.
+            OSError,
+            http.client.HTTPException,
+            json.JSONDecodeError,
+        ) as exc:
             last = exc
+        if attempt < MAX_ATTEMPTS - 1:
             time.sleep(2**attempt)
     raise ModelError(
         f"{url} failed after {MAX_ATTEMPTS} attempts (timeout={timeout}s): {last}"

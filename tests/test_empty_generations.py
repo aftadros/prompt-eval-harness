@@ -111,3 +111,57 @@ def test_compare_excludes_unpairable_cases_and_names_them(tmp_path):
     md = report.compare_report(a, b, flips, st)
     assert "excluded as unpairable" in md
     assert "c2" in md
+
+
+class _FakeSubject:
+    """Answers every case except one with a grounded-looking sentence; that one
+    case gets an empty body every time, which is what an out-of-budget reasoning
+    model hands back."""
+
+    model = "fake-subject"
+
+    def __init__(self, empty_question):
+        self.empty_question = empty_question
+
+    def preflight(self):
+        return self.model
+
+    def complete(self, system, user, decoding):
+        text = "" if self.empty_question in user else "The sources do not cover this. [doc-1]"
+        return model_mod.Completion(text=text, model_reported=self.model, usage=None, raw={})
+
+
+def test_run_writes_empty_rows_as_missing_data_at_any_concurrency(tmp_path, monkeypatch):
+    """Drives runner.run() end to end with a fake model: the empty case's rows
+    carry empty=true and all_passed=null, its summary n is 0 (nodata), and the
+    record is byte-identical at concurrency 1 and 3. Nothing exercised run()
+    itself before this."""
+    import json
+    import os
+    from harness import records
+    from harness.runner import RunConfig, run
+
+    cases = load_all()[:3]
+    empty_id = cases[1].id
+    monkeypatch.setattr(model_mod, "build",
+                        lambda name, config=None: _FakeSubject(cases[1].input))
+    monkeypatch.setattr(model_mod, "load_config",
+                        lambda: {"models": {"local": {"kind": "openai_compat", "model": "fake-subject",
+                                                      "base_url": "http://x"}}})
+    monkeypatch.setattr(records, "RUNS_DIR", str(tmp_path))
+
+    def one(conc):
+        d = run(cases, RunConfig(prompt_path="prompts/v1.txt", n_reruns=2, concurrency=conc), quiet=True)
+        rows = [json.loads(l) for l in open(os.path.join(d, "results.jsonl"))]
+        summary = json.load(open(os.path.join(d, "summary.json")))
+        return rows, summary
+
+    rows1, sum1 = one(1)
+    rows3, sum3 = one(3)
+    assert rows1 == rows3 and sum1 == sum3
+    empties = [r for r in rows1 if r["case_id"] == empty_id]
+    assert empties and all(r["empty"] and r["all_passed"] is None for r in empties)
+    assert sum1[empty_id]["conjunction"]["n"] == 0 and sum1[empty_id]["empty"] == 2
+    assert case_state(sum1[empty_id]) == "nodata"
+    others = [r for r in rows1 if r["case_id"] != empty_id]
+    assert others and all(not r["empty"] for r in others)

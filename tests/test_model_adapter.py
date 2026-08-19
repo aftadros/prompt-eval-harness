@@ -122,3 +122,36 @@ def test_decoding_is_recorded_even_when_the_seed_is_unused():
     that ignored its seed looks identical to one that did not."""
     d = model_mod.Decoding(temperature=0.7, top_p=0.95, max_tokens=1024, seed=42)
     assert d.as_dict()["seed"] == 42
+
+
+@pytest.mark.parametrize("exc", [
+    lambda: __import__("http.client").client.IncompleteRead(b"partial"),
+    lambda: __import__("ssl").SSLEOFError("EOF occurred"),
+    lambda: json.JSONDecodeError("not json", "<html>", 0),
+    lambda: ConnectionResetError("reset"),
+])
+def test_post_retries_the_other_mid_body_failures(exc):
+    """A server dropping mid-body (IncompleteRead), a TLS EOF, and a non-JSON
+    200 from a proxy are the same one-call-kills-the-batch shape as the timeout
+    bug. All four used to escape the transient clause on the first attempt."""
+    calls = {"n": 0}
+
+    def urlopen(req, timeout=None):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            raise exc()
+        return fake_response({"ok": True})
+
+    with mock.patch("urllib.request.urlopen", urlopen), mock.patch("time.sleep"):
+        assert model_mod._post("http://x/y", {}, {}) == {"ok": True}
+    assert calls["n"] == 2
+
+
+def test_post_does_not_sleep_after_the_last_attempt():
+    def urlopen(req, timeout=None):
+        raise TimeoutError("timed out")
+
+    with mock.patch("urllib.request.urlopen", urlopen), mock.patch("time.sleep") as sleep:
+        with pytest.raises(model_mod.ModelError):
+            model_mod._post("http://x/y", {}, {})
+    assert sleep.call_count == model_mod.MAX_ATTEMPTS - 1

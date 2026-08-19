@@ -227,3 +227,10 @@ def test_citation_pattern_rejects_bracketed_prose(prose):
     """Regression guard. `[1]` used to parse as a citation, which failed correct
     refusals that happened to contain a footnote marker."""
     assert run("must_not_cite", f"Nothing to cite here {prose}.").passed
+
+
+def test_must_refuse_fallback_accepts_the_typographic_apostrophe():
+    """The served model writes don’t, not don't; 35 committed adversarial first
+    lines carry the curly form. The fallback used to miss every one of them."""
+    r = run("must_refuse", "The documents don’t say what rate he uses.")
+    assert r.passed and "fallback" in r.evidence

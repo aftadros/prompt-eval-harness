@@ -111,3 +111,26 @@ def test_partial_run_directory_is_identifiable(tmp_path):
     rec = records.load_record(str(d))
     assert rec["summary"] == {}
     assert rec["results"] == []
+
+
+def test_resolve_bare_names_stay_inside_runs(tmp_path):
+    """A bare name is one component under runs/. '../x' used to resolve to
+    runs/../x; a separator or a parent reference is a path, and a path that
+    does not exist is not found."""
+    import pytest
+    (tmp_path / "run-x").mkdir()
+    assert records.resolve("run-x", runs_dir=str(tmp_path)) == str(tmp_path / "run-x")
+    with pytest.raises(FileNotFoundError):
+        records.resolve("../run-x", runs_dir=str(tmp_path / "sub"))
+
+
+def test_new_record_dir_allocation_is_atomic_under_a_race(tmp_path):
+    """Two allocators for the same manifest in the same second both see seq 1
+    absent; mkdir is the claim, so they get seq 1 and 2 instead of one of them
+    dying on FileExistsError."""
+    from concurrent.futures import ThreadPoolExecutor
+    manifest = {"k": "v"}
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        paths = list(pool.map(lambda _: records.new_record_dir("run", manifest, str(tmp_path)),
+                              range(8)))
+    assert len(set(paths)) == 8

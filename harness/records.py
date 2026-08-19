@@ -144,10 +144,13 @@ def new_record_dir(prefix: str, manifest: dict, runs_dir: str | None = None) -> 
     while True:
         name = f"{prefix}-{stamp}-{sha12}-{seq}"
         path = os.path.join(runs_dir, name)
-        if not os.path.exists(path):
-            os.makedirs(path)
+        try:
+            # mkdir is the atomic claim. Two allocators racing for the same seq
+            # both saw it absent; exactly one creates it and the other moves on.
+            os.mkdir(path)
             return path
-        seq += 1
+        except FileExistsError:
+            seq += 1
 
 
 def write_json(path: str, obj) -> None:
@@ -214,8 +217,13 @@ def resolve(path_or_name: str, runs_dir: str | None = None) -> str:
     """Accept a bare record name or a path."""
     runs_dir = runs_dir or RUNS_DIR
     if os.path.isdir(path_or_name):
-        return os.path.abspath(path_or_name)
-    candidate = os.path.join(runs_dir, path_or_name)
+        return os.path.normpath(os.path.abspath(path_or_name))
+    # A bare name is one path component inside runs/. Anything with a
+    # separator or a parent reference is a path, and a path that does not
+    # exist is simply not found rather than joined under runs/.
+    if os.sep in path_or_name or path_or_name in ("", ".", ".."):
+        raise FileNotFoundError(f"no record found at {path_or_name!r}")
+    candidate = os.path.normpath(os.path.join(runs_dir, path_or_name))
     if os.path.isdir(candidate):
         return candidate
     raise FileNotFoundError(f"no record found at {path_or_name!r}")

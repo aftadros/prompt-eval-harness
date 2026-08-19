@@ -55,7 +55,7 @@ class RunConfig:
     #: the request count suggests, because per-request latency grows as the batch
     #: does. Measured on one local 27B model: one call at a time ran 1.5 calls a
     #: minute, six at a time ran 3.3, and twelve at a time pushed per-request
-    #: latency past the adapter's own 300-second timeout, so the run failed rather
+    #: latency past the adapter's timeout (model.DEFAULT_TIMEOUT), so the run failed rather
     #: than merely slowed. Measure your own rig instead of trusting any of those
     #: numbers, and leave this at 1 against a shared endpoint, where the capacity
     #: is somebody else's.
