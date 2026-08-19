@@ -97,7 +97,12 @@ def judge_one(
     )
     raw_samples, rationales = [], []
     for _ in range(samples):
-        completion = mdl.complete("You are a careful grader.", prompt, decoding)
+        # An empty reply is the judge running out of budget, not a verdict, so
+        # it is retried the way the runner retries an empty generation. On the
+        # Aug 18 records every unparseable sample was an empty reply.
+        completion = model_mod.complete_with_content(
+            mdl, "You are a careful grader.", prompt, decoding
+        )
         v = parse_verdict(completion.text)
         raw_samples.append(v or "UNPARSEABLE")
         rationales.append(completion.text.strip()[:300])
@@ -105,12 +110,22 @@ def judge_one(
     parseable = [s for s in raw_samples if s in ("YES", "NO")]
     passes = sum(1 for s in parseable if s == want)
     p_pass = passes / len(parseable) if parseable else 0.0
+    # A verdict needs a majority of the samples to have been readable. One
+    # parseable sample out of five used to decide the row and read as unanimous
+    # (p_pass 1.0, no split); five unparseable read as a fail. Neither is a
+    # judgment, and a row below the floor is recorded as such and kept out of
+    # the per-case judge state rather than rounded to pass or fail.
+    floor = (samples + 1) // 2
+    if len(parseable) < floor:
+        verdict = "unparseable"
+    else:
+        verdict = "pass" if p_pass > 0.5 else "fail"
     return {
         "question_id": question["id"],
         "samples": raw_samples,
         "n_unparseable": len(raw_samples) - len(parseable),
         "p_pass": p_pass,
-        "verdict": "pass" if p_pass > 0.5 else "fail",
+        "verdict": verdict,
         "rationale_first": rationales[0] if rationales else "",
     }
 
@@ -157,6 +172,12 @@ def run_judge(
         if case is None or not case.judge:
             continue
         if case_ids and case.id not in case_ids:
+            continue
+        if result.get("empty"):
+            # Missing data on the deterministic side stays missing here. A judge
+            # verdict on an empty answer is vacuous on "grounded" and a fail on
+            # "answers the question", and either would put a case into flaky on
+            # the strength of a rerun that produced nothing.
             continue
         for qid in case.judge:
             if (case.id, result["rerun"], qid) in already:
@@ -328,14 +349,19 @@ def outcomes(record: dict) -> dict:
         slot = per.setdefault(row["case_id"], {})
         q = slot.setdefault(
             row["question_id"],
-            {"passes": 0, "n": 0, "p_sum": 0.0, "split": 0, "unparseable": 0},
+            {"passes": 0, "n": 0, "p_sum": 0.0, "split": 0, "unparseable": 0,
+             "unparseable_rows": 0},
         )
+        q["unparseable"] += row.get("n_unparseable", 0)
+        if row["verdict"] == "unparseable":
+            # Below the readable-majority floor: counted, never scored.
+            q["unparseable_rows"] += 1
+            continue
         q["n"] += 1
         q["passes"] += 1 if row["verdict"] == "pass" else 0
         q["p_sum"] += row["p_pass"]
         if 0.0 < row["p_pass"] < 1.0:
             q["split"] += 1
-        q["unparseable"] += row.get("n_unparseable", 0)
     for case in per.values():
         for q in case.values():
             q["mean_p_pass"] = q["p_sum"] / q["n"] if q["n"] else 0.0

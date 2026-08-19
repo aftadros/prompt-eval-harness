@@ -180,3 +180,84 @@ def test_judge_resumes_under_concurrency(tmp_path, monkeypatch):
     assert len(first) == 8 and second == []
     assert fake.calls == calls_after_first
     assert open(os.path.join(run, "judge.jsonl")).read().count("\n") == 8
+
+
+class _ScriptedJudge:
+    """Returns the given texts in order, cycling; counts calls."""
+
+    model = "scripted-judge"
+
+    def __init__(self, texts):
+        self.texts, self.i, self.calls = texts, 0, 0
+
+    def preflight(self):
+        return self.model
+
+    def complete(self, system, user, decoding):
+        from harness.model import Completion
+        t = self.texts[self.i % len(self.texts)]
+        self.i += 1
+        self.calls += 1
+        return Completion(text=t, model_reported=self.model, usage=None, raw={})
+
+
+def _q(pass_when="no"):
+    return {"id": "grounded", "question": "q?", "pass_when": pass_when}
+
+
+def test_one_readable_sample_does_not_decide_a_verdict():
+    """4 unparseable + 1 NO used to score pass, p_pass 1.0, no split: it read as
+    unanimous. Below a readable majority the row is 'unparseable', and
+    outcomes() counts it without scoring it."""
+    j = _ScriptedJudge(["garbage", "garbage", "NO.", "garbage", "garbage"])
+    v = judge_mod.judge_one(j, "{source}{question_input}{answer}{question}", _q(),
+                            source="s", question_input="i", answer="a", samples=5)
+    assert v["verdict"] == "unparseable" and v["n_unparseable"] == 4
+    per = judge_mod.outcomes({"judge": [{"case_id": "c", "question_id": "grounded",
+                                          "verdict": "unparseable", "p_pass": 1.0,
+                                          "n_unparseable": 4}]})
+    assert per["c"]["grounded"]["n"] == 0 and per["c"]["grounded"]["unparseable_rows"] == 1
+    assert judge_mod.case_judge_state(per["c"]) == "nodata"
+
+
+def test_all_unparseable_is_not_a_fail():
+    j = _ScriptedJudge(["", "", "", "", ""])
+    v = judge_mod.judge_one(j, "{source}{question_input}{answer}{question}", _q(),
+                            source="s", question_input="i", answer="a", samples=5)
+    assert v["verdict"] == "unparseable"
+
+
+def test_three_readable_of_five_still_scores():
+    j = _ScriptedJudge(["NO.", "NO.", "garbage", "NO.", "garbage"])
+    v = judge_mod.judge_one(j, "{source}{question_input}{answer}{question}", _q(),
+                            source="s", question_input="i", answer="a", samples=5)
+    assert v["verdict"] == "pass" and v["n_unparseable"] == 2
+
+
+def test_empty_judge_replies_are_retried():
+    """An empty reply is the judge out of budget, not a verdict; it gets the same
+    bounded retry the runner gives an empty generation."""
+    from harness import model as model_mod
+    j = _ScriptedJudge(["", "NO."])
+    v = judge_mod.judge_one(j, "{source}{question_input}{answer}{question}", _q(),
+                            source="s", question_input="i", answer="a", samples=1)
+    assert v["samples"] == ["NO"] and j.calls == 2
+    assert j.calls <= model_mod.MAX_ATTEMPTS * 1
+
+
+def test_run_judge_skips_empty_answers(tmp_path, monkeypatch):
+    """A rerun the runner recorded as empty carries all_passed None on the
+    deterministic side; the judge must not manufacture a verdict for it."""
+    import json
+    import os
+    fake = _ScrambledFakeJudge()
+    monkeypatch.setattr(judge_mod.model_mod, "build", lambda name, config=None: fake)
+    run = _judge_run(tmp_path, "empties", n=3)
+    rows = [json.loads(l) for l in open(os.path.join(run, "results.jsonl"))]
+    rows[1]["empty"] = True
+    rows[1]["all_passed"] = None
+    with open(os.path.join(run, "results.jsonl"), "w") as fh:
+        for r in rows:
+            fh.write(json.dumps(r) + "\n")
+    written = judge_mod.run_judge(run, samples=1, quiet=True)
+    assert {r["rerun"] for r in written} == {0, 2}
