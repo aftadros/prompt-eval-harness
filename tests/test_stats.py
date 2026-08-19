@@ -361,7 +361,8 @@ def test_every_public_stats_function_is_referenced_by_a_test():
     suite = "\n".join(
         p.read_text() for p in pathlib.Path(__file__).parent.glob("test_*.py")
     )
-    missing = sorted(n for n in public if f"stats.{n}" not in suite)
+    # A call, not a mention: `stats.name(` so a comment cannot satisfy the guard.
+    missing = sorted(n for n in public if f"stats.{n}(" not in suite)
     assert not missing, f"stats.py functions with no test: {missing}"
 
 
@@ -403,3 +404,39 @@ def test_the_floor_equals_a_unanimous_exact_test():
 
 def test_no_discordant_pairs_has_no_floor_below_one():
     assert stats.min_achievable_p(0) == 1.0
+
+
+def test_aa_floor_estimates_a_twin_run_at_the_arms_own_n():
+    """A half-split compares N//2 reruns against N//2 while the A/B it stands in
+    for compares N against N. Unscaled, the split floor runs hot by sqrt(N/h):
+    the reviewer measured 1.67x at N=5. Scaled by sqrt(h/N), the floor's 95th
+    percentile has to sit on the 95th percentile of |delta| between two
+    independent full-N arms drawn from the same per-case rates. Simulated here
+    with a fixed seed; the tolerance is loose because both sides are sampled."""
+    import random
+    rng = random.Random(7)
+    n_cases, n_reruns = 50, 5
+    ps = [rng.choice([1.0, 1.0, 0.0, 0.8, 0.6, 0.4]) for _ in range(n_cases)]
+
+    def arm():
+        return [[rng.random() < p for _ in range(n_reruns)] for p in ps]
+
+    floors = [stats.aa_noise_floor(arm(), splits=400, seed=i)["p95_mean_delta"] for i in range(6)]
+    floor = sum(floors) / len(floors)
+    twins = []
+    for _ in range(1000):
+        x, y = arm(), arm()
+        twins.append(abs(sum(sum(b) / n_reruns - sum(a) / n_reruns for a, b in zip(x, y)) / n_cases))
+    twin95 = stats.percentile(sorted(twins), 95)
+    assert 0.8 < floor / twin95 < 1.2, (floor, twin95)
+
+
+def test_kappa_is_undefined_when_both_raters_use_one_class():
+    """Perfect agreement on an all-pass table is 0/0, not 'no better than chance'.
+    statsmodels returns nan here; so do we, and the bootstrap skips resamples
+    that collapse to one class instead of scoring them 0.0."""
+    import math
+    assert math.isnan(stats.cohens_kappa([True] * 6, [True] * 6).kappa)
+    j = h = [True] * 15 + [False] * 3
+    ci = stats.kappa_bootstrap_ci(j, h, b_iters=600, seed=3)
+    assert ci.lo > 0.9, ci  # perfect agreement must not bootstrap down to [0, 1]

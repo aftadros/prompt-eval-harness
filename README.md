@@ -69,7 +69,9 @@ imports nothing outside the standard library:
 - Wilson intervals on the pass rate
 - an exact McNemar test on the paired binary outcome
 - a paired bootstrap that resamples cases, not reruns
-- an A/A noise floor built by splitting one prompt's own reruns in half
+- an A/A noise floor built by splitting one prompt's own reruns in half, with
+  each split delta scaled by the square root of half over N so the floor
+  estimates a twin run at the arm's own rerun count rather than at half of it
 - Cohen's kappa for judge-versus-human agreement
 - a simulated minimum detectable effect
 
@@ -100,9 +102,9 @@ comes from the sample size, and rerunning the same 50 cases does not move it.
   context:
     - doc: rag-over-internal-docs--chunking-decides-what-retrieval-can-find
   checks:
-    - must_not_contain: ["512"]
     - must_cite
     - cited_ids_exist
+  judge: [grounded, number_not_endorsed]
   why: >
     The post recommends a strategy and deliberately no number. "512" appears in
     the retrieved passage exactly once, as the naive counter-example being argued
@@ -110,6 +112,13 @@ comes from the sample size, and rerunning the same 50 cases does not move it.
   source: constructed
   added: 2026-08-17
 ```
+
+This case used to carry `must_not_contain: ["512"]`. A real run failed it five
+times out of five on answers that were right: the model wrote that the post
+"presents a 512-token window only as an example", which is the correct reading
+and contains the string. A substring check cannot tell a number being endorsed
+from a number being rejected, so that question moved to the judge, and the
+case file's `notes:` key records the switch.
 
 `checks:` and `judge:` are separate keys on purpose. Which cases pay for a model
 call should be visible from the outside:
@@ -143,4 +152,5 @@ The corpus is those two posts and nine others, chunked by the method described i
 
 Code is MIT (see `LICENSE`). The `corpus/` and `fixtures/` directories hold
 excerpts of the author's own published posts, included here as test fixtures, and
-are not covered by the MIT grant.
+are not covered by the MIT grant; neither is the model-generated text under
+`runs/**/outputs/`, which is derived from them. `NOTICE` states the split.

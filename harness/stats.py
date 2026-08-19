@@ -190,6 +190,14 @@ def aa_noise_floor(
     should look like under Bin(N, p); this says what it does look like when the
     server, the batching and the sampler are whatever they are. The 95th
     percentile of |delta| is the floor a real A/B delta has to clear.
+
+    A half-split compares h reruns against h, where h = N // 2, while the A/B
+    it stands in for compares N against N. The variance of a per-case mean
+    difference goes as (1/h + 1/h) for the split and (1/N + 1/N) for the real
+    pair, so an unscaled split floor runs hot by sqrt(N/h): about 1.6x at N=5
+    and 1.4x at N=10. Each per-case split delta is scaled by sqrt(h/N) so the
+    floor estimates a twin run at the arm's own N rather than at half of it.
+    The vote delta is left unscaled; it is a count, not a mean.
     """
     rng = random.Random(seed)
     mean_deltas: list[float] = []
@@ -204,7 +212,8 @@ def aa_noise_floor(
             rng.shuffle(shuffled)
             half = len(shuffled) // 2
             left, right = shuffled[:half], shuffled[half : 2 * half]
-            md += (sum(right) / len(right)) - (sum(left) / len(left))
+            scale = math.sqrt(half / len(reruns))
+            md += scale * ((sum(right) / len(right)) - (sum(left) / len(left)))
             lv = sum(left) * 2 > len(left)
             rv = sum(right) * 2 > len(right)
             vd += int(rv) - int(lv)
@@ -256,7 +265,10 @@ def cohens_kappa(judge: list[bool], human: list[bool]) -> Agreement:
     p_o = (a + d) / n
     pj, ph = (a + b) / n, (a + c) / n
     p_e = pj * ph + (1 - pj) * (1 - ph)
-    kappa = 0.0 if p_e == 1 else (p_o - p_e) / (1 - p_e)
+    # p_e == 1 means both raters used a single class, so chance agreement is
+    # total and kappa is 0/0: undefined, not zero. Returning 0.0 here would
+    # report "no better than chance" for a table that may be perfect agreement.
+    kappa = float("nan") if p_e == 1 else (p_o - p_e) / (1 - p_e)
     return Agreement(n, p_o, kappa, 2 * p_o - 1, {"a": a, "b": b, "c": c, "d": d})
 
 
@@ -271,7 +283,14 @@ def kappa_bootstrap_ci(
     out = []
     for _ in range(b_iters):
         pick = rng.choices(range(n), k=n)
-        out.append(cohens_kappa([judge[i] for i in pick], [human[i] for i in pick]).kappa)
+        k = cohens_kappa([judge[i] for i in pick], [human[i] for i in pick]).kappa
+        # A resample that drops every member of one class has no kappa. Keeping
+        # it as 0.0 used to pull the interval of a perfect-agreement set down to
+        # [0.0, 1.0]. Undefined resamples are skipped, not scored.
+        if not math.isnan(k):
+            out.append(k)
+    if not out:
+        return Interval(float("nan"), float("nan"))
     out.sort()
     return Interval(percentile(out, 2.5), percentile(out, 97.5))
 

@@ -13,10 +13,12 @@ committed next to the code is a thing people diff.
 
 from __future__ import annotations
 
+import math
 
 from harness import judge as judge_mod
 from harness import stats
 from harness.runner import case_state, pass_rate
+
 
 def _isnan(x) -> bool:
     return isinstance(x, float) and x != x
@@ -159,9 +161,12 @@ def run_report(record: dict) -> str:
                 jrows.append([
                     cid, qid, f"{q['passes']}/{q['n']}", f"{q['mean_p_pass']:.2f}",
                     str(q["split"]), str(q["unparseable"]),
+                    str(q.get("unparseable_rows", 0)),
                 ])
         lines.append(_table(
-            jrows, ["case", "question", "k/n", "mean p_pass", "split reruns", "unparseable"]
+            jrows,
+            ["case", "question", "k/n", "mean p_pass", "split reruns", "unparseable",
+             "rows unscored"],
         ))
         lines += [
             "",
@@ -177,6 +182,13 @@ def run_report(record: dict) -> str:
                 "dropped. The protocol requires the verdict first, and a reply that buries "
                 "it is not recovered by searching further into the text: that would put "
                 "back exactly the rationalization the protocol removes."
+            )
+        unscored = sum(q.get("unparseable_rows", 0) for c in judged.values() for q in c.values())
+        if unscored:
+            lines.append(
+                f"\n**{unscored} judge row(s) had fewer readable samples than a majority** "
+                "and are counted in `rows unscored` but not in k/n. A verdict from one "
+                "readable sample out of five is not a verdict."
             )
     lines.append("")
 
@@ -198,6 +210,105 @@ def run_report(record: dict) -> str:
     return "\n".join(lines)
 
 
+def verdict(agg: dict, observed: float, ci, floor, mde: float, floor_p: float) -> str:
+    """The blunt sentence. Templated on purpose: a verdict written fresh each
+    time is a verdict that drifts toward whatever the author hoped for."""
+
+    straddles = ci.lo <= 0 <= ci.hi
+    sig = agg["p"] <= 0.05
+    discordant = agg["b"] + agg["c"]
+    outside_floor = floor and abs(observed) > floor["p95_mean_delta"]
+    inside_floor = floor and abs(observed) <= floor["p95_mean_delta"]
+    underpowered = floor_p > 0.05
+    limit = "no effect at all" if math.isnan(mde) else f"about {mde:.2f}"
+
+    if inside_floor:
+        return (
+            f"NOT distinguishable from rerun noise. The observed delta ({observed:+.3f}) is "
+            f"inside the A/A noise floor ({floor['p95_mean_delta']:.3f}), which is what running "
+            "the same prompt twice looks like on this rig. Do not ship on this delta."
+        )
+
+    if underpowered and not straddles:
+        # The case this repo exists to make legible: a real, large, one-directional
+        # effect that the exact test structurally cannot certify.
+        if min(agg["b"], agg["c"]) == 0:
+            split = (
+                f"Every one of the {discordant} discordant pair(s) went the same way, and "
+                f"with {discordant} the smallest two-sided p this test can produce is "
+                f"{floor_p:.4f}. It cannot reach 0.05 however unanimous the evidence is"
+            )
+        else:
+            split = (
+                f"The {discordant} discordant pairs split {agg['b']} to {agg['c']}, and with "
+                f"{discordant} the smallest two-sided p this test can produce is "
+                f"{floor_p:.4f} even when every pair agrees. It cannot reach 0.05 at this "
+                "count under any split"
+            )
+        return (
+            f"UNDERPOWERED, NOT NULL. {split}, so p = {agg['p']:.4f} here is a statement "
+            f"about the sample size and not about the prompt. The other two views do "
+            f"resolve it: the paired bootstrap {ci} excludes zero"
+            + (
+                f", and the delta ({observed:+.3f}) is "
+                + (
+                    f"{abs(observed) / floor['p95_mean_delta']:.1f}x the A/A noise floor "
+                    f"({floor['p95_mean_delta']:.3f})"
+                    if floor["p95_mean_delta"] > 0
+                    else "outside an A/A noise floor that is exactly zero, because every "
+                         "rerun of A agreed with itself"
+                )
+                if outside_floor
+                else ""
+            )
+            + ". Read the per-case table, then collect more cases before calling it "
+            "significant. Do not report this as a null result."
+        )
+
+    if underpowered:
+        return (
+            f"CANNOT BE CALLED, and not because the effect is small. With {discordant} "
+            f"discordant pair(s) the smallest achievable p is {floor_p:.4f}, so the exact "
+            f"test could not have rejected at 0.05 under any outcome. The bootstrap {ci} "
+            "straddles zero as well. This set has no power here; collect more cases."
+        )
+
+    if not sig and straddles:
+        return (
+            f"CANNOT BE CALLED at this sample size. McNemar p = {agg['p']:.4f} and the bootstrap "
+            f"interval {ci} straddles zero. With {discordant} discordant pairs the test "
+            f"cannot resolve an effect below {limit}. This is not evidence of no effect; "
+            "it is an absence of evidence either way. Do not ship on this delta."
+        )
+
+    if sig and not straddles:
+        direction = "improvement" if observed > 0 else "regression"
+        return (
+            f"A {direction} that survives the test: McNemar p = {agg['p']:.4f}, bootstrap "
+            f"{ci} excludes zero. Read the per-case table before acting on it, and check the "
+            "correction family in METRICS.md before calling it significant."
+        )
+
+    return (
+        f"MIXED. McNemar p = {agg['p']:.4f}, bootstrap {ci}. The two views of the same data "
+        f"disagree, which usually means the effect sits near this set's resolution limit "
+        f"({limit}). Treat it as uncalled."
+    )
+
+
+def _verdict_for(st: dict) -> str:
+    """Recompute the verdict from the stored numbers when the record carries
+    them, so regenerating an old report picks up a corrected template. Records
+    written before ci_lo/ci_hi were stored fall back to the text as written."""
+    bs = st.get("bootstrap") or {}
+    if "ci_lo" not in bs or "ci_hi" not in bs:
+        return st["verdict"]
+    agg = (st.get("buckets") or {}).get("ALL", {"b": 0, "c": 0, "p": 1.0})
+    ci = stats.Interval(bs["ci_lo"], bs["ci_hi"])
+    return verdict(agg, bs["observed"], ci, st.get("noise_floor"), st.get("mde", float("nan")),
+                   st.get("min_achievable_p", 1.0))
+
+
 def compare_report(rec_a: dict, rec_b: dict, flips: list[dict], st: dict) -> str:
     """A/B report. Per-case first, aggregates second, verdict last."""
     ma, mb = rec_a["manifest"], rec_b["manifest"]
@@ -208,6 +319,18 @@ def compare_report(rec_a: dict, rec_b: dict, flips: list[dict], st: dict) -> str
         f"- B: `{mb['prompt']['path']}` ({mb['prompt']['sha256'][:19]})",
         f"- model: `{ma['model']['server_reported']}` -> `{mb['model']['server_reported']}`",
         f"- reruns: {ma['n_reruns']} / {mb['n_reruns']}   cases: {len(flips)}",
+    ]
+    if ma["model"]["server_reported"] != mb["model"]["server_reported"]:
+        lines.append(
+            "- **WARNING: the two arms ran on different served builds, so prompt and "
+            "model are confounded in everything below.**"
+        )
+    if ma.get("closed_book") != mb.get("closed_book"):
+        lines.append(
+            "- **WARNING: one arm ran closed-book and the other did not; this compares "
+            "context handling, not the prompt.**"
+        )
+    lines += [
         "",
         "## Per-case changes, regressions first",
         "",
@@ -293,7 +416,7 @@ def compare_report(rec_a: dict, rec_b: dict, flips: list[dict], st: dict) -> str
             "- A/A noise floor: not computed. It needs at least 4 reruns per case in arm A; "
             "with fewer, a half-split has nothing left to compare."
         )
-    lines += ["", "**" + st["verdict"] + "**", ""]
+    lines += ["", "**" + _verdict_for(st) + "**", ""]
 
     j = st.get("judge") or {}
     lines += ["## Judge outcome, reported separately", ""]

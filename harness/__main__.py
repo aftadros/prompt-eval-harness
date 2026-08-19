@@ -15,9 +15,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import random
 import sys
+from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -26,7 +28,6 @@ from harness import model as model_mod  # noqa: E402
 from harness import records, report, stats  # noqa: E402
 from harness.cases import CaseError, load_all  # noqa: E402
 from harness.runner import RunConfig, case_state, pass_rate, run  # noqa: E402
-
 
 # ----------------------------------------------------------------- compare
 
@@ -81,11 +82,21 @@ def compare_stats(rec_a: dict, rec_b: dict, flips: list[dict]) -> dict:
     pb = [f["k_b"] / f["n_b"] if f["n_b"] else 0.0 for f in flips]
     observed, ci = stats.paired_bootstrap_delta(pa, pb)
 
+    # Empty reruns are missing data on the deterministic side and must be
+    # missing data here too: all_passed is None on an empty row, and bool(None)
+    # would count it as a failure inside the floor. A case needs at least four
+    # usable reruns to half-split; cases below that drop out of the floor
+    # rather than dragging the whole floor to None.
     per_case_a = []
     for cid in sorted(rec_a["summary"]):
-        rows = [r for r in rec_a["results"] if r["case_id"] == cid]
-        per_case_a.append([bool(r["all_passed"]) for r in sorted(rows, key=lambda r: r["rerun"])])
-    floor = stats.aa_noise_floor(per_case_a) if per_case_a and len(per_case_a[0]) >= 4 else None
+        rows = sorted(
+            (r for r in rec_a["results"]
+             if r["case_id"] == cid and not r.get("empty") and r.get("all_passed") is not None),
+            key=lambda r: r["rerun"],
+        )
+        if len(rows) >= 4:
+            per_case_a.append([bool(r["all_passed"]) for r in rows])
+    floor = stats.aa_noise_floor(per_case_a) if per_case_a else None
 
     judged = [f for f in flips if f["judge_a"] != "nodata" and f["judge_b"] != "nodata"]
     jb_ = sum(1 for f in judged if f["judge_a"] == "pass" and f["judge_b"] != "pass")
@@ -112,11 +123,11 @@ def compare_stats(rec_a: dict, rec_b: dict, flips: list[dict]) -> dict:
     mde = stats.find_mde(n, max(psi, 0.05), sims=800) if n else float("nan")
 
     floor_p = stats.min_achievable_p(agg["b"] + agg["c"])
-    verdict = _verdict(agg, observed, ci, floor, mde, floor_p)
+    verdict = report.verdict(agg, observed, ci, floor, mde, floor_p)
     return {
         "buckets": buckets,
         "bootstrap": {
-            "observed": observed, "ci": str(ci),
+            "observed": observed, "ci": str(ci), "ci_lo": ci.lo, "ci_hi": ci.hi,
             "iterations": stats.DEFAULT_B, "seed": stats.DEFAULT_SEED,
         },
         "noise_floor": floor,
@@ -130,82 +141,6 @@ def compare_stats(rec_a: dict, rec_b: dict, flips: list[dict]) -> dict:
         "empty_b": sum(e.get("empty", 0) for e in rec_b["summary"].values()),
     }
 
-
-def _verdict(agg: dict, observed: float, ci, floor, mde: float, floor_p: float) -> str:
-    """The blunt sentence. Templated on purpose: a verdict written fresh each
-    time is a verdict that drifts toward whatever the author hoped for."""
-    import math
-
-    straddles = ci.lo <= 0 <= ci.hi
-    sig = agg["p"] <= 0.05
-    discordant = agg["b"] + agg["c"]
-    outside_floor = floor and abs(observed) > floor["p95_mean_delta"]
-    inside_floor = floor and abs(observed) <= floor["p95_mean_delta"]
-    underpowered = floor_p > 0.05
-    limit = "no effect at all" if math.isnan(mde) else f"about {mde:.2f}"
-
-    if inside_floor:
-        return (
-            f"NOT distinguishable from rerun noise. The observed delta ({observed:+.3f}) is "
-            f"inside the A/A noise floor ({floor['p95_mean_delta']:.3f}), which is what running "
-            "the same prompt twice looks like on this rig. Do not ship on this delta."
-        )
-
-    if underpowered and not straddles:
-        # The case this repo exists to make legible: a real, large, one-directional
-        # effect that the exact test structurally cannot certify.
-        return (
-            f"UNDERPOWERED, NOT NULL. Every one of the {discordant} discordant pair(s) went "
-            f"the same way, and with {discordant} the smallest two-sided p this test can "
-            f"produce is {floor_p:.4f}. It cannot reach 0.05 however unanimous the evidence "
-            f"is, so p = {agg['p']:.4f} here is a statement about the sample size and not "
-            f"about the prompt. The other two views do resolve it: the paired bootstrap "
-            f"{ci} excludes zero"
-            + (
-                f", and the delta ({observed:+.3f}) is "
-                + (
-                    f"{abs(observed) / floor['p95_mean_delta']:.1f}x the A/A noise floor "
-                    f"({floor['p95_mean_delta']:.3f})"
-                    if floor["p95_mean_delta"] > 0
-                    else "outside an A/A noise floor that is exactly zero, because every "
-                         "rerun of A agreed with itself"
-                )
-                if outside_floor
-                else ""
-            )
-            + ". Read the per-case table, then collect more cases before calling it "
-            "significant. Do not report this as a null result."
-        )
-
-    if underpowered:
-        return (
-            f"CANNOT BE CALLED, and not because the effect is small. With {discordant} "
-            f"discordant pair(s) the smallest achievable p is {floor_p:.4f}, so the exact "
-            f"test could not have rejected at 0.05 under any outcome. The bootstrap {ci} "
-            "straddles zero as well. This set has no power here; collect more cases."
-        )
-
-    if not sig and straddles:
-        return (
-            f"CANNOT BE CALLED at this sample size. McNemar p = {agg['p']:.4f} and the bootstrap "
-            f"interval {ci} straddles zero. With {discordant} discordant pairs the test "
-            f"cannot resolve an effect below {limit}. This is not evidence of no effect; "
-            "it is an absence of evidence either way. Do not ship on this delta."
-        )
-
-    if sig and not straddles:
-        direction = "improvement" if observed > 0 else "regression"
-        return (
-            f"A {direction} that survives the test: McNemar p = {agg['p']:.4f}, bootstrap "
-            f"{ci} excludes zero. Read the per-case table before acting on it, and check the "
-            "correction family in METRICS.md before calling it significant."
-        )
-
-    return (
-        f"MIXED. McNemar p = {agg['p']:.4f}, bootstrap {ci}. The two views of the same data "
-        f"disagree, which usually means the effect sits near this set's resolution limit "
-        f"({limit}). Treat it as uncalled."
-    )
 
 
 # ----------------------------------------------------------------- commands
@@ -247,7 +182,25 @@ def cmd_compare(args) -> int:
                 file=sys.stderr,
             )
             return 2
+    only_a = sorted(set(rec_a["summary"]) - set(rec_b["summary"]))
+    only_b = sorted(set(rec_b["summary"]) - set(rec_a["summary"]))
+    if only_a or only_b:
+        print(
+            "refusing to compare: the two runs cover different case ids, so the pairs "
+            "the statistics need do not exist.\n"
+            f"  only in A: {only_a}\n  only in B: {only_b}\n"
+            "Same case files, different --case or --buckets selection is the usual cause.",
+            file=sys.stderr,
+        )
+        return 2
     flips = build_flips(rec_a, rec_b)
+    if not flips:
+        print(
+            "refusing to compare: no case has usable reruns on both sides, so there is "
+            "nothing to pair. Nothing was written.",
+            file=sys.stderr,
+        )
+        return 2
     st = compare_stats(rec_a, rec_b, flips)
     manifest = {
         "run_a": rec_a["name"], "run_b": rec_b["name"],
@@ -255,7 +208,14 @@ def cmd_compare(args) -> int:
         "n_cases": len(flips),
     }
     out_dir = records.new_record_dir("cmp", manifest)
-    records.write_json(os.path.join(out_dir, "compare.json"), manifest)
+    # The hash above pins the inputs. The harness commit and the clock are
+    # provenance, not inputs, so they ride outside the hashed dict: two records
+    # over the same runs can differ only by code, and this is where that shows.
+    records.write_json(
+        os.path.join(out_dir, "compare.json"),
+        {**manifest, "harness_git_sha": records.git_sha(),
+         "started": datetime.now(timezone.utc).isoformat(timespec="seconds")},
+    )
     for f in flips:
         records.append_jsonl(os.path.join(out_dir, "flips.jsonl"), f)
     records.write_json(os.path.join(out_dir, "stats.json"), st)
@@ -390,7 +350,9 @@ def cmd_calibrate(args) -> int:
     }
     pi = sum(h) / len(h)
     out = {
-        "n": ag.n, "raw_agreement": ag.raw, "kappa": ag.kappa, "kappa_ci": str(ci),
+        "n": ag.n, "raw_agreement": ag.raw,
+        # None, not 0.0, when both raters used one class: kappa is undefined there.
+        "kappa": None if math.isnan(ag.kappa) else ag.kappa, "kappa_ci": str(ci),
         "pabak": ag.pabak, "confusion": ag.confusion, "human_pass_rate": pi,
         "kappa_implied_by_80pct_at_this_base_rate": stats.kappa_at(0.80, pi)[1],
         "consistency_bins": bin_stats,

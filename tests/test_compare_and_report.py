@@ -226,3 +226,124 @@ def test_report_regenerates_a_cmp_record(tmp_path, monkeypatch):
 
     assert cmd_report(RepArgs()) == 0
     assert (cmp_dir / "report.md").read_text() == first
+
+
+def test_underpowered_verdict_does_not_claim_unanimity_on_a_mixed_split():
+    """b=4, c=1 is underpowered (5 discordant, smallest p 0.0625) and the
+    bootstrap can exclude zero, but the pairs did not all go the same way. The
+    old template said they did; the flagship committed comparison carried that
+    sentence with a 4/1 split."""
+    floor = {"splits": 1000, "p95_mean_delta": 0.1, "n_cases": 15}
+    mixed = report.verdict({"b": 4, "c": 1, "p": 0.375}, -0.35, stats_interval(-0.57, -0.12),
+                           floor, float("nan"), 0.0625)
+    assert mixed.startswith("UNDERPOWERED, NOT NULL")
+    assert "went the same way" not in mixed
+    assert "split 4 to 1" in mixed
+    unanimous = report.verdict({"b": 5, "c": 0, "p": 0.0625}, -0.35, stats_interval(-0.57, -0.12),
+                               floor, float("nan"), 0.0625)
+    assert "Every one of the 5 discordant pair(s) went the same way" in unanimous
+
+
+def stats_interval(lo, hi):
+    from harness import stats
+    return stats.Interval(lo, hi)
+
+
+def test_empty_reruns_stay_out_of_the_noise_floor(tmp_path):
+    """An empty generation is missing data on the deterministic side (all_passed
+    is None). bool(None) is False, so without a filter it entered the A/A floor
+    as a failure and inflated it; both reviewers reproduced the flip to
+    'NOT distinguishable from rerun noise' on an all-pass arm."""
+    import json
+    a = make_record(tmp_path, "a", {f"c{i}": ("ordinary", 5) for i in range(6)})
+    b = make_record(tmp_path, "b", {f"c{i}": ("ordinary", 5) for i in range(6)}, "prompts/v2.txt")
+    clean = compare_stats(a, b, build_flips(a, b))["noise_floor"]["p95_mean_delta"]
+    # mark two reruns of c0 in A empty, the way the runner writes them
+    rows = records.read_jsonl(os.path.join(a["path"], "results.jsonl"))
+    for r in rows:
+        if r["case_id"] == "c0" and r["rerun"] in (0, 1):
+            r["all_passed"] = None
+            r["empty"] = True
+    with open(os.path.join(a["path"], "results.jsonl"), "w") as fh:
+        for r in rows:
+            fh.write(json.dumps(r) + "\n")
+    a["summary"]["c0"]["conjunction"] = {"passes": 3, "n": 3}
+    a["summary"]["c0"]["empty"] = 2
+    a = records.load_record(a["path"])
+    with_empties = compare_stats(a, b, build_flips(a, b))["noise_floor"]["p95_mean_delta"]
+    assert clean == 0.0 and with_empties == 0.0
+
+
+def test_compare_refuses_different_case_id_sets(tmp_path, capsys):
+    """Same case files, different --case selection: the file hashes match and
+    the old guard let it through, silently intersecting to the shared cases."""
+    from harness.__main__ import cmd_compare
+    a = make_record(tmp_path, "a", {"c1": ("ordinary", 5), "c2": ("ordinary", 5), "c3": ("ordinary", 5)})
+    b = make_record(tmp_path, "b", {"c1": ("ordinary", 5)})
+
+    class Args:
+        run_a, run_b = a["path"], b["path"]
+
+    assert cmd_compare(Args()) == 2
+    err = capsys.readouterr().err
+    assert "different case ids" in err and "c2" in err and "c3" in err
+    assert not [d for d in tmp_path.iterdir() if d.name.startswith("cmp-")]
+
+
+def test_compare_refuses_when_nothing_is_pairable(tmp_path, monkeypatch, capsys):
+    """Every shared case nodata on one side used to pass compare_stats, then die
+    with KeyError('ALL') in the report after the cmp directory existed."""
+    from harness.__main__ import cmd_compare
+    a = make_record(tmp_path, "a", {"c1": ("ordinary", 5)})
+    b = make_record(tmp_path, "b", {"c1": ("ordinary", 5)})
+    b["summary"]["c1"]["conjunction"] = {"passes": 0, "n": 0}
+    import json
+    with open(os.path.join(b["path"], "summary.json"), "w") as fh:
+        json.dump(b["summary"], fh)
+    monkeypatch.setattr(records, "RUNS_DIR", str(tmp_path))
+
+    class Args:
+        run_a, run_b = a["path"], b["path"]
+
+    assert cmd_compare(Args()) == 2
+    assert "nothing to pair" in capsys.readouterr().err
+    assert not [d for d in tmp_path.iterdir() if d.name.startswith("cmp-")]
+
+
+def test_cmp_record_carries_provenance_and_report_recomputes_verdict(tmp_path, monkeypatch):
+    """Two comparisons of the same runs can differ only by code. compare.json
+    now names the harness commit and the clock, outside the hashed inputs, and
+    report.md recomputes the verdict from the stored numbers so a corrected
+    template reaches old records on regeneration."""
+    import json
+    from harness.__main__ import cmd_compare, cmd_report
+    a = make_record(tmp_path, "a", {"c1": ("ordinary", 5), "c2": ("ordinary", 0)})
+    b = make_record(tmp_path, "b", {"c1": ("ordinary", 5), "c2": ("ordinary", 5)}, "prompts/v2.txt")
+    monkeypatch.setattr(records, "RUNS_DIR", str(tmp_path))
+
+    class Args:
+        run_a, run_b = a["path"], b["path"]
+
+    assert cmd_compare(Args()) == 0
+    cmp_dir = next(d for d in tmp_path.iterdir() if d.name.startswith("cmp-"))
+    info = json.load(open(cmp_dir / "compare.json"))
+    assert "harness_git_sha" in info and "started" in info
+    st = json.load(open(cmp_dir / "stats.json"))
+    assert "ci_lo" in st["bootstrap"] and "ci_hi" in st["bootstrap"]
+    # poison the stored verdict; regeneration must not echo it
+    st["verdict"] = "STALE TEMPLATE TEXT"
+    json.dump(st, open(cmp_dir / "stats.json", "w"))
+
+    class RepArgs:
+        record = str(cmp_dir)
+
+    assert cmd_report(RepArgs()) == 0
+    assert "STALE TEMPLATE TEXT" not in (cmp_dir / "report.md").read_text()
+
+
+def test_compare_report_warns_when_builds_differ(hidden_regression):
+    a, b = hidden_regression
+    b["manifest"]["model"]["server_reported"] = "some-other-build"
+    flips = build_flips(a, b)
+    md = report.compare_report(a, b, flips, compare_stats(a, b, flips))
+    assert "different served builds" in md
