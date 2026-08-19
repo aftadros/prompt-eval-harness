@@ -148,6 +148,18 @@ The method, in long form:
 The corpus is those two posts and nine others, chunked by the method described in
 "RAG over a decade of internal docs".
 
+## Provenance
+
+The method comes from two of my posts, linked under Background. In July 2026 I
+drafted the corpus design and the experiment plan and decided how the cases
+would split into buckets. I worked all of it over with Claude before the first
+commit. The code, the fifty cases, the fixtures, the prompts and this README
+were built in August 2026 in working sessions I ran with Claude Code. I set
+each piece of work and read what came back; where it was wrong, I pushed back.
+The calls I made along the way are recorded in the commit messages and in
+`design/`. The hand labels in `labels/` are mine alone. They are the one thing
+in this repo that has to come from a person reading the outputs.
+
 ## License
 
 Code is MIT (see `LICENSE`). The `corpus/` and `fixtures/` directories hold

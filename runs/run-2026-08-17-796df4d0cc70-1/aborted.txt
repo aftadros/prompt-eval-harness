@@ -14,4 +14,4 @@ because records are append-only and the failure is part of the record.
 
 Corrected 2026-08-19: an earlier version of this note blamed a too-broad
 process filter. That kill happened later the same night to a different
-run; this one was a deliberate stop, per the session transcript.
+run; this one was a deliberate stop, per that night's working notes.
