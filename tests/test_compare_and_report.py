@@ -274,10 +274,11 @@ def test_empty_reruns_stay_out_of_the_noise_floor(tmp_path):
     assert clean == 0.0 and with_empties == 0.0
 
 
-def test_compare_refuses_different_case_id_sets(tmp_path, capsys):
+def test_compare_refuses_different_case_id_sets(tmp_path, monkeypatch, capsys):
     """Same case files, different --case selection: the file hashes match and
     the old guard let it through, silently intersecting to the shared cases."""
     from harness.__main__ import cmd_compare
+    monkeypatch.setattr(records, "RUNS_DIR", str(tmp_path))
     a = make_record(tmp_path, "a", {"c1": ("ordinary", 5), "c2": ("ordinary", 5), "c3": ("ordinary", 5)})
     b = make_record(tmp_path, "b", {"c1": ("ordinary", 5)})
 
