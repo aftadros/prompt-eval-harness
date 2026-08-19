@@ -1,0 +1,13 @@
+Partial record, not a run. Nothing compares against it.
+
+The first full 50-case attempt with prompts/v1.txt, started 2026-08-18
+03:07 UTC. It died on one slow generation: socket.timeout surfaces as the
+builtin TimeoutError, which is not a subclass of urllib.error.URLError, and
+the adapter's retry clause caught only URLError, so one timeout ended the
+whole 250-call batch. Outputs were not yet written as they arrived, which
+is why this directory holds only the manifest and the prompt copy. Both
+fixes landed in commit c60db1a, nine minutes after this run started; the
+manifest's harness_git_sha still reads c0f9c24 because the working tree was
+ahead of the last commit at the time. Kept rather than deleted because records
+here are append-only and a deleted failure is the kind of thing this repo
+argues against hiding.

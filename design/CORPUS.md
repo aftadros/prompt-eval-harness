@@ -1,7 +1,6 @@
-<!-- Working spec, 2026-07-27. Publication decision per-file at M0 (see DECISIONS.md).
-     Design pressure-tested with Claude; cases and labels are Anthony's to author. -->
-
 # CORPUS — golden set plan + labeling protocol
+
+Pre-registered: first committed 2026-07-30 (`c0f9c24`), before the first model call against the harness. `git log -p -- design/CORPUS.md` shows everything that changed after.
 
 Demo task: grounded Q&A over the 11 published posts at anthonytadros.me, retrieval as
 committed fixtures. All 11 posts verified live 2026-07-27 (prerendered pages exist for

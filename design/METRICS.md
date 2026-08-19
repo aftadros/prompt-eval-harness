@@ -1,9 +1,6 @@
-<!-- Working spec, 2026-07-27. Publication decision per-file at M0 (see DECISIONS.md).
-     Commit this file (with EXPERIMENTS.md) BEFORE collection C1 runs — pre-registration flavor.
-     All numeric anchors below were recomputed independently by executed stdlib Python on
-     2026-07-27, not carried from drafts. Design pressure-tested with Claude. -->
-
 # METRICS — statistical method spec
+
+Pre-registered: first committed 2026-07-30 (`c0f9c24`), before the first model call against the harness. `git log -p -- design/METRICS.md` shows everything that changed after.
 
 Implementation home: `harness/stats.py`, stdlib-only, every function unit-tested against
 externally computed reference values (cite the source of each reference value in a

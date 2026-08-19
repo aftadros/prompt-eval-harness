@@ -1,5 +1,6 @@
-# Private working notes. See design/DECISIONS.md, decision #4 (resolved 2026-07-30):
-# CORPUS/METRICS/EXPERIMENTS are committed, these three are not.
+# Private working notes, kept out of the public tree on purpose. The three
+# design files that are committed (CORPUS, METRICS, EXPERIMENTS) are the
+# method; these three hold the working spec, the schedule and the decision log.
 design/DESIGN.md
 design/SCHEMAS.md
 design/DECISIONS.md

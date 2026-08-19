@@ -1,8 +1,6 @@
-<!-- Working spec, 2026-07-27. Publication decision per-file at M0 (see DECISIONS.md).
-     Commit this file (with METRICS.md) BEFORE collection C1 runs — pre-registration flavor.
-     Design pressure-tested with Claude. -->
-
 # EXPERIMENTS — the writeup's experiment suite
+
+Pre-registered: first committed 2026-07-30 (`c0f9c24`), before the first model call against the harness. `git log -p -- design/EXPERIMENTS.md` shows everything that changed after.
 
 Thesis: the practitioner heuristics published in *Evals before vibes* and *How to tell
 if a prompt change actually helped*, put under statistical test on the author's own
