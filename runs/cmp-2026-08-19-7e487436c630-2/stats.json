@@ -1,0 +1,83 @@
+{
+  "bootstrap": {
+    "ci": "[-0.573, -0.120]",
+    "ci_hi": -0.12000000000000001,
+    "ci_lo": -0.5733333333333334,
+    "iterations": 10000,
+    "observed": -0.3466666666666667,
+    "seed": 20260817
+  },
+  "buckets": {
+    "ALL": {
+      "b": 4,
+      "c": 1,
+      "n": 15,
+      "p": 0.375,
+      "variant": "exact_binomial"
+    },
+    "adversarial": {
+      "b": 4,
+      "c": 0,
+      "n": 7,
+      "p": 0.125,
+      "variant": "exact_binomial"
+    },
+    "known_hard": {
+      "b": 0,
+      "c": 1,
+      "n": 4,
+      "p": 1.0,
+      "variant": "exact_binomial"
+    },
+    "ordinary": {
+      "b": 0,
+      "c": 0,
+      "n": 4,
+      "p": 1.0,
+      "variant": "exact_binomial"
+    }
+  },
+  "empty_a": 0,
+  "empty_b": 0,
+  "judge": {
+    "b": 0,
+    "c": 0,
+    "cases": [
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "kh-chunk-size-trap"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "kh-refund-window-meta"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "kh-refusal-dial"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "ord-streaming-cost"
+      }
+    ],
+    "min_achievable_p": 1.0,
+    "n": 4,
+    "p": 1.0
+  },
+  "mde": NaN,
+  "min_achievable_p": 0.0625,
+  "noise_floor": {
+    "max_mean_delta": 0.06324555320336758,
+    "n_cases": 15,
+    "p95_mean_delta": 0.06324555320336758,
+    "p95_vote_delta": 3.0,
+    "splits": 1000
+  },
+  "psi": 0.3333333333333333,
+  "unpairable_cases": [],
+  "verdict": "UNDERPOWERED, NOT NULL. The 5 discordant pairs split 4 to 1, and with 5 the smallest two-sided p this test can produce is 0.0625 even when every pair agrees. It cannot reach 0.05 at this count under any split, so p = 0.3750 here is a statement about the sample size and not about the prompt. The other two views do resolve it: the paired bootstrap [-0.573, -0.120] excludes zero, and the delta (-0.347) is 5.5x the A/A noise floor (0.063). Read the per-case table, then collect more cases before calling it significant. Do not report this as a null result."
+}
