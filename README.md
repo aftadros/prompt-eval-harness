@@ -39,7 +39,7 @@ literal in `checks/__init__.py`, so `grep REGISTRY` gives you the whole list.
 Properties are deterministic, cheap to run, and don't drift between runs.
 
 **`judge/`** holds everything model-graded, kept in one directory so you can see
-the whole judgment surface without going looking for it. 15 of the 50 cases are
+the whole judgment surface without going looking for it. 17 of the 50 cases are
 judge-routed. Each judge call asks one narrow yes-or-no question with the source
 text in hand, and the reply has to start with YES or NO before any reasoning.
 Each question is asked five times, so what comes back is 5-0 or 3-2 rather than a
