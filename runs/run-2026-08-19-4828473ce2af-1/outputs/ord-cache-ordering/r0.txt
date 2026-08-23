@@ -1,0 +1,3 @@
+Order your prompt **stable material first, volatile last**: static system prompt → tool definitions → retrieved context → user question [llm-cost-at-campus-scale--caching-the-stable-prefix]. The cached prefix can then cover everything up to the first point where content changes [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+Also keep the stable parts actually stable — don’t inject timestamps or per-user tokens near the top, or the cacheable prefix shrinks and the savings disappear [llm-cost-at-campus-scale--caching-the-stable-prefix].

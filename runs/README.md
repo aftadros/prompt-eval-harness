@@ -45,8 +45,9 @@ A partial record, one whose run died mid-batch, has `manifest.json` and some
 arrives, so a crash costs one call rather than the batch, at the price of leaving
 these behind. They are not runs and nothing will compare against them.
 
-Three partial records from the first collection night (2026-08-18) are kept with
-an `aborted.txt` naming what stopped each one. Deleting them would be tidier
+Three partial records from the first collection night (2026-08-18), and a
+fourth from 2026-08-20, are kept with an `aborted.txt` naming what stopped each
+one, or saying that the cause was not recorded. Deleting them would be tidier
 and less true.
 
 ## Records that predate a fix

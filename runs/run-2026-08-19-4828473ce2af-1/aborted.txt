@@ -1,0 +1,24 @@
+Partial record, not a run. Nothing compares against it.
+
+A full 50-case attempt with prompts/v2.txt against the local
+qwen3.8-27b-uncensored-hauhaucs-aggressive-mtp build (harness commit
+bad28ba, 5 reruns, no judge), started 2026-08-20 02:00:05 UTC. 15 of 250
+outputs arrived, all between 02:16 and 02:22 UTC and none empty:
+ord-cache-ordering and ord-orphaned-chunks complete at 5 of 5,
+ord-streaming-cost at 3, ord-log-fields and ord-two-timeouts at 1. Nothing
+was scored: there is no results.jsonl, summary.json or report.md.
+
+What stopped it is not recorded, and this note was written four days later
+(2026-08-23) by a session that did not launch it. Checked and empty: every
+Claude session transcript on this Mac in both profiles (none with this repo
+as its working directory spans the window; the last one ended 21:32 UTC),
+the self-improve events log (nothing about LM Studio between 01:55 and
+02:45 UTC), LM Studio's server-logs directory (holds nothing after
+2025-02), the shell history (five entries across both days, none of them
+this), and the scheduled tasks, LaunchAgents and crontab (nothing runs the
+harness). The start five seconds past the hour and the sixteen quiet minutes
+before the first output (consistent with a cold prefill of the v2 prompt on
+the dense build) are the only shape the evidence has. Kept because records
+are append-only; it holds no finding. The three completed v2 runs in this
+directory are 15-case subsets, and as of this note no 50-case run has
+completed with either prompt.

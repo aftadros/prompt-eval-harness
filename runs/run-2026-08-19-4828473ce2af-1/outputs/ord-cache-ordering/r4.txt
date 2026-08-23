@@ -1,0 +1,12 @@
+Order the prompt so the stable parts come first and the volatile parts last, because the provider can cache everything up to the first point where content changes [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+A good order is:
+
+1. **Static system prompt**  
+2. **Tool definitions**  
+3. **Retrieved context / passages**  
+4. **User’s question or other per-request input**  
+
+This lets the cached prefix cover the long, repeated preamble instead of billing it at full input price every time [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+The key is to keep those early sections byte-for-byte stable across calls. If you inject something that changes near the top—such as a timestamp or per-user token—the cacheable prefix shrinks and the savings disappear [llm-cost-at-campus-scale--caching-the-stable-prefix]. To confirm it’s working, track cached versus uncached input tokens per request, since identical-looking requests can cost very different amounts depending on how much of the prompt was served from the prefix cache [llm-cost-per-request--one-line-item-per-call].
