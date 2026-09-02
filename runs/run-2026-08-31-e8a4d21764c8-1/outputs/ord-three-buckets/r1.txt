@@ -1,0 +1,7 @@
+The golden set document recommends keeping **three labeled buckets**:
+
+1. **Ordinary questions** – everyday queries that should just work [evals-before-vibes--the-golden-set].
+2. **Known-hard ones** – cases that exposed a bug once, so they stay in the set as permanent regression tests [evals-before-vibes--the-golden-set][did-the-prompt-change-help--build-the-set-from-real-questions-including-the].
+3. **Adversarial ones** – inputs designed to try to pull the model off its guardrails [evals-before-vibes--the-golden-set].
+
+The same source adds a sizing guideline: "Fifty good cases beat five hundred lazy ones, and every case has to be able to fail or it's decoration" [evals-before-vibes--the-golden-set].

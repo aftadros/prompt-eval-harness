@@ -1,0 +1,7 @@
+A golden set should be split into three labeled buckets [evals-before-vibes--the-golden-set]:
+
+1. **Ordinary questions** — everyday queries that should just work.
+2. **Known-hard questions** — cases that exposed a bug once and need to keep failing loudly if the regression returns.
+3. **Adversarial questions** — inputs designed to pull the model off its guardrails (e.g., tricking it into inventing policy or leaking restricted content).
+
+The guidance also notes that fifty good cases across these buckets beat five hundred lazy ones, and every case must be able to fail or it's just decoration [evals-before-vibes--the-golden-set].

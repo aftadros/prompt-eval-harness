@@ -1,0 +1,8 @@
+The pattern is **classify the request, then route it by difficulty and retrieval quality**:
+
+- **Cheap tier:** Use for short factual lookups that have a clean, high-confidence retrieval hit, especially when the model is mostly reformatting retrieved text.
+- **Smart/expensive tier:** Use for ambiguous, multi-step, or synthesis-heavy questions, cases spanning multiple documents, conflicts between sources, or weak retrieval where the model has to do real work.
+- **Classifier:** The routing decision can be made by a small model or even a rules-based check on retrieval confidence, so it costs little.
+- **Escalation pattern:** Start with the cheap model; if a confidence check or guardrail flags the answer as thin, retry once on the smart model instead of defaulting all traffic upward.
+
+The goal is to let most requests settle on the cheaper tier while reserving expensive-model calls for questions that actually need stronger reasoning [llm-cost-at-campus-scale--which-model-gets-the-question].

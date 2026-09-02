@@ -1,0 +1,12 @@
+The single most important defense is **enforcing permissions at retrieval time**: filter candidate documents against the asking user’s access rights before they are ranked or assembled into the prompt [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].
+
+The provided material calls this permission filter “the load-bearing piece,” because even a successful planted instruction cannot reach data the user was never cleared for, while the other defenses mainly increase the attacker’s cost [prompt-injection-in-rag--the-prompt-and-the-output]. In English. User asks: "What's the single most important defense against prompt injection in a RAG system?" Need answer from docs only with inline citations. We need direct lead. The key doc says permission filter is load-bearing piece. Another says first thing code does enforce permissions before anything gets ranked/assembled; restricted text never enters context can't be leaked. So answer: retrieval-time access control/permission filtering, not prompt wording or output escaping alone. Need maybe mention "single most important" as docs establish it. Cite both? Yes.
+
+Need ensure no outside knowledge. Could say: The single most important defense is to enforce user permissions at retrieval time so restricted material never enters the context window [id]. This is described as load-bearing because worst sentence in corpus still can't reach data user wasn't cleared for; other mitigations only raise attacker's cost [id]. Maybe mention prompt marking and output escaping are secondary. Need not be too long.
+
+Check rule: every claim from document must carry doc id inline. We can include citations after claims. Use exact ids. Do not cite missing. Good.
+</think>
+
+The single most important defense is **enforcing permissions at retrieval time**, so documents the user isn’t allowed to see are filtered out before they’re ranked or placed in the prompt [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].
+
+That permission filter is “the load-bearing piece,” because even if a planted instruction succeeds, it still can’t reach data the user was never cleared for; other mitigations mostly just make attacks more expensive [prompt-injection-in-rag--the-prompt-and-the-output].

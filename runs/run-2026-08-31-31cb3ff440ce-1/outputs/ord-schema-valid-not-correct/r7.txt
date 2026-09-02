@@ -1,0 +1,3 @@
+Yes. Structured outputs mainly guarantee shape, not correctness or sanity [structured-outputs--what-it-didnt-fix]. You still need to validate whether the response makes sense—e.g., whether a category fits the input, whether an enum choice is right, or whether a free-form string is actually supported [structured-outputs--what-it-didnt-fix].
+
+You may also still need defensive parsing: even with a schema attached, responses can sometimes be wrapped in prose or markdown fences, so decode as if the schema might not have held [llm-json-in-php--send-the-schema]. In short, structured outputs do most of the work, but not all of it [llm-json-in-php--send-the-schema].

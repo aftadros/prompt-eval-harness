@@ -1,0 +1,14 @@
+Look first at **prompt-cache prefix stability** and your **per-request cost breakdown**.
+
+A refactor that moves a per-request value—such as a timestamp, user-specific token, or other volatile content—near the top of the prompt can stop the cache prefix from matching. The result is that input tokens you previously paid for at a cached discount are billed at full price, with no exception or slowdown [llm-cost-per-request--what-it-catches]. The documents describe this as an “innocent refactor” where the only symptom is the bill [llm-cost-per-request--what-it-catches].
+
+Practically, check:
+
+1. **Prompt ordering**  
+   Stable material should come first—system prompt, tool definitions, retrieved context, then volatile question content—and volatile values should stay near the end [llm-cost-at-campus-scale--caching-the-stable-prefix]. If a refactor injected per-request data earlier in the prompt, the cacheable prefix may have shrunk to nothing [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+2. **Cache hit rate**  
+   A broken prefix can make the cache hit rate fall to zero while everything still works normally [llm-cost-per-request--what-it-catches]. Compare cache hits before and after the refactor.
+
+3. **Cost per request by feature/endpoint**  
+   Since this kind of regression does not throw an error, look for the outlier in cost-per-request data rather than monitoring errors or latency alone [llm-cost-per-request--what-it-catches].

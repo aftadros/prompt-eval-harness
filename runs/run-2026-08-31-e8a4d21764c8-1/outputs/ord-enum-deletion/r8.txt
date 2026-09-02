@@ -1,0 +1,3 @@
+It deleted code by removing the downstream normalization layer that had existed only to repair free-text output.
+
+In the example, `category` was supposed to be one of four buckets, but free-text classification let the model return variants such as `"Billing"`, `"billing issue"`, or `"this looks like a billing question to me."` The code therefore needed a lowercase-and-fuzzy-match step to collapse those strings into the allowed buckets [structured-outputs--schema-constrained-generation]. Once `category` was an enum in the JSON Schema, constrained generation restricted the model to emitting one of exactly those values, so that mapping step—and its test file—disappeared [structured-outputs--schema-constrained-generation].

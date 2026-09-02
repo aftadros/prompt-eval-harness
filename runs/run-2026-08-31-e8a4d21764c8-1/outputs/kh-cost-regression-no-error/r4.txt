@@ -1,0 +1,8 @@
+First, look at **per-request LLM cost**, especially input-token spend and prompt-cache behavior—not errors or latency. A refactor can silently break caching by moving a per-request value into the stable prefix, so nothing crashes but you start paying full price for input you previously reused [llm-cost-per-request--what-it-catches][llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+Start with:
+
+1. **Cost per request sliced by feature or endpoint** in your dashboard or request log, ideally written next to latency and status code [llm-cost-per-request--what-it-catches].
+2. **Cache hit rate**, because a broken cache prefix can drop reuse to zero while the bill climbs [llm-cost-per-request--what-it-catches][llm-cost-at-campus-scale--caching-the-stable-prefix].
+3. **Prompt ordering and stability**: stable material should come first, volatile last—static system prompt, tool definitions, retrieved context, then user question [llm-cost-at-campus-scale--caching-the-stable-prefix]. If the refactor added timestamps, per-user tokens, or other changing values near the top, the cacheable prefix may have shrunk to nothing [llm-cost-at-campus-scale--caching-the-stable-prefix].
+4. **Structural input-heavy features**, such as retrieval flows that pack in many passages but ask for only a short answer; those can spend heavily on input tokens without throwing errors [llm-cost-per-request--what-it-catches].

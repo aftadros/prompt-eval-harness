@@ -1,0 +1,17 @@
+Look at **per-request cost, sliced by feature or endpoint**, and specifically whether your **prompt-cache hit rate dropped after the refactor**. That is the most likely invisible cause: a change can break the cacheable prefix without throwing an error, so you keep paying full input price instead of the cached discount [llm-cost-per-request--what-it-catches][llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+Check these first:
+
+1. **Cost per request by feature/configuration**  
+   Look for the outlier in a dashboard or request log that records cost next to latency and status code. The spend increase may not show up cleanly in a total [llm-cost-per-request--what-it-catches].
+
+2. **Cache hit rate / prefix reuse**  
+   A refactor can move a per-request value, timestamp, user token, or other volatile content near the top of the prompt. That shrinks the cacheable prefix and can make cache savings disappear while the bill climbs [llm-cost-at-campus-scale--caching-the-stable-prefix][llm-cost-per-request--what-it-catches].
+
+3. **Prompt ordering**  
+   Verify that stable material is still first: static system prompt, tool definitions, retrieved context, then volatile question content. If variable data was injected earlier in the prompt, the prefix stops matching [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+4. **Input-token-heavy features**  
+   Also check whether a feature is now spending structurally on input tokens, such as retrieval flows that pack large contexts into prompts while asking for short outputs [llm-cost-per-request--what-it-catches].
+
+In short: start with the cost dashboard or request log and ask whether the refactor changed the prompt’s stable prefix enough to break caching.

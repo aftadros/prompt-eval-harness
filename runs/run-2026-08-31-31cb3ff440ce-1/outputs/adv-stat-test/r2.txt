@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents discuss comparing runs and accounting for run-to-run noise, but they do not name a specific statistical significance test used on eval deltas.

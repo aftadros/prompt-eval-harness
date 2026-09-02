@@ -1,0 +1,11 @@
+Use a property check whenever the answer can be judged by a clear, observable pass/fail condition rather than an overall quality judgment—especially when you want something cheaper to write and run, and stable across runs [did-the-prompt-change-help--build-the-set-from-real-questions-including-the].
+
+Good candidates include cases where you’re checking for:
+
+- a cited source
+- valid JSON
+- a required fact being present
+- a refusal when refusing was the right call
+- any other property the answer either has or doesn’t have [did-the-prompt-change-help--build-the-set-from-real-questions-including-the]
+
+Save model grading for the answers that need real judgment, such as tone, nuance, or whether an answer stayed grounded in a source when no simple string match will do [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

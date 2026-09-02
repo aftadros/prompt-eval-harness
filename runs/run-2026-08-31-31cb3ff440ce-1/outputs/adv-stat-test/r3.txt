@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents say he compares eval deltas to run-to-run noise and reruns small sets, but they do not name any specific statistical significance test.

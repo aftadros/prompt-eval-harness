@@ -1,0 +1,1 @@
+No—not always. Refusal is a tradeoff: refusing too eagerly causes missed answers and trains people to stop asking, while refusing too little produces confident wrong answers. The guidance is to calibrate it, leaning toward refusal when unsure in documentation used for decisions [rag-over-internal-docs--the-honest-i-dont-know].

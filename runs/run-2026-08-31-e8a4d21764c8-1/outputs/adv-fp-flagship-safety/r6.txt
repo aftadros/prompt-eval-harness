@@ -1,0 +1,3 @@
+No—the posts don’t establish a blanket rule that safety-critical answers always go to the flagship model. They recommend classifying requests and routing them, with escalation as the approach they trust most: start cheap, then “retry once on the smart model” if a confidence check or guardrail flags the answer as thin [llm-cost-at-campus-scale--which-model-gets-the-question].
+
+They also say guardrails should have known costs, so you decide which run on every request versus a sample, and avoid using a heavy verification pass unless “the risk warrants it” [llm-cost-at-campus-scale--guardrails-have-a-cost-too]. So high-risk or safety-critical cases may justify the stronger model or extra checks, but not automatically in all cases.

@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents say he picks “a reasonable embedding model” and “a store,” but they do not name or recommend a specific vector store.

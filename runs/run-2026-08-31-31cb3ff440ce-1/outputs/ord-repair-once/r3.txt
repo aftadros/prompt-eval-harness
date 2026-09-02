@@ -1,0 +1,1 @@
+You should retry **once** — give the model one repair attempt with the specific parse/validation error attached. If the second answer is still bad, stop and fall back instead of continuing to hammer the endpoint [llm-json-in-php--one-repair-attempt].

@@ -1,0 +1,1 @@
+A 200 response isn’t necessarily a success because the model can return an HTTP-level “success” while its body is still malformed, off-topic, or hostile—so the response must be treated as untrusted input and validated before use [llm-api-from-php-in-production--a-200-is-not-success].

@@ -1,0 +1,3 @@
+Look first at **prompt caching**, especially whether the refactor broke your stable prompt prefix [llm-cost-at-campus-scale--caching-the-stable-prefix]. A per-request value—such as a timestamp or per-user token—moved near the top of the prompt can make the cached prefix stop matching, so input tokens are billed at full freight even though nothing errors [llm-cost-at-campus-scale--caching-the-stable-prefix][llm-cost-per-request--what-it-catches].
+
+Then check **cost per request by feature** or cache-hit metrics to find the outlier; that is where a silent cost regression from a broken prefix shows up as a dashboard number rather than an exception [llm-cost-per-request--what-it-catches].

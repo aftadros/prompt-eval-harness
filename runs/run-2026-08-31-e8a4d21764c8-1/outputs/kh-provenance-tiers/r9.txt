@@ -1,0 +1,5 @@
+No. Retrieved chunks should not be treated the same if they come from different sources; their provenance should affect how much trust the system places in them.
+
+A curated, write-restricted knowledge base deserves more trust than a recently indexed user-uploaded file or crawled public content [prompt-injection-is-untrusted-input--retrieved-content-is-hostile-input]. The documents say the system prompt “should reflect the difference instead of flattening everything into one undifferentiated wall of context” [prompt-injection-is-untrusted-input--retrieved-content-is-hostile-input].
+
+Similarly, each chunk should keep its source provenance so that lower-trust sources “draw more suspicion on the way in,” and access controls should filter restricted material before it reaches the reranker or model [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].

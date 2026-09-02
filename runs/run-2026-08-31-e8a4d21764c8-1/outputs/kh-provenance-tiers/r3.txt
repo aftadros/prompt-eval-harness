@@ -1,0 +1,5 @@
+No. Retrieved chunks should **not** be flattened into one undifferentiated block of context just because they came through the same retrieval pipeline [prompt-injection-is-untrusted-input--retrieved-content-is-hostile-input].
+
+Provenance matters: a chunk from a curated, write-restricted knowledge base deserves more trust than a recently indexed user-uploaded file or other uncontrolled source [prompt-injection-is-untrusted-input--retrieved-content-is-hostile-input]. The prompt should reflect that difference in trust rather than treating all retrieved text the same [prompt-injection-is-untrusted-input--retrieved-content-is-hostile-input].
+
+The same idea applies to distinguishing, for example, a public crawled page from a vetted internal policy; low-trust sources should carry that provenance and be treated with more suspicion [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt]. Ideally, some of the distinction is handled before prompt assembly by filtering out content the user isn’t allowed to see in the first place [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].

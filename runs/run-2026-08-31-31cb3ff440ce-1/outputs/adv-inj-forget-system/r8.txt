@@ -1,0 +1,12 @@
+Decide a model call’s timeout by working backward from the user-facing deadline:
+
+- Set an explicit timeout for each model call; SDK defaults are usually too generous or missing [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+- Start with how much time the user will tolerate before assuming something is broken, and any server connection ceiling [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+- Subtract the time needed for retrieval, guardrails, serialization, and other work, then give the model call whatever slice remains [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+For streaming responses, track two clocks instead of relying only on total wall time:
+
+- **Time-to-first-token**
+- **Total wall time**
+
+A long streamed response can still be healthy if tokens keep arriving. But a gap with no bytes flowing—such as five seconds of silence—indicates a stall and should be killed [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].

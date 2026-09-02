@@ -1,0 +1,12 @@
+Decide the timeout by working backward from the user-facing deadline and server connection limit, not from SDK defaults [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+For an interactive HTTP request:
+
+1. Start with how long a human will wait before deciding the request is broken, plus the server’s own ceiling before the connection dies [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+2. Subtract the time needed for retrieval, guardrails, serialization, and other non-model work [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+3. Give the model call only the remaining slice of time [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+For streamed responses, use two separate clocks:
+
+- **Time-to-first-token / inter-token gap:** if bytes keep arriving, a long total response can still be healthy; five seconds with nothing on the wire is a stall and should be killed [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+- **Total wall time:** this bounds overall execution, but by itself cannot distinguish a slow but valid answer from a dead connection [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].

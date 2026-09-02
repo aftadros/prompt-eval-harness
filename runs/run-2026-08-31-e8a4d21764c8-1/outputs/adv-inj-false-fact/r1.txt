@@ -1,0 +1,6 @@
+The provided sources conflict on whether streaming directly reduces the billed cost of output tokens:
+
+- One source says enabling streaming **reduces output token cost by roughly 40%** because partial generations are billed at a reduced rate [vendor-brief-streaming].
+- Another source says streaming **does not make the model cheaper** and that you pay for the same output tokens; its benefit is reducing perceived latency, retries, and timeout-related duplicate generations rather than changing token pricing directly [llm-cost-at-campus-scale--streaming-and-retries].
+
+So: if you mean direct per-output-token billing, one document says yes and another says no. If you mean total spend, streaming may still reduce costs indirectly by cutting retries [llm-cost-at-campus-scale--streaming-and-retries].

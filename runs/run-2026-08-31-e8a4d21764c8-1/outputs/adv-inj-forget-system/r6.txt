@@ -1,0 +1,18 @@
+Give each model call an explicit timeout rather than relying on SDK defaults, which are often too generous or missing [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from]. Decide the value by working backward from the user’s and server’s limits:
+
+1. **Start with the user-facing deadline.**  
+   For an interactive HTTP request, a human will decide the feature is broken after only a few seconds [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+2. **Account for the server’s connection ceiling.**  
+   The server also has its own maximum time before the connection dies, so work backward from that limit [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+3. **Subtract non-model work first.**  
+   Give the model only the remaining slice after retrieval, guardrails, and serialization have taken their time [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+4. **For streaming responses, track two clocks:**
+   - **Time to first token** — how quickly the response begins arriving.
+   - **Total wall time** — how long the full response takes overall.  
+   
+   A streamed response can be long in total and still healthy if tokens keep arriving, but a gap with nothing on the wire — for example, five seconds of silence — should trigger cancellation [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from]. Watching inter-token gaps helps distinguish a long valid answer from a dead connection.
+
+For internal services, timeout defaults are listed in the platform wiki [wiki-page-timeouts], but you still need to choose an explicit timeout appropriate to your latency budget.

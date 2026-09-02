@@ -1,0 +1,12 @@
+No. An increased average alone is not enough to ship.
+
+A prompt change can raise the overall mean while still making an important behavior worse—for example, making the assistant more forthcoming but less willing to say it doesn’t know—so only a per-category breakdown reveals that the product got worse [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+Before shipping, you should:
+
+- Put old and new scores side by side.
+- Check the specific categories or cases you decided mattered, not just the overall average.
+- Make sure the improvement is larger than run-to-run noise from model output and judge variability.
+- If the eval set is small, rerun it a few times and confirm the change holds rather than relying on one lucky pass [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+You should also watch for tradeoffs in other checks; for example, making answers more concise can improve conciseness while dropping grounding because shorter answers stop citing sources [evals-before-vibes--what-this-looks-like-on-a-normal-week].

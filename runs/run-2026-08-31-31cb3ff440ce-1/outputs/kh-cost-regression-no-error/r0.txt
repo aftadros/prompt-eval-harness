@@ -1,0 +1,9 @@
+Look first at **per-request cost** — especially **cache hit rate and the stability/ordering of your prompt prefix**.
+
+A refactor can silently raise spend if it moves volatile, per-request content near the top of the prompt, such as a timestamp or per-user token, causing the cached prefix to stop matching. The system won’t error; it just stops receiving the cache discount and bills full input cost instead [llm-cost-at-campus-scale--caching-the-stable-prefix]. This is one of the main failure modes that only shows up when you track cost per request by feature or model call, not in exceptions or latency alerts [llm-cost-per-request--what-it-catches].
+
+So check:
+
+1. Whether your prompt still has **stable material first and volatile material last** — system prompt, tool definitions, retrieved context, then user question [llm-cost-at-campus-scale--caching-the-stable-prefix].
+2. Whether the **cache hit rate dropped after the refactor**, even though requests still succeed [llm-cost-per-request--what-it-catches].
+3. Whether a specific feature or endpoint is now consuming much more input cost per request than before [llm-cost-per-request--what-it-catches].

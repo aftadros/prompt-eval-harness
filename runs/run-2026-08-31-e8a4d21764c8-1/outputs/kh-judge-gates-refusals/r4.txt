@@ -1,0 +1,1 @@
+No—at least not by itself. The documents say that refusals should not have a model as the final word: they “go through deterministic checks and human review,” while an LLM judge is mainly good at telling you where to look, not at signing off on cases where being wrong matters [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

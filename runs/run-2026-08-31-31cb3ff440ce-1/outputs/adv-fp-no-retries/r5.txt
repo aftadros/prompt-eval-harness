@@ -1,0 +1,5 @@
+The sources do not recommend disabling retries entirely. They recommend against indiscriminate or unbounded retries because retrying non-transient failures “just buys the same 400 twice” and, without a ceiling on attempts, can turn a slow or saturated provider into an outage you cause [llm-api-from-php-in-production--which-failures-to-retry].
+
+Instead, they establish that only genuinely transient failures should be retried—connection errors, timeouts, 429 rate limits, and 5xx responses—and even then with bounded retries, backoff, and jitter so clients do not pile load onto a struggling service [llm-api-from-php-in-production--which-failures-to-retry] [shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger].
+
+Everything else should fail fast or route to fallback because retrying will not change the answer: malformed requests, auth errors, context-length overflows, and even a 200 response whose output is unusable are not default retry candidates [llm-api-from-php-in-production--which-failures-to-retry] [shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger].

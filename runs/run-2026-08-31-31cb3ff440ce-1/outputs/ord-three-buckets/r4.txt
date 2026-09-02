@@ -1,0 +1,5 @@
+Split your golden set into **three labeled buckets** [evals-before-vibes--the-golden-set]:
+
+1. **Ordinary questions** – everyday queries that should just work.
+2. **Known-hard ones** – cases that exposed a bug once and need to keep passing.
+3. **Adversarial ones** – inputs designed to pull the model off its guardrails.

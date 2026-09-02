@@ -1,0 +1,7 @@
+Split it into three labeled buckets:
+
+1. **Ordinary questions** — routine queries that should just work.  
+2. **Known-hard cases** — questions that exposed a bug once and should keep testing the fix.  
+3. **Adversarial cases** — questions designed to try pulling the model off its guardrails.  
+
+[evals-before-vibes--the-golden-set]

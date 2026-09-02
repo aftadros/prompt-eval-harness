@@ -1,0 +1,11 @@
+You should log enough to reconstruct the call. For every model call, record:
+
+- Request ID  
+- Model and version  
+- Input and output token counts  
+- Latency split into time-to-first-token and total latency  
+- Which retry attempt it was  
+- Whether the circuit breaker was open  
+- Which path served the response: model, fallback, or kill switch  
+
+Also avoid logging secrets, and treat prompts and user content as sensitive [llm-api-from-php-in-production--log-enough-to-reconstruct-one-call].

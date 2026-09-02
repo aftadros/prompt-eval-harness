@@ -1,0 +1,1 @@
+Add jitter to spread out retry timing so a fleet of pods doesn’t all retry in lockstep against a provider that’s already struggling. That helps avoid hammering the provider and keeps you off its rate-limit blocklist [llm-api-from-php-in-production--which-failures-to-retry].

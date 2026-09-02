@@ -1,0 +1,5 @@
+No. An increased eval average is not enough by itself to ship, because the mean can go up while an important behavior gets worse—for example, easy answers improve but a category that matters erodes [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+Check whether the change moved the metrics for the specific cases you decided mattered by more than run-to-run noise. Model output and LLM-judge scoring vary between runs, so on a small set you should rerun several times before trusting the delta [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+Also inspect tradeoffs in the breakdown: one metric may improve while another drops, such as conciseness going up while grounding falls because shorter answers stop citing sources [evals-before-vibes--what-this-looks-like-on-a-normal-week]. Ship only if the important metrics hold after that check.

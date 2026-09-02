@@ -1,0 +1,1 @@
+Yes—filter on metadata first, then rank by similarity. That approach is described as “cheaper and more accurate” than trying to make the embedding encode things like source document, section, last-modified date, and access scope [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].

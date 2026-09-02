@@ -1,0 +1,10 @@
+No—not as the sole final approver. The documents say that refusals should go through deterministic checks and human review rather than getting a model as the final word [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you]. An LLM judge can help you triage cases or point out where to look, but signing off on cases where being wrong costs something is a different job [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].
+
+If you want the judge to help gate refusal cases, first make it trustworthy:
+
+- Give each judge call one narrow yes-or-no question with the criterion spelled out.
+- Include the source text and tell it to check claims against that text rather than its own beliefs.
+- Require the verdict before the explanation so the explanation does not rationalize itself into agreement.
+- Validate the judge against a small hand-scored golden set; if you disagree on about a fifth of those cases, it is not trustworthy yet and should not gate anything [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].
+
+For refusal behavior over internal docs, the documents also recommend layered checks: weak or thin retrieval results can signal that you should refuse or narrow the question; the prompt should explicitly allow the model to say the docs do not cover it; and a final check should confirm the answer is grounded in retrieved passages rather than free-floating assertion [rag-over-internal-docs--the-honest-i-dont-know].

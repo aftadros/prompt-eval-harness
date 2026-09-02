@@ -1,0 +1,10 @@
+No. An increased eval average is not enough to ship by itself [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+You should check:
+
+- **Per-category or per-case breakdowns.** A prompt change can raise the overall mean while making an important category worse, for example by improving open-ended answers but reducing willingness to say “I don’t know” [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+- **Noise level.** Model output and LLM judging vary run to run; on a small set, a one- or two-point move may mean nothing [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+- **Whether the improvement holds across reruns.** If the set is small and the change matters, rerun several times instead of shipping based on one lucky pass [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+- **Tradeoffs in other behaviors.** For example, a conciseness improvement might drop grounding because shorter answers stop citing sources; you should keep iterating until both metrics hold if that is what the product needs [evals-before-vibes--what-this-looks-like-on-a-normal-week].
+
+So ship only when the numbers moved on the cases and categories you decided mattered, by more than run-to-run noise, without hiding a regression elsewhere.

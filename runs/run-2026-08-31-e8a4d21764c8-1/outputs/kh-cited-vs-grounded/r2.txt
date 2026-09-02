@@ -1,0 +1,5 @@
+Not necessarily. A citation alone does not establish that an answer is grounded.
+
+For grounding, the cited source must be a real retrieved document or passage, and that passage must actually support the claim [rag-over-internal-docs--citations-end-to-end]. If the model cites something that was not in the retrieved set, that is treated as a failure and should be stripped or flagged before anyone sees it [rag-over-internal-docs--citations-end-to-end]. The documents also say that a citation which does not resolve to a real retrieved document “manufactures confidence” rather than proving correctness [rag-over-internal-docs--citations-end-to-end].
+
+In evaluation terms, the relevant test is whether “the cited passage support[s] the claim,” not merely whether a source was named [rag-over-internal-docs--citations-end-to-end]. Likewise, an LLM-as-judge check should verify claims against the provided source text rather than against what the model already believes [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

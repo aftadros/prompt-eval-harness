@@ -1,0 +1,8 @@
+Yes—filter chunks on metadata before ranking, rather than relying on the embedding to capture those distinctions. The documents say that storing metadata such as source document, section, last-modified date, and access scope lets you “filter before [you] rank,” and that this approach is “cheaper and more accurate than asking the embedding to encode all of that on its own” [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+For access control especially, filtering should happen even earlier: candidate documents should be checked against the user’s permissions before reranking or prompt assembly, so restricted material never enters the context window at least. Could include second doc? Maybe relevant: enforce permissions before ranking; but question is metadata vs embedding. Cite both if using permission claim. Need exact id square brackets. Ensure no extra.
+</think>
+
+Yes—filter on metadata first and use embeddings for similarity afterward. The documents recommend storing enough chunk metadata to filter by things like source document, section, last-modified date, and access scope, because “filtering on metadata first and ranking by similarity second is cheaper and more accurate than asking the embedding to encode all of that on its own” [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+The same logic applies to permissions: candidate documents should be filtered against access rights before reranking or model use, so restricted material is removed early rather than left to the prompt or embedding stage [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].

@@ -1,0 +1,7 @@
+None of them. The documents explicitly say that no single technique fully solves prompt injection:
+
+- Delimited retrieved blocks “shift the base rate” and give you a place to reason about failures, but they are not immunity [prompt-injection-is-untrusted-input--the-data-instruction-boundary].
+- Defense in depth is presented as the approach that holds up because “no single one has to hold”; it does not make prompt injection go away [prompt-injection-is-untrusted-input--defense-in-depth].
+- Marking retrieved context lowers success rate, but that is only a model-level mitigation and “without being a guarantee” [prompt-injection-in-rag--the-prompt-and-the-output].
+
+So the techniques described reduce risk or limit damage, but none fully solves prompt injection.

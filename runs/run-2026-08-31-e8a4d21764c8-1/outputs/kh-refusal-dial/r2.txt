@@ -1,0 +1,1 @@
+No—not universally. The document says refusal is a tradeoff that should be tuned to the context: it “belongs wherever a wrong answer costs more than a missed one” [rag-over-internal-docs--the-honest-i-dont-know]. For documentation people use to make decisions, though, it recommends leaning toward refusing when unsure [rag-over-internal-docs--the-honest-i-dont-know].

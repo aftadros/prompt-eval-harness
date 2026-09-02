@@ -1,0 +1,5 @@
+Track cost per request because it is immediately actionable and easier to diagnose than a monthly total:
+
+- A change either moved the per-call number or it didn’t, so you can tell right away instead of waiting for an invoice that averages everything together [llm-cost-per-request--why-the-unit-is-the-request].
+- It survives growth. If traffic doubles, the bill roughly doubles and tells you little; but if cost per request rises while traffic is flat, it points to a specific feature or behavior getting more expensive [llm-cost-per-request--why-the-unit-is-the-request].
+- The monthly bill averages everything together and hides the offender, whereas per-request cost—especially bucketed by feature—shows whether a change helped [llm-cost-at-campus-scale--tokens-are-the-row-count].

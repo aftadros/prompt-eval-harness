@@ -1,0 +1,7 @@
+First check your per-request LLM cost metrics, especially cache hit rate and input-token cost for the affected endpoint or feature. A refactor can move a volatile value near the top of the prompt, break the stable cached prefix, and make you pay full input price instead of the discounted cache rate—without producing an error [llm-cost-per-request--what-it-catches] [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+So look for:
+
+- a sudden drop in cache hit rate or rise in effective input cost after the refactor;
+- prompt-ordering changes, such as timestamps, per-user tokens, or other per-request values appearing before stable system instructions, tool definitions, retrieved context, or the question [llm-cost-at-campus-scale--caching-the-stable-prefix];
+- a feature-level cost outlier that only appears when you slice spend by request/feature rather than looking at total spend [llm-cost-per-request--what-it-catches].

@@ -1,0 +1,1 @@
+I can't answer that from the sources provided. The documents mention retrieval-time permission checks and earlier PII-related work, but they don’t address FERPA or establish whether the setup meets its requirements.

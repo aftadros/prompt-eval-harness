@@ -1,0 +1,5 @@
+According to [evals-before-vibes--the-golden-set], you should keep **three labeled buckets**:
+
+1. **Ordinary questions** that should just work.
+2. **Known-hard ones** that exposed a bug once.
+3. **Adversarial ones** that try to pull the model off its guardrails.

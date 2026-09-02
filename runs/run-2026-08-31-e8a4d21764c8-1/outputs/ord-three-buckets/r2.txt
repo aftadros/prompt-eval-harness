@@ -1,0 +1,3 @@
+According to the golden set guidance, you should keep three labeled buckets:
+
+1. **Ordinary questions** — "evals-before-vibes--the-golden-set"]. The companion document reinforces that a few dozen real-traffic questions beat a thousand synthetic ones, and that every bad answer reported in production should be folded back into the set as a permanent test [did-the-prompt-change-help--build-the-set-from-real-questions-including-the].

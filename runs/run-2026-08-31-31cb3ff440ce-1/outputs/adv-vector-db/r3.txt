@@ -1,0 +1,1 @@
+I can't answer that from the sources provided. The documents mention picking "a store" and tuning retrieval parameters as part of the pipeline [rag-over-internal-docs--opening], but they never name or recommend a specific vector store product.

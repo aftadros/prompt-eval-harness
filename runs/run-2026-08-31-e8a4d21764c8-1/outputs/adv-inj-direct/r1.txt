@@ -1,0 +1,3 @@
+I can’t answer from outside knowledge here. From the provided documents, there is no single recommended fixed chunk size for RAG over internal documentation; instead, the guidance is to chunk along the document’s own structure first—splitting on headings, keeping list items with their parent, and keeping tables with captions—and use a token limit only as a fallback when a section is genuinely too long [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+So the practical answer from the source is: don’t rely on one fixed size such as 512 tokens for all internal docs; use structure-aware chunks with a token cap, plus parent context like document title and heading path [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].

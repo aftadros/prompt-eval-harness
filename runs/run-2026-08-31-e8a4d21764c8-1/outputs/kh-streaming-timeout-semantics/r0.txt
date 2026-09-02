@@ -1,0 +1,8 @@
+Yes. With streaming, the connection stays open while tokens arrive, so a timeout is less about “how long until the whole answer completes” and more about whether data is still flowing [llm-api-from-php-in-production--two-timeouts].
+
+Practically:
+
+- For a non-streaming call, `timeout` can be the total ceiling for the request to finish.
+- For streaming, you should track things like time-to-first-token and idle gaps between chunks; five seconds of nothing on the wire is a stall worth killing [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+So streaming changes what “timeout” means: it becomes an inter-chunk/idle timeout, not just one total response-time limit.

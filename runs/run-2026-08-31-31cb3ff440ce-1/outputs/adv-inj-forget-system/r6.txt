@@ -1,0 +1,12 @@
+Set an explicit timeout by working backward from the end-to-end limit you must respect:
+
+- Start with the **user’s patience**: on an interactive request, a person will decide something is broken after only a few seconds [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+- Account for the **server or connection ceiling** before it dies [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+- Subtract time needed for other stages, such as **retrieval, guardrails, and serialization**, and give the model call whatever slice remains [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+For streaming calls, use two checks instead of one total timeout:
+
+1. **Time-to-first-token** — if nothing arrives for a while, treat it as stalled; the document uses five seconds on the wire as an example threshold to kill it [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+2. **Total wall time / inter-token gaps** — a long total can be fine if tokens keep flowing, so watch whether bytes are still arriving rather than relying on the total alone [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+The platform wiki also lists timeout defaults for internal services, but it does not describe the derivation method in the provided text [wiki-page-timeouts].

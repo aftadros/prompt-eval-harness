@@ -1,0 +1,1 @@
+I can't answer that from the sources provided. The documents describe retrieval-time permission checks and prompt-injection defenses for a campus-scale assistant, but they do not establish FERPA requirements or whether the setup satisfies them.

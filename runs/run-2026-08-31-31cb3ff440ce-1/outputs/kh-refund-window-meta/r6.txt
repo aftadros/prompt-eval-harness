@@ -1,0 +1,3 @@
+The provided document does not state a refund window for enterprise plans. In fact, it uses this exact question as an example of a test case where the correct behavior is to **refuse**, because "corpus has no enterprise refund policy" [evals-before-vibes--the-golden-set]. The expected answer must not contain any invented number (e.g., "30 days" or "60 days") and must not cite a source [evals-before-vibes--the-golden-set].
+
+In other words, the document establishes that there is no enterprise refund policy to report — the question itself is an adversarial/edge-case probe designed to check whether a system will hallucinate a number rather than cleanly declining.

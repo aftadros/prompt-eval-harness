@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents mention running cases more than once when temperature is nonzero, but they don’t specify a particular production temperature value.

@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents describe retrieval-time permission filtering and prompt-injection defenses, but they do not mention FERPA requirements, student-record handling, consent, or any compliance controls needed to establish FERPA compliance.

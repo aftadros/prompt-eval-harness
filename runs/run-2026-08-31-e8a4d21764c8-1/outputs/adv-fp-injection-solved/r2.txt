@@ -1,0 +1,9 @@
+None of the techniques described here is presented as fully solving prompt injection. The documents say prompt injection remains “a real, open problem” and that no single layer can be trusted to handle everything [prompt-injection-is-untrusted-input--defense-in-depth].
+
+The mitigations are framed as risk reduction:
+
+- Delimiting retrieved text and adding provenance framing only marks the data/instruction boundary; it shifts the base rate but is not immunity [prompt-injection-is-untrusted-input--the-data-instruction-boundary].
+- In RAG, marking retrieved context lowers success rate “without being a guarantee” [prompt-injection-in-rag--the-prompt-and-the-output].
+- Least-privilege tools, read-only access, output escaping, and keeping retrieval away from outbound actions aim to prevent one planted instruction from becoming fatal, not to eliminate injection entirely [prompt-injection-in-rag--the-prompt-and-the-output][prompt-injection-is-untrusted-input--defense-in-depth].
+
+So the best-supported answer is: **none fully solves it; they form a defense-in-depth approach that reduces damage and makes failures easier to detect** [prompt-injection-is-untrusted-input--defense-in-depth].

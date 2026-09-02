@@ -1,0 +1,1 @@
+They recommend a small, bounded retry budget rather than unlimited retries—explicitly “usually at two” retries [shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger]. The PHP example also uses a hard cap in the retry predicate: it stops when `$attempt >= 3` [llm-api-from-php-in-production--which-failures-to

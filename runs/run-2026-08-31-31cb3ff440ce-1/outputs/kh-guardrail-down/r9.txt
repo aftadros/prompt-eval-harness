@@ -1,0 +1,1 @@
+It should **fail closed** — if the guardrail service is down, ship nothing rather than returning an unchecked answer, because “an unchecked answer is worse than no answer” [shipping-llm-features-safely--what-the-user-sees-when-the-model-is-down].

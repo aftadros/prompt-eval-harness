@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The setup is described as a campus-scale LLM assistant [llm-cost-at-campus-scale--opening], and retrieval enforces permissions so restricted material does not enter the context window [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt]. But nothing in the provided documents says whether that makes it FERPA-compliant.

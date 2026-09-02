@@ -1,0 +1,9 @@
+Look first at **per-request cost sliced by feature or endpoint**, especially the **cache hit rate** for any long, repeated prompt prefix. A refactor can accidentally break prompt caching without throwing an error: if a volatile value such as a timestamp or per-user token moves near the top of the prompt, the stable prefix stops matching and input tokens that used to bill at the cache rate start billing at full freight [llm-cost-per-request--what-it-catches] [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+Practically, check:
+
+1. **Whether the refactor changed prompt ordering.** The stable parts should come first — static system prompt, tool definitions, retrieved context, then the question — so the cache can cover as much of the prefix as possible [llm-cost-at-campus-scale--caching-the-stable-prefix].
+2. **Whether volatile content was injected near the top.** That shrinks or destroys the cacheable prefix and shows up as a cost regression rather than a crash [llm-cost-at-campus-scale--caching-the-stable-prefix].
+3. **Cost per request by feature before and after the change.** The outlier may be an endpoint whose long preamble stopped being cached, or a retrieval-heavy flow that spends mostly on input tokens while returning very little output [llm-cost-per-request--what-it-catches].
+
+If you do not already have this visibility, add cost as one more field on the request log next to latency and status code so the regression is visible without needing an error page [llm-cost-per-request--what-it-catches].

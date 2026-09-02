@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents describe retrieval-time permission checks, provenance tracking, and prompt-injection screening, but they do not mention FERPA or whether the system’s handling of education records meets FERPA requirements.

@@ -1,0 +1,6 @@
+In practice, a kill switch for an AI feature is **a coarse, boring configuration flag that can turn the feature off without requiring a deploy**. It should be:
+
+- **Read on every request**, with no cache in front of it that would delay its effect [shipping-llm-features-safely--the-kill-switch].
+- **Able to drop the feature quickly** when something goes wrong, such as a bad prompt change, unsafe provider content, a runaway cost loop, or a guardrail regression [shipping-llm-features-safely--the-kill-switch].
+- **Equivalent to the graceful-degradation path**, not an error state. For example, if the feature is summarization, turning it off might simply mean “the summarized answer is unavailable,” while retrieval and the rest of the app keep working [shipping-llm-features-safely--the-kill-switch].
+- **A known, tested mode** that can be rehearsed before it is needed; a kill switch you have never flipped is still just a guess [shipping-llm-features-safely--the-kill-switch].

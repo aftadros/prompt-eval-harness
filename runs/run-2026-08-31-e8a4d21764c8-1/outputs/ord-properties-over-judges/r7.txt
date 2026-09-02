@@ -1,0 +1,10 @@
+Use a property check when the answer has a clear, verifiable feature you can test directly—such as:
+
+- it includes a cited source  
+- it refuses when refusing was correct  
+- it produces valid JSON  
+- it contains a specific fact that must be present  
+
+Properties are preferable there because they’re cheaper to write and run than model grading, and they don’t drift between runs. In the docs’ words, lean on them “anywhere the question allows” and reserve model judging for answers that need real judgment [did-the-prompt-change-help--build-the-set-from-real-questions-including-the].
+
+Use a model judge instead when what you’re measuring doesn’t reduce to a simple string match—e.g., whether the answer stayed grounded, whether the tone was right, or whether a refusal was polite and specific rather than blunt [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

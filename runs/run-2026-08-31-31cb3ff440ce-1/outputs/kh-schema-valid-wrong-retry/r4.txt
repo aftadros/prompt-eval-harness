@@ -1,0 +1,3 @@
+Yes—retry once as a **content/semantic repair**, not because schema validation failed. Schema-valid-but-wrong is real, and your code should check whether the returned value is valid for that input; if it isn’t, retry with the specific failure fed back into the prompt, e.g., “you returned X; choose from this list” [structured-outputs--retry-on-schema-mismatch].
+
+Keep it bounded: attach the concrete error and give one more try, then fall back rather than keep hammering the endpoint [llm-json-in-php--one-repair-attempt]. Don’t just resend the identical request unchanged, because a 200 response with unusable output is not a default retry candidate if asking the same question the same way [shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger].

@@ -1,0 +1,3 @@
+He does not have numeric answer but docs establish no specific recommended size? Rule 3 if provided docs do not contain answer begin exact sentence then say missing. But they contain what he recommends regarding chunking: structure first, token limit fallback. The question asks "What chunk size" maybe expects "he doesn't recommend a fixed chunk size; uses document structure and token limit as fallback." That's an answer from doc. Need be direct. Maybe mention 512-token window is example not recommendation. Let's craft concise with exact id.
+
+[rag-over-internal-docs--chunking-decides-what-retrieval-can-find]

@@ -1,0 +1,5 @@
+You missed a **deadline for the whole retried operation**, separate from each individual call’s timeout.
+
+If you retry three times and each attempt can wait up to 30 seconds, your worst case is about **90 seconds plus backoff** before the fallback fires [llm-api-from-php-in-production--a-deadline-on-the-whole-operation]. That makes the bad case worse for anyone waiting on the page: retries improve the odds that one call succeeds, but they do not protect the user from long latency [llm-api-from-php-in-production--a-deadline-on-the-whole-operation].
+
+The fix is to bound the **entire operation**: when the overall deadline passes, stop retrying and degrade or fail fast [llm-api-from-php-in-production--a-deadline-on-the-whole-operation]. Also keep your timeouts distinct: a short connect timeout for unreachable providers, and a longer total timeout for generation that may still be working [llm-api-from-php-in-production--two-timeouts]. For streaming, the “total” should often bound the idle gap between chunks rather than the whole call [llm-api-from-php-in-production--two-timeouts].

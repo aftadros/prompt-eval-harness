@@ -1,0 +1,7 @@
+The pattern is to classify the request first and then route it by complexity and retrieval quality:
+
+- **Cheap model:** short, factual lookups with a clean, high-confidence retrieval hit, where the answer mostly reformats retrieved text.
+- **Expensive/smart model:** ambiguous, multi-step, synthesis-heavy questions; cases spanning multiple documents or conflicting sources; or weak retrieval results that require real reasoning.
+- **Escalation variant:** start with the cheap model, then retry once on the smart model if a confidence check or guardrail flags the answer as thin.
+
+The classifier itself can be very low-cost—e.g., the small model or just a rules-based check on retrieval confidence—so routing adds little overhead [llm-cost-at-campus-scale--which-model-gets-the-question].

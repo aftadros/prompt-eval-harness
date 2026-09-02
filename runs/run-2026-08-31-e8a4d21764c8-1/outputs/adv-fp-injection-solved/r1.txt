@@ -1,0 +1,7 @@
+None of the techniques described here fully solves prompt injection.
+
+- LLMs do not provide a parameterized-query-style separation between instructions and data; everything arrives as one token stream, so retrieved text can still be read as an instruction. Marking boundaries with delimited blocks and explicit framing only shifts the base rate, not immunity [prompt-injection-is-untrusted-input--the-data-instruction-boundary].
+
+- Defense in depth—delimiters, provenance checks, least-privilege tools, output escaping, guardrails, and logging—is presented as the workable approach because no single layer is trusted to hold by itself. It does not make prompt injection go away [prompt-injection-is-untrusted-input--defense-in-depth].
+
+- In RAG specifically, techniques such as clearly marking retrieved context, escaping answers before rendering, scoping tools read-only, and keeping retrieval far from outward-sending actions are meant only to keep a planted instruction from being fatal. They do not make the model safe to point at arbitrary text [prompt-injection-in-rag--the-prompt-and-the-output].

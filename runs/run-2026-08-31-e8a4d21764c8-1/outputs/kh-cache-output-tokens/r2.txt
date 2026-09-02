@@ -1,0 +1,3 @@
+No—not directly. Prompt caching lowers the cost of the **cached input prefix**, charging a fraction of the normal input price for reused content [llm-cost-at-campus-scale--caching-the-stable-prefix]. It does not change how output tokens are priced: input and output are billed separately, with output costing more per token [llm-cost-at-campus-scale--tokens-are-the-row-count].
+
+So caching can cut your effective **input cost**, but it will not by itself reduce your **output token cost** unless you also reduce the number of output tokens produced.

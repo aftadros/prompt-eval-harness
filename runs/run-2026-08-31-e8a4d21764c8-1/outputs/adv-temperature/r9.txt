@@ -1,0 +1,1 @@
+The provided documents do not state a specific production temperature. They only note that when temperature is nonzero, each case should be run more than once because a single green run can hide flakiness [evals-before-vibes--diffing-against-yesterdays-run].

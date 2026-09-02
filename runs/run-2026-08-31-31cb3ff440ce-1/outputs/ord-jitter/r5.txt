@@ -1,0 +1,1 @@
+Add jitter to retry backoff so a fleet of pods doesn’t all retry at the same moment, avoiding lockstep retries against an already struggling provider. This is a cheap courtesy that helps keep you off a rate-limit blocklist [llm-api-from-php-in-production--which-failures-to-retry].

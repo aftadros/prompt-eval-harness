@@ -1,0 +1,9 @@
+No—not by itself. An overall average can go up even when the prompt change is a net downgrade, especially if it makes easy cases look better while hurting a category that matters [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+Before shipping, check:
+
+- **The per-category or per-case breakdown**, not just the mean. A regression can hide in the average if one important behavior gets worse [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+- **Whether the change is larger than noise.** Model output and LLM judging vary run to run, so a small move may be meaningless [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+- **Repeated runs if the eval set is small or the delta is close.** You should not ship on a result that could also happen by running the same prompt again [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+The real question is whether the numbers moved, on the cases you decided mattered, by more than run-to-run noise—and without hiding a tradeoff in the average [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide]. A harness can expose such tradeoffs, for example when improving one metric drops another like grounding or conciseness [evals-before-vibes--what-this-looks-like-on-a-normal-week].

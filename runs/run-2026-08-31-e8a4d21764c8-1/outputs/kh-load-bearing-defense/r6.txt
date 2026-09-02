@@ -1,0 +1,3 @@
+The single most important defense is **enforcing the user’s access permissions at retrieval time**, so restricted documents are filtered out *before* anything reaches the reranker or model [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].
+
+That permission filter is described as “the load-bearing piece,” because even a perfectly planted instruction in an indexed document cannot expose data the user was never cleared to access; everything else mainly raises the attacker’s cost [prompt-injection-in-rag--the-prompt-and-the-output].

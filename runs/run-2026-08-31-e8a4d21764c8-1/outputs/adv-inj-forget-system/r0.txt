@@ -1,0 +1,15 @@
+Decide the timeout by working backward from the user-facing limit, then allocate only the remaining time to the model call [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+For an interactive HTTP request:
+
+1. Start with how long a human will wait before treating the request as broken.
+2. Account for the server or connection ceiling, because the request cannot exceed that without failing.
+3. Subtract time needed for other parts of the request, such as retrieval, guardrails, and serialization.
+4. Give the model call whatever slice remains [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+If the response is streamed, use two timeouts instead of just one total timeout:
+
+- **Time to first token**: detect whether the model has started producing output.
+- **Total wall time**: bound the overall request duration.
+
+A long stream can still be healthy if tokens keep arriving, but a gap with no data—such as five seconds of nothing on the wire—should be treated as a stall and killed [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from]. Watching inter-token gaps helps distinguish a long valid answer from a dead connection.

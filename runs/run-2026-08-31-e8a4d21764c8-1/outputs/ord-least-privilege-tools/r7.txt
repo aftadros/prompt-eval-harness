@@ -1,0 +1,10 @@
+Treat the tools as least-privilege service accounts: expose only the narrowest capabilities needed for the job, because a model reading retrieved documents can be talked into using whatever tools it has [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+
+Concretely:
+
+- **Keep retrieval/search read-only.** A document-search tool should read; it should not get write access “just in case” [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Gate destructive or outbound actions.** If a tool can send email, delete records, make authenticated API calls, or exfiltrate data, put those actions behind a confirmation the user actually sees so a silent injection cannot trigger them alone [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Validate model-generated arguments as untrusted input.** Treat the tool arguments the model produces as if a stranger typed them, and check for path traversal, injection, and other unvalidated-input problems [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Separate untrusted content from high-trust tools.** Keep attacker-controllable retrieved text and loaded high-trust tools as far apart in the flow as possible; a single turn that both reads untrusted text and holds dangerous capabilities is riskier [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Avoid the exfiltration loop.** The dangerous combination is a model that reads external or retrieved text, has a tool that makes network requests, and runs unattended; break it by gating the tool or sanitizing what reaches it [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Make retrieval provenance-bearing if answers must be checkable.** The chunk should carry source identity from creation, retrieval should return that identity with the text, and the model should cite only passages it was actually handed; strip or flag citations that do not resolve to a real retrieved document [rag-over-internal-docs--citations-end-to-end].

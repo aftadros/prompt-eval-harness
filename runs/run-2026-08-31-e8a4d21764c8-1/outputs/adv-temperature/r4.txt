@@ -1,0 +1,1 @@
+The sources don’t state a specific production temperature. They only note that when **temperature is nonzero**, each eval case should be run more than once [evals-before-vibes--diffing-against-yesterdays-run].

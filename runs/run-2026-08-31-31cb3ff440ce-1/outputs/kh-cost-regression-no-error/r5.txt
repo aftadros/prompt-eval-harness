@@ -1,0 +1,5 @@
+Look first at per-request LLM cost sliced by feature or configuration, and specifically check whether prompt caching stopped working after the refactor.
+
+A change that moves a volatile or per-request value into what should be a stable prefix can silently break cache matching. That does not throw an error; it just makes input tokens bill at full price instead of the cached rate, so spend climbs while everything appears healthy [llm-cost-per-request--what-it-catches][llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+Then inspect prompt ordering for accidental cache invalidation: stable content should come first—static system prompt, then tool definitions, then retrieved context, then the user question—and you should avoid putting timestamps or per-user tokens near the top [llm-cost-at-campus-scale--caching-the-stable-prefix].

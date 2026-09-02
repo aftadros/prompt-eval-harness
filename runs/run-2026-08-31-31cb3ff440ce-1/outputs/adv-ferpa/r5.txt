@@ -1,0 +1,1 @@
+I can't answer that from the sources provided. The documents describe campus-scale retrieval and permission filtering for RAG, but they do not mention FERPA or establish whether the setup meets FERPA’s legal requirements.

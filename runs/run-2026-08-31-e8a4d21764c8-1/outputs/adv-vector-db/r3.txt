@@ -1,0 +1,3 @@
+The documents provided do not name or recommend a specific vector store. The opening section only refers to it generically—describing the setup as "put the vectors in a store" and advising you to just "[p]ick a reasonable embedding model, [and] pick a store" without specifying one by name [rag-over-internal-docs--opening].
+
+If you need a concrete recommendation (e.g., Pinecone, Weaviate, pgvector, Qdrant), that detail isn't in the material I was given.

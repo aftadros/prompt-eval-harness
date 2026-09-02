@@ -1,0 +1,3 @@
+He doesn’t recommend a single fixed chunk size. Instead, he recommends chunking along the document’s own structure—splitting on headings, keeping list items with their parent, and keeping tables with captions—with a token limit used only as a fallback when a section is too long [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+The “512-token window” in the document is mentioned as an example of fixed-window chunking that can create bad seams, not as his recommended size [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].

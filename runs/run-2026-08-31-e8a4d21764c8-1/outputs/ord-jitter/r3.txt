@@ -1,0 +1,1 @@
+Add jitter so a fleet of pods doesn’t all retry at the same time against an already-struggling provider; the small random delay keeps retries from happening in lockstep, which helps avoid adding extra pressure and getting blocked by rate limits [llm-api-from-php-in-production--which-failures-to-retry].

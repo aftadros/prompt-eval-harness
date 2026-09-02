@@ -1,0 +1,7 @@
+The pattern is to classify each request and route it by complexity:
+
+- **Cheap tier:** direct factual answers that are grounded in one high-confidence retrieved passage, where the model mostly reformatsthe text [llm-cost-at-campus-scale--which-model-gets-the-question].
+- **Smart/expensive tier:** questions that span multiple documents, require reasoning over conflicting sources, or have weak retrieval results so the model has real work to do [llm-cost-at-campus-scale--which-model-gets-the-question].
+- **Escalation approach:** start with the cheap model, then if a confidence check or guardrail flags the answer as thin, retry it once on the smart model [llm-cost-at-campus-scale--which-model-gets-the-question].
+
+The routing decision itself can be made by a small model or even a simple rule based on retrieval confidence, so it costs almost nothing [llm-cost-at-campus-scale--which-model-gets-the-question].

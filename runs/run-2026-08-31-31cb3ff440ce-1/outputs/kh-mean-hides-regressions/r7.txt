@@ -1,0 +1,5 @@
+No—an average increase alone is not enough to ship [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+The overall average can hide a real regression: the change may make easy cases nicer while making an important category worse, so the mean goes up even though the product got worse [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide]. The same tradeoff can show up in concrete evals, such as conciseness improving while grounding drops because shorter answers stop citing sources [evals-before-vibes--what-this-looks-like-on-a-normal-week].
+
+Before shipping, you should check the per-category breakdown and make sure the improvement is larger than run-to-run noise. If the set is small or the delta is close to noise, rerun a few times and confirm the change holds [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].

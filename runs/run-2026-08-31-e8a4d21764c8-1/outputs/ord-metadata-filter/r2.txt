@@ -1,0 +1,3 @@
+Yes—filter chunks on metadata first, then use embedding similarity to rank what remains. The documents say that filtering by metadata such as source document, section, last-modified date, and access scope is “cheaper and more accurate than asking the embedding to encode all of that on its own” [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+For access control especially, restricted material should be filtered out before it reaches the reranker or model, so it never enters the context window at all [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].

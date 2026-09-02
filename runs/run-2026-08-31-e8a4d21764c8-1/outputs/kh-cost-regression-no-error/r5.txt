@@ -1,0 +1,17 @@
+Start with **per-request LLM cost**, especially for the endpoint or feature that changed in the refactor, and check whether you accidentally broke **prompt-cache prefix matching**. The documents say this kind of regression “never throws an exception” and can show up only as a dashboard number if you are tracking cost per request [llm-cost-per-request--what-it-catches].
+
+Look first at:
+
+1. **Cost per request by feature, endpoint, or model**  
+   Compare the affected path before and after the refactor. The goal is to find whether one configuration screen, prompt template, or retrieval flow is now spending much more than expected [llm-cost-per-request--what-it-catches]. If you only look at total spend, errors, latency, or status codes, you may miss it because the request can still succeed normally while costing more [llm-cost-per-request--what-it-catches][llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+2. **Cache hit rate / cached-prefix reuse**  
+   If your provider caches a stable prompt prefix, check whether that cache is still being used. A refactor can move “a per-request value to the top of the prompt,” causing the cache prefix to stop matching and making you pay full input cost instead of the discounted cache rate [llm-cost-per-request--what-it-catches]. The document specifically calls this a common invisible bug: nothing crashes, but the bill rises [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+3. **Prompt ordering for volatile content**  
+   Inspect whether dynamic values are now appearing too early in the prompt. The recommended order is stable material first and volatile material last: static system prompt, then tool definitions, retrieved context, then the user’s question [llm-cost-at-campus-scale--caching-the-stable-prefix]. If a timestamp, per-user token, or other request-specific value was injected near the top of the prompt, the cacheable prefix can shrink to nothing and the savings disappear [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+4. **Input-token-heavy features**  
+   If the refactor also changed context packing, check whether a feature is now sending large retrieved passages but asking for very little output. That pattern spends mostly on input tokens and can be an outlier in cost-per-request charts even if nothing errors [llm-cost-per-request--what-it-catches].
+
+In short: your first place to look should be **cost per request plus cache-hit behavior**, not error logs. The likely culprit is that the refactor changed prompt structure or added volatile content early enough to invalidate caching, causing input tokens to bill at full cost instead of the cheaper cached rate [llm-cost-per-request--what-it-catches][llm-cost-at-campus-scale--caching-the-stable-prefix].

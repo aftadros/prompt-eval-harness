@@ -1,0 +1,6 @@
+The sources don’t recommend disabling retries entirely. They establish a narrow, bounded retry policy:
+
+- Retry only genuinely transient failures—connection errors, timeouts, 429s, and 5xx responses [llm-api-from-php-in-production--which-failures-to-retry] [shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger].
+- Cap the number of attempts so retries don’t create an outage or extra cost [llm-api-from-php-in-production--which-failures-to-retry] [shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger].
+- Use backoff, jitter, and provider `Retry-After` guidance to avoid piling load on a struggling service [llm-api-from-php-in-production--which-failures-to-retry] [shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger].
+- Fail fast on permanent failures such as malformed requests, auth errors, context-length overflow, or unusable 200 responses [llm-api-from-php-in-production--which-failures-to-retry] [shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger].

@@ -1,0 +1,9 @@
+Look first at whether the refactor broke prompt caching, especially by moving volatile or per-request content near the top of the prompt — such as a timestamp, user token, or other changing value — so the stable prefix no longer matches [llm-cost-per-request--what-it-catches] [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+That is the most likely cause when spend climbs but nothing errors: the cache hit rate can drop to zero and you end up paying full input price for a prefix you used to get at a discount, with no exception or slowdown [llm-cost-per-request--what-it-catches] [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+So check:
+
+- **Prompt ordering** — stable material first, volatile material last [llm-cost-at-campus-scale--caching-the-stable-prefix].
+- **Cache hit rate before and after the refactor** — a sudden collapse is a strong signal [llm-cost-per-request--what-it-catches] [llm-cost-at-campus-scale--caching-the-stable-prefix].
+- **Cost per request by feature or endpoint** — that is where an invisible cost regression usually shows up as an outlier [llm-cost-per-request--what-it-catches] [llm-cost-at-campus-scale--caching-the-stable-prefix].

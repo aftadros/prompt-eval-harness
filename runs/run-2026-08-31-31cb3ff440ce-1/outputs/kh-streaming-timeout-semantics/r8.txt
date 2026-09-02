@@ -1,0 +1,3 @@
+Yes. In a non-streaming call, the timeout can act as a total ceiling for the whole model call [llm-api-from-php-in-production--two-timeouts]. With streaming, the connection stays open while tokens arrive, so the “total” no longer measures the entire answer in the same way; you instead bound the idle gap between chunks and watch whether bytes are still flowing [llm-api-from-php-in-production--two-timeouts][shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+Practically, that means tracking things like time-to-first-token, inter-token gaps, and total wall time: a long streamed response can be healthy if tokens keep arriving, but a period of nothing on the wire is a stall [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].

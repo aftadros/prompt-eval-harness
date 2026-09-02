@@ -1,0 +1,10 @@
+Order the prompt **stable material first, volatile content last**:
+
+1. Static system prompt  
+2. Tool definitions  
+3. Retrieved context  
+4. The user’s question  
+
+The prefix cache can cover everything up to the first point where the prompt varies, so this ordering lets a high-traffic endpoint bill its repeated preamble at the lower cache rate [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+Also keep the “stable” parts actually stable. If you inject something that changes near the top—such as a timestamp or per-user token—the cacheable prefix shrinks and the savings disappear, causing a cost regression rather than an obvious failure [llm-cost-at-campus-scale--caching-the-stable-prefix].

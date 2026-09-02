@@ -1,0 +1,3 @@
+Yes—filter chunks on metadata first, then rank by similarity. The documents say this approach is “cheaper and more accurate than asking the embedding to encode all of that on its own” [rag-over-internal-docs--chunking-decides-what-retrieval-can-find]. They recommend storing enough metadata for filtering—such as source document, section, last-modified date, and access scope—and using it before similarity ranking [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+For an internal assistant, the same idea applies to permissions: candidate documents should be filtered against the user’s access rights before anything is reranked or sent to the model [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].

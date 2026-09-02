@@ -1,0 +1,17 @@
+Set an explicit timeout and derive it from the end-to-end deadline, rather than relying on SDK defaults, which are often too generous or missing [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+For an interactive HTTP request:
+
+1. Start with the user’s patience ceiling — how long a human will wait before deciding the request is broken [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+2. Also account for the server’s connection ceiling before it dies [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+3. Work backward from that total budget and subtract time spent on retrieval, guardrails, serialization, and other non-model work [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+4. The remaining slice is what you should give the model call [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+For streaming responses, use two clocks instead of only a total timeout:
+
+- **Time to first token** — how long until the response starts arriving.
+- **Total wall time** — how long the whole request takes.
+
+A long total duration can be fine if tokens or bytes keep flowing; but about five seconds with nothing on the wire is a stall and should be killed [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from]. Watching the inter-token gap lets you distinguish a healthy long answer from a dead connection, which total time alone cannot do [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+Internal service timeout defaults are listed in the platform wiki, but the documents provided do not specify those default values [wiki-page-timeouts].

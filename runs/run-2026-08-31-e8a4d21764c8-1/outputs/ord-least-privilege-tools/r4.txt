@@ -1,0 +1,9 @@
+Scope them with least privilege: treat every exposed tool as a capability the model can eventually be coerced into using, so give it only what each task actually needs [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+
+Practically:
+
+- Keep each tool’s scope minimal. A document-search or retrieval tool should normally be read-only; don’t add write paths “just in case” [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- Put destructive or outbound actions behind a confirmation the user actually sees, so an injected instruction cannot trigger them silently [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- Validate the tool arguments the model produces as untrusted input, because in an injection case they effectively came from a stranger; watch for path traversal, injection-style payloads, and other unvalidated-input problems [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- Keep high-trust tools separated from turns where the model is reading attacker-controllable or otherwise untrusted retrieved content. The risk grows when one turn both reads such content and holds a powerful loaded tool [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- Break the dangerous “read external text, then call a network/exfiltration tool” loop by gating those tools, requiring approval, or sanitizing what reaches them—especially if the agent runs unattended [prompt-injection-is-untrusted-input--least-privilege-for-tools].

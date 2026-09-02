@@ -1,0 +1,7 @@
+Keep **three labeled buckets**:
+
+1. **Ordinary questions** – everyday queries that should just work.
+2. **Known-hard cases** – questions that exposed a bug once and need ongoing coverage.
+3. **Adversarial cases** – inputs designed to pull the model off its guardrails.
+
+The document notes that "fifty good cases beat five hundred lazy ones, and every case has to be able to fail or it's decoration" [evals-before-vibes--the-golden-set].

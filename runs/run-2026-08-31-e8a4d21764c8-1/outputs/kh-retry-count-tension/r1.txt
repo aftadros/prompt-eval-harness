@@ -1,0 +1,4 @@
+They recommend a very small, bounded limit: about **two retries**, or equivalently **up to three total attempts**.
+
+- One post says retries should be “bounded, usually at two.” [shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger]  
+- The other shows a hard cap in code with `if ($attempt >= 3) return false;`, so the process stops once it reaches the third attempt. [llm-api-from-php-in-production--which-failures-to-retry]

@@ -1,0 +1,8 @@
+Phrase each LLM-judge call as **one narrow yes-or-no question**, not a bare 1-to-10 score [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you]. In the prompt, you should:
+
+- Spell out the criterion you want judged  
+- Include the relevant source text  
+- Tell the judge to check claims against that text rather than relying on what it already believes  
+- Ask for the verdict before any explanation, so the judge isn’t rationalizing an essay it has just written  
+
+All of these are recommended in the provided document [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

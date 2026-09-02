@@ -1,0 +1,9 @@
+The pattern is to classify the request and route it by its shape, much like a query planner picks an access path: send easy cases to the cheap tier and harder cases to the smart tier [llm-cost-at-campus-scale--which-model-gets-the-question].
+
+In practice, that means:
+
+- **Cheap model**: direct factual lookups grounded in one high-confidence passage, especially where the model is mostly reformatting retrieved text [llm-cost-at-campus-scale--which-model-gets-the-question].
+- **Smart model**: ambiguous, multi-step, synthesis-heavy questions; questions spanning multiple documents; or cases with conflicting sources or weak retrieval results [llm-cost-at-campus-scale--which-model-gets-the-question].
+- **Classifier/routing logic**: the classifier can itself be a small model, or even just a rules check on retrieval confidence, so the routing decision costs very little [llm-cost-at-campus-scale--which-model-gets-the-question].
+
+A particularly reliable variant is **escalation**: answer with the cheap model first, then retry once on the smart model if a confidence check or guardrail flags the answer as thin [llm-cost-at-campus-scale--which-model-gets-the-question]. This keeps most traffic on the cheaper tier while still giving harder or higher-stakes questions the stronger model [llm-cost-at-campus-scale--which-model-gets-the-question].

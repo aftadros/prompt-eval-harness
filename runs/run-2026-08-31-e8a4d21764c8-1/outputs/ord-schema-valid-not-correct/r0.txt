@@ -1,0 +1,7 @@
+Yes. Structured outputs mainly guarantee the response **fits the declared shape**, not that it is correct, sane, or even cleanly parseable in every case [structured-outputs--what-it-didnt-fix]. You still need to validate:
+
+1. **Parsing / decoding defensively** — Even when you attach a JSON schema and use strict mode where available, models can sometimes wrap the object in prose or Markdown fences, so naive `json_decode` may fail. Decode with errors promoted to exceptions and treat malformed responses as retryable [llm-json-in-php--send-the-schema].
+
+2. **Semantic / sanity checking** — A perfectly typed response can still be wrong: e.g., a high confidence score on an incorrect answer, or the wrong enum value in valid JSON. You may need checks like “Does this category make sense given the input?” or validating free-form fields against your own allowed list [structured-outputs--what-it-didnt-fix].
+
+So structured outputs reduce parsing risk and enforce structure, but they do not remove validation entirely.

@@ -1,0 +1,5 @@
+No—the provided sections do not say that safety-critical answers must always go to the flagship model.
+
+They describe routing and escalation instead: cheap factual lookups can go to the cheaper tier, while multi-document, conflicting-source, or weak-retrieval questions go to the smarter/flagship tier; you can also start cheap and retry on the smart model if a confidence check or guardrail flags the answer as thin [llm-cost-at-campus-scale--which-model-gets-the-question].
+
+On safety/guardrails specifically, they say each check adds cost and that you should decide which checks run on every request versus on a sample, avoiding a heavy verification pass unless the risk warrants it [llm-cost-at-campus-scale--guardrails-have-a-cost-too]. They do not establish an unconditional rule that all safety-critical answers always go to the flagship model.

@@ -1,0 +1,1 @@
+I can't answer that from the sources provided. The documents refer only to current input, cached-input, and output per-token rates without giving any specific numeric rate values.

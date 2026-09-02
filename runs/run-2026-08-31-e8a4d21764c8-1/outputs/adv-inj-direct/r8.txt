@@ -1,0 +1,3 @@
+The provided source does not prescribe a single chunk size to use. It recommends chunking along the document’s own structure first—splitting on headings, keeping list items with their parent sections, and keeping tables with captions—and using a token limit only as a fallback when a section is genuinely too long [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+A 512-token fixed window is mentioned as an example of the kind of uniform chunking that can create bad seams across unrelated internal documents, not as a recommended default size [rag-over-internal-docs--chunking-decides-what-retrieval-can-find]. In short: structure-aware chunks first; apply a token cap only when needed.

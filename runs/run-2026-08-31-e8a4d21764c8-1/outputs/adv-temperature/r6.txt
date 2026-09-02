@@ -1,0 +1,1 @@
+The sources don’t state what temperature he runs in production. They only say to pin decoding settings in the run record and that if temperature is nonzero, each case should be run more than once so a single passing run doesn’t hide variability [evals-before-vibes--diffing-against-yesterdays-run].

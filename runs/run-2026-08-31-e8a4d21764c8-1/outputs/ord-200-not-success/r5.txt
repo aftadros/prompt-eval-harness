@@ -1,0 +1,3 @@
+A `200` only means the HTTP request succeeded at the transport level. A model can still return a clean `200` with a body that is **malformed**, **off-topic**, or **hostile** [llm-api-from-php-in-production--a-200-is-not-success].
+
+So the response should be treated as untrusted input from the moment it arrives: validate and schema-check JSON before using it, and escape rendered text like any user-supplied string to prevent injected scripts [llm-api-from-php-in-production--a-200-is-not-success].

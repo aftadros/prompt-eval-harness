@@ -1,0 +1,1 @@
+The documents don’t name a company. They only say he builds the admin and configuration side of an “AI knowledge assistant,” described as an LLM product that retrieves, indexes, streams answers, and applies guardrails [rag-over-internal-docs--opening] [llm-cost-at-campus-scale--opening] [evals-before-vibes--opening].

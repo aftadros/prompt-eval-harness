@@ -1,0 +1,9 @@
+The pattern is to **classify the request first, then route it to the tier that matches how much work the model needs to do** [llm-cost-at-campus-scale--which-model-gets-the-question].
+
+Specifically:
+
+- **Cheap tier**: direct factual answers grounded in one high-confidence passage, where the model mostly reformats retrieved text.
+- **Smart/expensive tier**: questions that span multiple documents, require reasoning over conflicting sources, or come back from retrieval weak enough that the model has real work to do.
+- **Escalation**: start with the cheap model; if a confidence check or guardrail flags the answer as thin, retry once on the smart model instead of defaulting everything upward.
+
+The classifier itself can be the small model or even a rules-based check on retrieval confidence, so routing adds little cost [llm-cost-at-campus-scale--which-model-gets-the-question].

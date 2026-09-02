@@ -1,0 +1,7 @@
+Yes — but only as a bounded **content-repair retry**, not as an ordinary transient retry or by resending the same request unchanged.
+
+A schema-valid response can still be semantically wrong for your input, such as containing an enum value that is valid in the schema but invalid for this case [structured-outputs--retry-on-schema-mismatch]. The provider may enforce format, but it does not know what “valid” means for your product [structured-outputs--retry-on-schema-mismatch].
+
+So run a semantic check after validation. If the enum/tag/value is wrong, retry once with the specific failure fed back into the prompt — for example: “You returned X, which is not valid for this input; choose from these values” [structured-outputs--retry-on-schema-mismatch][llm-json-in-php--one-repair-attempt].
+
+Keep it bounded. If the second answer is still bad, fall back to whatever your feature can do without that extraction instead of continuing to hammer the endpoint [llm-json-in-php--one-repair-attempt]. A 200 response with unusable output should not be retried by default in a way that piles load or repeats the same prompt unchanged [shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger].

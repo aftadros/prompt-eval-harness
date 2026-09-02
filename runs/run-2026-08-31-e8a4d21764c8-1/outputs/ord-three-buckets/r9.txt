@@ -1,0 +1,5 @@
+A golden set should be split into **three labeled buckets** [evals-before-vibes--the-golden-set]:
+
+1. **Ordinary questions** that should just work
+2. **Known-hard ones** that exposed a bug once
+3. **Adversarial ones** that try to pull the model off its guardrails

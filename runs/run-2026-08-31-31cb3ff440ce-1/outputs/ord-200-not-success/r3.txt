@@ -1,0 +1,1 @@
+A 200 response only means the HTTP request succeeded at the transport level; the model’s body can still be malformed, off-topic, or hostile [llm-api-from-php-in-production--a-200-is-not-success].

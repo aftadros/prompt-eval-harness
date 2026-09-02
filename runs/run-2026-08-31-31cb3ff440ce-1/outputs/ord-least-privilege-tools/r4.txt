@@ -1,0 +1,9 @@
+Scope them like service accounts: give each tool only the narrowest permissions that let it do its job, because the model will eventually be coaxed into using all of them [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+
+For a model that reads retrieved documents:
+
+- **Use minimum scope.** A document-search tool should read, not also get a write path “just in case” [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Gate destructive or outbound actions** behind a confirmation the user actually sees, so a silent injection can’t trigger them alone [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Validate tool arguments as if a stranger typed them**, because in an injection case a stranger effectively did; guard against path traversal, injection, and unvalidated input [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Keep high-trust tools and untrusted retrieved content as far apart in the flow as possible**; avoid having one turn both read attacker-controllable text and hold a loaded risky tool [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Break the exfiltration loop** by gating the tool or sanitizing what reaches it, especially if the model reads external text and can then make a network request unattended [prompt-injection-is-untrusted-input--least-privilege-for-tools].

@@ -1,0 +1,9 @@
+First look at **per-request cost for the refactored feature/configuration**, not just total spend, and specifically check whether your **prompt-cache hit rate dropped** [llm-cost-per-request--what-it-catches]. A refactor can move a per-request or volatile value into what should have been a stable prefix—such as a timestamp or per-user token near the top—so the cached prefix stops matching, reuse falls away, and input tokens bill at full price without throwing an error [llm-cost-at-campus-scale--caching-the-stable-prefix][llm-cost-per-request--what-it-catches].
+
+Practically, check:
+
+- **Cost per request sliced by feature/prompt path** before vs. after the refactor [llm-cost-per-request--what-it-catches].
+- **Cache hit rate or cached-prefix behavior**, especially if a long stable preamble stopped being reused [llm-cost-at-campus-scale--caching-the-stable-prefix][llm-cost-per-request--what-it-catches].
+- **Prompt ordering**: stable system instructions/tool definitions first, then retrieved context/question last; the cache only covers up to the first point where content varies [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+If you see a cost climb with no errors or slowdowns, the likely cause is accidental cache invalidation: nothing crashed, but the system stopped getting the discounted input price it used to get [llm-cost-per-request--what-it-catches][llm-cost-at-campus-scale--caching-the-stable-prefix].

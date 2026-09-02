@@ -1,0 +1,13 @@
+The pattern is to **model** gets the question? Let's inspect doc: "Routing is where the query-planner metaphor pays off most directly. A planner picks an access path from the shape of the query, and you can do the same thing: classify the request, then route it. Short factual lookups with a clean retrieval hit go to the cheap model; ambiguous, multi-step, synthesis-heavy questions go to the smart one. The classifier itself can be the small model, or even a rules check on retrieval confidence, so the routing decision costs close to nothing." Also escalation: start cheap and if confidence/guardrail flags answer thin retry once on smart. Need answer maybe "classify then route; optionally escalate". Cite only doc.
+
+Need ensure direct. Maybe bullet points. Include exact id in square brackets. No need mention second doc.
+</think>
+
+The pattern is to **classify the request, then route it by difficulty and confidence**:
+
+- **Cheap tier:** short factual lookups with a clean retrieval hit, where the model mostly reformats retrieved text.  
+- **Smart/expensive tier:** ambiguous, multi-step, synthesis-heavy questions, or cases that span multiple documents, require reasoning over conflicting sources, or came back from retrieval weakly.  
+
+The classifier can be the small model itself or even a cheap rules check on retrieval confidence [llm-cost-at-campus-scale--which-model-gets-the-question].
+
+A closely related variant is **escalation**: start with the cheap model, then if a confidence check or guardrail flags the answer as thin, retry once on the expensive model [llm-cost-at-campus-scale--which-model-gets-the-question].

@@ -1,0 +1,10 @@
+Scope them like least-privilege service accounts, because the tools decide how much damage a prompt injection can cause [prompt-injection-is-untrusted-input--least-privilege-for-tools]. Every tool you expose is an entry in the model’s capability list, and the model will eventually be coaxed into using all of them [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+
+For a model that reads retrieved documents:
+
+- Give each tool only the minimum scope needed to be useful. A document-search tool should read; it does not need a write path “just in case” [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- Put destructive or outbound actions behind a confirmation the user actually sees, so a silent injection cannot trigger them alone [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- Validate tool arguments as if a stranger typed them, because in an injection case that is effectively what happened. Path traversal, injection, and unvalidated input remain failure modes; the model is just another way to reach them [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- Keep high-trust tools and untrusted retrieved content as far apart in the flow as possible. The more a single turn both reads attacker-controllable text and holds a loaded tool, the worse the risk is [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+
+The especially dangerous combination is a model that reads untrusted or external text, has a tool that can exfiltrate data or make network requests, and runs unattended. Break that loop by gating the tool or sanitizing what reaches it; the model may still be injectable in principle, but most realistic attacks are defused [prompt-injection-is-untrusted-input--least-privilege-for-tools].

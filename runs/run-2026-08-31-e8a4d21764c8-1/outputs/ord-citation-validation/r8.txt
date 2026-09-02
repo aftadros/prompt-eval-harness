@@ -1,0 +1,3 @@
+Yes. Check citations on the way out, before anyone sees the answer. If the model cites a source that wasn’t in the retrieved set, treat it as a failure and strip or flag it, because an unresolvable citation “manufactures confidence the system didn’t earn” [rag-over-internal-docs--citations-end-to-end].
+
+A useful check is whether the cited passage actually supports the claim, not just whether some citation appears [evals-before-vibes--the-golden-set].

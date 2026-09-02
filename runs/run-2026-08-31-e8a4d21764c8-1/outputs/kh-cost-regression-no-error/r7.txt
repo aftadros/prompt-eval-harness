@@ -1,0 +1,11 @@
+Look first for **accidental invalidation of your cached prompt prefix**.
+
+A refactor can move volatile or per-request content—such as a timestamp, user token, or changed field—near the top of the prompt, causing the stable prefix to stop matching. The system won’t error; it just stops getting the cache discount and starts charging full input price for material that used to be cached [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+Check these first:
+
+- **Cache hit rate or cached-token reuse** for affected endpoints/models  
+- **Per-request cost**, especially input tokens, sliced by feature, model, or configuration [llm-cost-per-request--what-it-catches]
+- **Prompt ordering** around the refactor: stable content should come first—system prompt, tool definitions—then volatile material such as retrieved context and the user question [llm-cost-at-campus-scale--caching-the-stable-prefix]
+
+If your cache hit rate fell after the change while input cost rose, that is likely the cause; it shows up as a steady cost regression rather than a crash [llm-cost-per-request--what-it-catches][llm-cost-at-campus-scale--caching-the-stable-prefix].

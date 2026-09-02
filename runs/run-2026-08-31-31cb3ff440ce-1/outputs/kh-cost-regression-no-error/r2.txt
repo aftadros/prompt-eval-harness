@@ -1,0 +1,5 @@
+Look first for accidental cache invalidation: check whether the refactor moved a per-request value, timestamp, or other variable content near the top of your prompt, which can shrink the cached prefix to nothing and make you pay full input cost again [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+Then look at per-request cost data—ideally cost logged next to latency/status code and sliced by feature or endpoint—because this kind of spend increase shows up as a dashboard number rather than an error [llm-cost-per-request--what-it-catches] [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+Concretely, verify that your prompt still orders stable material first and volatile material last: system instructions/formatting/guardrails or tool definitions before retrieved context and the user’s question [llm-cost-at-campus-scale--caching-the-stable-prefix].

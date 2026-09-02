@@ -1,0 +1,9 @@
+He doesn’t assume a single fixed numeric per‑token rate. His math takes the rates as parameters—uncached input, cached read, and output—and applies them to each request:
+
+```php
+(inputTokens * $r->input
++ cachedTokens * $r->cacheRead
++ outputTokens * $r->output) / 1_000_000
+```
+
+So the cost is computed from “current rate[s]” for uncached input, cached prompt reads, and output tokens [llm-cost-per-request--one-line-item-per-call]. The division by `1_000_000` implies those rate values are expressed in dollars per million tokens rather than as a single hard-coded price per token. The other document likewise says he attaches “a dollar figure at the current per-token rates” [llm-cost-at-campus-scale--tokens-are-the-row-count].

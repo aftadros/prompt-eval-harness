@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents say costs use current per-token rates for input, cached reads, and output, but they do not state any specific numeric rate values.

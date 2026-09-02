@@ -1,0 +1,6 @@
+Yes—filter chunks on metadata first, then rank by embedding similarity. Storing and using chunk metadata such as source document, section, last-modified date, and access scope lets craft final with citations. Ensure not citing nonprovided. Use ids exactly.
+</think>
+
+Yes. It’s better to filter chunks on metadata before ranking, rather than relying on the embedding alone. The docs say that storing enough metadata per chunk—source document, section, last-modified date, access scope—and filtering first “is cheaper and more accurate than asking the embedding to encode all of that on its own” [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+For internal assistants especially, metadata should be used to enforce permissions at retrieval time: candidate documents should be filtered against the user’s access rights before anything is ranked or assembled into a prompt, so restricted material never enters the context [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].

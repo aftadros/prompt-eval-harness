@@ -1,0 +1,3 @@
+Yes. Structured outputs guarantee the response shape, not that it is correct or safe to use as-is [structured-outputs--what-it-didnt-fix]. You still need to validate for sanity—e.g., whether a category makes sense given the input, or whether a “string” field actually contains a value you support rather than something the model invented [structured-outputs--what-it-didnt-fix].
+
+Even when a schema is attached, decode and handle the response as if it might not have held: models can still wrap JSON in prose or markdown fences, especially under load or with older endpoints, so extract the JSON and use error-promoting parsing to make failures catchable and retryable [llm-json-in-php--send-the-schema].

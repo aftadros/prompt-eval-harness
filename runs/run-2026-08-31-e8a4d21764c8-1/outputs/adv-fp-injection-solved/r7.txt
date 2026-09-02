@@ -1,0 +1,3 @@
+No technique described here fully solves prompt injection. The documents say it remains “a real, open problem” and that there is no prepared-statement equivalent for LLMs that guarantees retrieved text can’t be read as an instruction [prompt-injection-is-untrusted-input--the-data-instruction-boundary][prompt-injection-is-untrusted-input--defense-in-depth].
+
+The described mitigations—delimited reference blocks, provenance checks, least-privilege tools, escaped outputs, guardrails, and logging—are best understood as defense in depth: they reduce risk so that “no single one has to hold,” but they do not make the problem go away [prompt-injection-is-untrusted-input--defense-in-depth][prompt-injection-in-rag--the-prompt-and-the-output].

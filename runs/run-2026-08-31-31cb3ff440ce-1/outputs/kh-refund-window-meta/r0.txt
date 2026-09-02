@@ -1,0 +1,1 @@
+The provided document does not state a refund window for enterprise plans. It explicitly treats that question as a refusal case because the corpus has no enterprise refund policy, and it says the answer must not invent numbers such as “30 days” or “60 days” [evals-before-vibes--the-golden-set].

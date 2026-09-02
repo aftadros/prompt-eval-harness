@@ -1,0 +1,7 @@
+In practice, a kill switch is **a coarse configuration flag that can disable the LLM feature without requiring a deploy** [shipping-llm-features-safely--the-kill-switch]. It should be:
+
+- **Read on every request**, with no cache in front of it that would delay the effect by minutes [shipping-llm-features-safely--the-kill-switch].
+- **Mapped to a graceful-degradation path** rather than an error state. For example, if the feature is summary generation, turning the switch off might simply make the assistant say the summarized answer is unavailable while retrieval and the rest of the app keep working [shipping-llm-features-safely--the-kill-switch].
+- **A known, tested mode** that can be rehearsed in advance, because an untested kill switch is just a guess [shipping-llm-features-safely--the-kill-switch].
+
+The point is to stop harm quickly—within seconds—not after the next build-and-release cycle. This matters when something like a bad prompt change ships, a provider starts returning unsafe content, a runaway loop causes a cost spike, or a guardrail regression appears [shipping-llm-features-safely--the-kill-switch].

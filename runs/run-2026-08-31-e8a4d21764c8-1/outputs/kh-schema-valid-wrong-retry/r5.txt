@@ -1,0 +1,7 @@
+Yes—but only as a bounded semantic/content repair, not as a normal transport retry.
+
+If the response is schema-valid but contains an enum value that is wrong for the input, treat it as “schema-valid-but-wrong” and run your own semantic check [structured-outputs--retry-on-schema-mismatch]. If that check fails, you can send one repair attempt with the specific failure attached to the prompt—for example, “you returned tag X; valid choices are this list” [structured-outputs--retry-on-schema-mismatch][llm-json-in-php--one-repair-attempt].
+
+But do not keep retrying. A second bad answer should generally trigger your fallback rather than more attempts, because a model that missed twice on the same input is unlikely to be argued into it later and you are paying for every extra call [llm-json-in-php--one-repair-attempt]. Also, a `200` response with unusable output is not automatically a transient retry candidate; asking the same question the same way usually produces the same bad answer [shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger].
+
+So: **retry once only if you can add useful failure information to the prompt; otherwise fall back.**

@@ -1,0 +1,3 @@
+He does not state a specific numeric per-token rate in the material provided. His cost math uses current provider rates for three separate token types—input, cached-read input, and output—and treats them as per-million-token prices because the calculation divides by `1_000_000` [llm-cost-per-request--one-line-item-per-call].
+
+The only pricing assumptions given are relative: cached input costs a fraction of normal input [llm-cost-per-request--one-line-item-per-call], and output costs several times more than input [llm-cost-at-campus-scale--tokens-are-the-row-count].

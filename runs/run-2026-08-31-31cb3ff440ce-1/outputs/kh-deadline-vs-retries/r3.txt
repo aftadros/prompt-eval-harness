@@ -1,0 +1,5 @@
+You missed a deadline around the **entire retried operation**, separate from each individual call’s timeout [llm-api-from-php-in-production--a-deadline-on-the-whole-operation].
+
+Retries multiply worst-case latency: with three attempts and a 30-second per-call timeout, the bad case can become roughly 90 seconds plus backoff before you fall back or degrade [llm-api-from-php-in-production--a-deadline-on-the-whole-operation]. That helps the odds for one call, but it does not help the user waiting on the page [llm-api-from-php-in-production--a-deadline-on-the-whole-operation].
+
+So the fix is to set an overall time budget for the whole operation and stop retrying when that deadline passes [llm-api-from-php-in-production--a-deadline-on-the-whole-operation].

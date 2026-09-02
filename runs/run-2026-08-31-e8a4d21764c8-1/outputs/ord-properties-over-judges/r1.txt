@@ -1,0 +1,10 @@
+Use a property check when the success criterion is concrete enough to state as something the answer either has or doesn’t have, rather than requiring fuzzy judgment. For example, prefer it when you need to verify that an answer:
+
+- includes a cited source,
+- refuses when refusing was the right call,
+- returns valid JSON, or
+- contains a fact you know should be there [did-the-prompt-change-help--build-the-set-from-real-questions-including-the].
+
+Property checks are better in those cases because they are cheaper to write than a model-graded rubric, much cheaper to run, and don’t drift between runs. The guidance is to lean on them anywhere the question allows and save fuzzy grading for answers that need real judgment [did-the-prompt-change-help--build-the-set-from-real-questions-including-the].
+
+Use a model grader instead when you need to assess qualities that are hard to check with simple matching, such as whether an answer stayed grounded in the source it cited, whether its tone fit the audience, or whether a refusal was polite and specific rather than blunt [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

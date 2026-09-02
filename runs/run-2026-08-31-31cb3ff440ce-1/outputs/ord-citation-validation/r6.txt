@@ -1,0 +1,3 @@
+Yes. Check the model’s citations on the way out, before a user sees them [rag-over-internal-docs--citations-end-to-end]. If a citation points to a source that wasn’t in the retrieved set, treat it as a failure and strip or flag it before showing the answer [rag-over-internal-docs--citations-end-to-end]. A citation that doesn’t resolve to a real retrieved document is worse than no citation because it “manufactures confidence the system didn’t earn” [rag-over-internal-docs--citations-end-to-end].
+
+As part of evaluation, you should also verify concrete checks such as whether the answer cited a real source document and stayed within what retrieval returned [evals-before-vibes--the-golden-set].

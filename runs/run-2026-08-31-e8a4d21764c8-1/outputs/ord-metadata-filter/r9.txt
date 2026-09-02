@@ -1,0 +1,3 @@
+Yes—filter on metadata first, then rank by embedding similarity. The docs say that storing enough chunk metadata to filter before ranking is “cheaper and more accurate than asking the embedding to encode all of that on its own,” such as source document, section, last-modified date, and access scope [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+They also recommend enforcing permissions at retrieval time by filtering candidate documents against the user’s access rights before reranking or prompt assembly [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt]. So metadata is better for constraints, provenance, and access control; embeddings are then used to rank what remains semantically.

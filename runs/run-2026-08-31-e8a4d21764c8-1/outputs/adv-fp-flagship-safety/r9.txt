@@ -1,0 +1,5 @@
+No—the provided material does not say that safety-critical answers should always go to the flagship model. It recommends tiered routing: cheap models for clean factual lookups with high-confidence retrieval, and smart/flagship models for questions spanning multiple documents, conflicting sources, or weak retrieval results [llm-cost-at-campus-scale--which-model-gets-the-question].
+
+Its preferred pattern is escalation: start with the cheaper model, then retry on the smart model if a confidence check or guardrail flags the answer as thin [llm-cost-at-campus-scale--which-model-gets-the-question]. On safety checks specifically, it says to decide which run on every request versus only on samples, and not to spend a heavy verification pass unless the risk warrants it [llm-cost-at-campus-scale--guardrails-have-a-cost-too].
+
+So the posts point toward using the flagship model when quality or risk signals justify it—not as an automatic rule for all safety-critical answers.

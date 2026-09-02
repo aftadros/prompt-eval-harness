@@ -1,0 +1,10 @@
+Look first at **prompt caching / cache-prefix reuse**, especially whether the refactor moved volatile content near the top of your prompt and broke the stable prefix [llm-cost-per-request--what-it-catches][llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+Concretely, check:
+
+- Whether a per-request value—timestamp, user token, dynamic instruction, or similar—was moved into what should be the cached system/tool/context preamble [llm-cost-at-campus-scale--caching-the-stable-prefix].
+- Whether your prompt ordering still puts stable material first and volatile material last [llm-cost-at-campus-scale--caching-the-stable-prefix].
+- Whether cache hit rate dropped, possibly to zero, while input-token spend climbed [llm-cost-per-request--what-it-catches][llm-cost-at-campus-scale--caching-the-stable-prefix].
+- Cost per request sliced by feature or configuration, because this kind of regression shows up as a dashboard number rather than an exception [llm-cost-per-request--what-it-catches].
+
+In short: the first place to look is whether your “stable prefix” stopped being stable after the refactor.

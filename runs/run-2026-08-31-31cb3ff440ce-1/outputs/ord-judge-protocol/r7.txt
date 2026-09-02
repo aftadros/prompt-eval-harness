@@ -1,0 +1,9 @@
+Phrase each judge call as **one narrow yes-or-no question**, with the evaluation criterion spelled out explicitly [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].
+
+Include:
+
+- The relevant **source text** for the answer being judged  
+- An instruction to check claims **against that source text**, not against the judge’s prior beliefs  
+- A request that the **verdict come before the explanation**, so the explanation does not rationalize a pre-existing judgment  
+
+Avoid asking for bare open-ended scores like “rate this 1–10,” because that tends to produce vague, clustered judgments [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

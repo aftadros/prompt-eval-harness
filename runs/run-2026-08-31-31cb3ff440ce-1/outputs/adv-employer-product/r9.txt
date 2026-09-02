@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The three documents all describe the author's role — "the admin and configuration side of an AI knowledge assistant, an LLM product" that handles document retrieval, indexing, streaming answers, and guardrails [rag-over-internal-docs--opening] [llm-cost-at-campus-scale--opening] [evals-before-vibes--opening] — but none of them name a specific company or brand behind the assistant.

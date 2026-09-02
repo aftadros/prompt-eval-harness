@@ -1,0 +1,17 @@
+Decide the timeout by working backward from the user’s and server’s limits, then give the model call only the time left after other parts of the request are accounted for [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+Concretely:
+
+1. **Start with the interactive deadline**
+   - A human user will consider an interactive HTTP request broken after a few seconds [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+   - The server also has its own connection ceiling before it gives up [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+2. **Subtract the other work in the request**
+   - Reserve time for retrieval, guardrails, serialization, and any other processing around the model call [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+   - The remaining slice is what you can safely give to the model call itself [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+3. **For streaming, track more than total time**
+   - Use two clocks: **time-to-first-token** and **total wall time** [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+   - A long-running stream is acceptable if tokens keep arriving [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+   - If there are several seconds of no data on the wire, treat it as a stall and kill it; for example, five seconds of nothing is a stall in this approach [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+   - Watching inter-token gaps helps distinguish a long but healthy answer from a dead connection, which total time alone cannot do [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].

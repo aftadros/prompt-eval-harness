@@ -1,0 +1,9 @@
+No. An average increase is not enough by itself, because a prompt change can raise the overall mean while still making an important category worse [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+You should check:
+
+- The per-category breakdown on the cases you decided mattered, not just the aggregate score [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+- Whether the change is larger than run-to-run noise; if the set is small, rerun it and confirm the improvement holds [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+- Whether other behaviors traded off badly—for example, an edit may improve conciseness while dropping grounding because shorter answers stop citing sources [evals-before-vibes--what-this-looks-like-on-a-normal-week].
+
+The average is a starting signal, not the shipping decision. Ship only if the important per-category numbers moved in your favor beyond noise and any tradeoffs are visible and handled [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide][evals-before-vibes--what-this-looks-like-on-a-normal-week].

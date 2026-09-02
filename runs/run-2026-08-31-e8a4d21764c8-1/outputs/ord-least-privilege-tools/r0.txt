@@ -1,0 +1,11 @@
+Treat the tools as part of an untrusted-input attack surface: because the model will read retrieved text that may contain planted instructions, any tool it can call becomes a capability an attacker can try to reach [prompt-injection-is-untrusted-input--least-privilege-for-tools]. Scope them like a service account—narrow enough for the job, not broad enough to cause damage after injection [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+
+Practically:
+
+- **Give each tool minimum scope.** A document-search or retrieval tool should generally be read-only; don’t add write paths “just in case” [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Separate reading from acting.** Keep high-trust tools and untrusted retrieved content as far apart in the flow as possible, especially if a single turn could both read attacker-controllable text and invoke a loaded tool [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Gate destructive or outbound actions.** Put them behind a confirmation the user actually sees so a silent injection can’t trigger them alone [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Validate model-produced tool arguments as untrusted input.** Treat path traversal, injection, and unvalidated inputs as real failure modes, because in an injection case the “stranger” did type them [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Avoid the exfiltration loop.** The dangerous combination is a model that reads untrusted content, has a tool that makes network requests or otherwise exfiltrates data, and runs unattended; break that loop by gating the tool or sanitizing what reaches it [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+
+If your retrieved-doc workflow also produces citations, keep source identity intact from chunking through retrieval to the prompt, and strip or flag any citation that does not resolve to a real retrieved document [rag-over-internal-docs--citations-end-to-end].

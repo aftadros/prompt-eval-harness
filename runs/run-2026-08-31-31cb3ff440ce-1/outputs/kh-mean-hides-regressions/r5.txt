@@ -1,0 +1,7 @@
+No. A higher eval average is not enough by itself, because the mean can go up while the product gets worse—for example, easy cases improve but a behavior or category you care about degrades [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+You should also check:
+
+- The per-category or per-case breakdown, especially for the cases you decided mattered.
+- Whether the change is larger than run-to-run noise; if the set is small, rerun it a few times to confirm the improvement holds [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+- Whether improving one metric caused another important check to drop, such as conciseness improving while grounding falls [evals-before-vibes--what-this-looks-like-on-a-normal-week].

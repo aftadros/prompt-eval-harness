@@ -1,0 +1,18 @@
+You set two different timeouts because an LLM API call has two distinct failure modes:
+
+1. **The provider is unreachable** — you want to fail quickly, after a second or two, so the page doesn’t hang waiting for a connection that isn’t going to succeed [llm-api-from-php-in-production--two-timeouts].
+2. **The provider is reachable but slow to generate** — you may be willing to wait longer because... Actually doc says: The 2 is outage tripwire; 30 is how long willing to wait for real answer finish generating. Streaming changes total meaning, bound idle gap between chunks. Could mention perceived latency/retries? It asks why two different timeouts instead of one. Answer: separate connect timeout from overall generation/idle timeout.
+
+Need avoid saying "overall" if streaming nuance. Maybe: connect_timeout handles can't reach; timeout handles non-streaming total ceiling or, for streaming, idle gap between chunks [first]. Streaming docs says slow but visibly making progress can keep connection open instead of getting failed and turning into retry you pay for [second]. That supports why one timeout might fail a progressing stream.
+
+Final with citations every claim from doc. Ensure not cite unsupported "page doesn't hang" maybe title says without taking page down, okay? Could say so the request doesn't sit waiting. But need cite? It's derived. Better: "so you can give up on that in a second or two and move on" [first].
+
+Need direct lead: "Because they guard against different failure modes." Then details.
+</think>
+
+Because an LLM API call has two very different failure modes, and one timeout would force you to treat them the same way.
+
+- **Connect timeout**: guards against the provider being unreachable; it lets you “fail fast” in a second or two and move on [llm-api-from-php-in-production--two-timeouts].
+- **Generation/total timeout**: covers the case where the provider is reachable but slow to finish generating, so you can wait longer for a real answer [llm-api-from-php-in-production--two-timeouts].
+
+For streaming calls, the second timeout also changes meaning: instead of bounding the whole call, it can bound the idle gap between chunks. That matters because an answer that is slow but visibly making progress can keep its connection open rather than failing and turning into a retry you pay for [llm-api-from-php-in-production--two-timeouts] [llm-cost-at-campus-scale--streaming-and-retries].

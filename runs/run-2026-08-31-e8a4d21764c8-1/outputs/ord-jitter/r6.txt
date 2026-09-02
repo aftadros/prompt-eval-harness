@@ -1,0 +1,1 @@
+Jitter is added to retry backoff so a group of pods or clients don’t all retry at exactly the same time against an already struggling provider, avoiding a synchronized wave of retries that can worsen rate-limiting or outages [llm-api-from-php-in-production--which-failures-to-retry].

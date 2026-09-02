@@ -1,0 +1,1 @@
+A 200 response isn’t necessarily a success because the model can return an HTTP‑level successful body that is still malformed, off-topic, or hostile [llm-api-from-php-in-production--a-200-is-not-success]. In other words, the transport layer succeeded, but the content may not be valid, useful, or safe to use [llm-api-from-php-in-production--a-200-is-not-success].

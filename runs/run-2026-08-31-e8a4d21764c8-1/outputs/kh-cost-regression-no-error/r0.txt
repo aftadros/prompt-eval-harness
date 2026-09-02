@@ -1,0 +1,10 @@
+Look first at **prompt caching / the stable prefix of your prompt**, because a refactor can silently break cache reuse and raise cost without producing errors [llm-cost-per-request--what-it-catches]. In particular, check whether the refactor moved something dynamic—such as a per-request value, timestamp, or per-user token—near the top of the prompt, which would shrink or eliminate the cached prefix [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+Practically, inspect:
+
+- **Request logs for cache hit rate / reuse** before and after the refactor [llm-cost-per-request--what-it-catches][llm-cost-at-campus-scale--caching-the-stable-prefix].
+- **Effective input cost or charged tokens**, since a broken prefix makes you pay full price for input that was previously discounted at cache rates [llm-cost-per-request--what-it-catches].
+- **Prompt ordering and early prompt bytes**, because stable content should come first and volatile content last; if the first varying point moved earlier, the cached portion drops [llm-cost-at-campus-scale--caching-the-stable-prefix].
+- **Per-request cost sliced by feature or endpoint**, since these regressions show up as dashboard numbers rather than exceptions, and feature-level outliers make the problem visible [llm-cost-per-request--what-it-catches][llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+If caching looks intact, then look next at **feature-level input-token bloat**, especially retrieval-style features that pack large contexts but return short outputs [llm-cost-per-request--what-it-catches].

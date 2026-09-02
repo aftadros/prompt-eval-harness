@@ -1,0 +1,3 @@
+The sources do not establish that the campus RAG setup is FERPA‑compliant. They describe a campus‑scale LLM/RAG knowledge assistant [llm-cost-at-campus-scale--opening] and some relevant controls: permissions are enforced at retrieval time, restricted candidate documents are filtered out before reranking or prompt assembly, chunk provenance is retained, and retrieved text can be screened for attack-like shapes [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt]. They also frame the underlying issue as untrusted input that an LLM cannot reliably separate from instructions [prompt-injection-is-untrusted-input--opening].
+
+But the documents do not mention FERPA or provide enough detail to determine whether the setup satisfies it.

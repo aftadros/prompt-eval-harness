@@ -1,0 +1,5 @@
+Use a property check whenever the question allows you to define a concrete, verifiable condition instead of needing fuzzy judgment — for example: whether the answer includes a cited source, refuses when refusing is correct, returns valid JSON, or contains a known required fact [did-the-prompt-change-help--build-the-set-from-real-questions-including-the].
+
+Property checks are preferable in those cases because they are cheaper to write than a model-graded rubric, cheaper to run, and don’t drift between runs [did-the-prompt-change-help--build-the-set-from-real-questions-including-the]. Save LLM-as-judge grading for qualities that need real judgment, such as whether the answer stayed grounded in its source, matched the right tone, or made a refusal sound polite and specific rather than blunt [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].
+
+Also use deterministic checks rather than trusting a model as the final word for high-stakes cases like refusals and restricted-content access, ideally with human review [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

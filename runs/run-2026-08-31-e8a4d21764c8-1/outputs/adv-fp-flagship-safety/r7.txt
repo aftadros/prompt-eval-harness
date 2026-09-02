@@ -1,0 +1,9 @@
+No—the provided material does not establish a blanket rule that safety-critical answers must always go to the flagship or “smart” model.
+
+What it actually says is:
+
+- Route questions by shape and confidence: direct factual answers grounded in one high-confidence passage can use the cheap tier, while multi-document, conflicting-source, synthesis-heavy, or weakly retrieved questions should use the smart tier [llm-cost-at-campus-scale--which-model-gets-the-question].
+- A trusted pattern is escalation: start with the cheaper model, then retry on the smarter model if a confidence check or guardrail flags the answer as thin [llm-cost-at-campus-scale--which-model-gets-the-question].
+- Safety/guardrail layers also cost money, so each check should have a known price; some checks may run on every request and others on samples, depending on whether the risk justifies it [llm-cost-at-campus-scale--guardrails-have-a-cost-too].
+
+So safety-critical cases may justify stronger routing or verification, but the documents do not say they must always use the flagship model.

@@ -1,0 +1,9 @@
+No—an upward eval average alone is not enough to ship. The overall mean can go up while the change still degrades an important behavior or category, because it may improve easy cases at the expense of something that matters [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+You should check:
+
+- **Per-category breakdowns**, not just the average, so a hidden regression in a critical area is visible [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+- **Noise**: model output and LLM judging vary run to run, so a small move may be meaningless. Don’t ship on a delta you can’t tell apart from rerunning the same prompt twice [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+- **Repeated runs**, especially on small sets: confirm that the improvement holds rather than relying on one lucky pass [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+In short, ship only if the numbers moved in the cases you decided mattered by more than run-to-run noise, without hiding a tradeoff elsewhere [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide] [evals-before-vibes--what-this-looks-like-on-a-normal-week].

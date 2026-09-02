@@ -1,0 +1,2 @@
+I can't answer that from the sources provided.
+The documents say he uses current input, cached-read, and output rates in his formula, but they do not give a specific numeric per-token rate.

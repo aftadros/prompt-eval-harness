@@ -1,0 +1,3 @@
+Give it **one extra repair attempt**—so, **two attempts total** for that input. If the second response is still malformed or fails validation, stop and fall back to whatever the feature can do without the extracted JSON [llm-json-in-php--one-repair-attempt].
+
+Don’t keep retrying indefinitely: a model that misses twice on the same input likely won’t succeed on later attempts, and each attempt costs you [llm-json-in-php--one-repair-attempt].

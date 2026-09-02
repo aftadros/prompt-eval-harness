@@ -1,0 +1,3 @@
+Give it **one repair retry**: if the first response has malformed or invalid JSON, send one follow-up request that includes the specific parse/validation error. If that second response is still bad, stop and fall back to whatever your feature can do without the extracted data [llm-json-in-php--one-repair-attempt].
+
+So in practice: **two total attempts**, then give up on extraction for that input rather than continuing to retry [llm-json-in-php--one-repair-attempt].

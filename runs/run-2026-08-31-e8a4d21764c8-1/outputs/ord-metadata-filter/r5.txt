@@ -1,0 +1,3 @@
+Yes—filter chunks on metadata first, then rank by similarity, rather than expecting the embedding to handle everything. The documents say this is “cheaper and more accurate” than asking the embedding model to encode source, section, recency, access scope, and similar context on its own [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+The same logic applies to security: candidate chunks should be filtered by permissions and provenance before ranking or prompt assembly, so restricted or low-trust material never reaches the model in the first place [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].

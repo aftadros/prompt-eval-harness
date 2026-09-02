@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The material mentions running cases more than once when temperature is nonzero [evals-before-vibes--diffing-against-yesterdays-run], but it does not state what specific temperature he uses in production.

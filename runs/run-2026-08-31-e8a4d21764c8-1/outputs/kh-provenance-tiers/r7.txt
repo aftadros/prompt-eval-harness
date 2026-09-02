@@ -1,0 +1,9 @@
+No. Retrieved chunks from different sources should **not** all be treated as equally trustworthy in the prompt. The documents emphasize that provenance matters: where a chunk came from, who could have written it, and how much risk an adversarial chunk would create [prompt-injection-is-untrusted-input--retrieved-content-hostile-input].
+
+Specifically:
+
+- A curated, write-restricted knowledge base is more trustworthy than a user-uploaded or third-party document that was indexed recently [prompt-injection-is-untrusted-input--retrieved-content-hostile-input].
+- The system prompt should reflect those trust differences rather than flattening everything into one undifferentiated wall of context [prompt-injection-is-untrusted-input--retrieved-content-hostile-input].
+- A public crawled page is not the same risk as a vetted internal policy, so provenance should be kept attached to chunks so lower-trust sources can draw more suspicion [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].
+
+In short: different sources imply different trust levels, and prompt construction should account for that.

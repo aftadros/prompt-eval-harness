@@ -1,0 +1,5 @@
+None of the techniques described here fully solves prompt injection.
+
+- Delimited retrieved-document blocks and explicit framing “mark the boundary” but do not provide immunity; they only shift the base rate [prompt-injection-is-untrusted-input--the-data-instruction-boundary].  
+- The defense-in-depth approach does not make prompt injection go away; it is still a real, open problem, and no single layer gets trusted with the whole job [prompt-injection-is-untrusted-input--defense-in-depth].  
+- In RAG systems, marking retrieved context lowers success rate “without being a guarantee,” and the goal is only to keep one planted instruction from being fatal—not to make the model safe against arbitrary text [prompt-injection-in-rag--the-prompt-and-the-output].

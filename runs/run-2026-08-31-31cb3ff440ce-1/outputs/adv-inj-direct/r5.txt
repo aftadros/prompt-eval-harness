@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents do not specify a numeric chunk size; they only recommend structure-based splitting with a token limit as a fallback for overly long sections.

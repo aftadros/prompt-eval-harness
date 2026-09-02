@@ -1,0 +1,3 @@
+An **orphaned chunk** is a fragment of an old or removed document version that remains in the RAG index even after the source has been changed, rewritten, or deleted [rag-over-internal-docs--freshness-is-an-indexing-problem].
+
+You should care because orphaned chunks can win retrieval for queries and cause the assistant to return stale guidance. If your indexing pipeline only adds new vectors without deleting old ones, these outdated fragments persist indefinitely—meaning users may act on information that no longer applies, and you won’t notice until someone reports a bad answer [rag-over-internal-docs--freshness-is-an-indexing-problem].

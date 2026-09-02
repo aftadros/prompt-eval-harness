@@ -1,0 +1,3 @@
+The single most important defense is **retrieval-time permission filtering**: enforce the asking user’s access rights before documents are ranked, assembled into a prompt, or shown to the model, so restricted material never enters the context window [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].
+
+That “permission filter” is described as the **load-bearing piece**, because even if an injected instruction succeeds at the prompt level, it still cannot reach data the user was never cleared to see; the other mitigations mainly increase the attacker’s cost [prompt-injection-in-rag--the-prompt-and-the-output].

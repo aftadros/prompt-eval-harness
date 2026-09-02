@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+They describe a campus-scale LLM/RAG system with retrieval-time permission checks and provenance tracking [llm-cost-at-campus-scale--opening][prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt], but they do not mention FERPA or provide enough details to assess compliance.

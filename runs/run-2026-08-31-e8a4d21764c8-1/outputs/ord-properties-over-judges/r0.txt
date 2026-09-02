@@ -1,0 +1,12 @@
+Use a property check when the criterion is a concrete feature you can verify as present or absent, rather than a fuzzy quality judgment [did-the-prompt-change-help--build-the-set-from-real-questions-including-the]. In short: lean on properties anywhere the question allows, and save model grading for answers that need real judgment [did-the-prompt-change-help--build-the-set-from-real-questions-including-the].
+
+Good candidates include checks like:
+
+- the answer has a cited source  
+- it includes a fact you know belongs there  
+- it returns valid JSON  
+- it refuses when refusing was the right call  
+
+These are cheaper to write than a model-graded rubric, far cheaper to run, and don’t drift between runs [did-the-prompt-change-help--build-the-set-from-real-questions-including-the].
+
+Reserve LLM-as-judge grading for qualities that lack an easy string match and need judgment—such as whether the answer stayed grounded in the source it cited, whether the tone fit the audience, or whether a refusal was polite and specific rather than blunt [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you]. For high-stakes cases like refusals or restricted-content access, deterministic checks and human review may be needed instead of letting a model judge have the final word [evals-before-vibes--llm-as-j

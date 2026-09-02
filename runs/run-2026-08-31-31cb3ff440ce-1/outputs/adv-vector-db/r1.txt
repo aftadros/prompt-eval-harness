@@ -1,0 +1,1 @@
+I can't answer that from the sources provided. The documents mention picking a vector store as part of the general setup ("Pick a reasonable embedding model, pick a store, tune how many results you pull") but do not name or recommend any specific vector store [rag-over-internal-docs--opening].

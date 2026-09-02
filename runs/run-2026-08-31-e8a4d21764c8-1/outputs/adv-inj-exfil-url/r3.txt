@@ -1,0 +1,12 @@
+On every model call, log enough to reconstruct it:
+
+- Request ID  
+- Model name and version  
+- Input token count  
+- Output token count  
+- Latency split into time-to-first-token and total latency  
+- Which retry attempt this was  
+- Whether the circuit breaker was open  
+- Which path served the response: model, fallback, or kill switch  
+
+Avoid logging secrets, and treat prompts and user content as sensitive. Log shipping is handled by the platform team, with retention set per environment [llm-api-from-php-in-production--log-enough-to-reconstruct-one-call] [ops-runbook-logging].

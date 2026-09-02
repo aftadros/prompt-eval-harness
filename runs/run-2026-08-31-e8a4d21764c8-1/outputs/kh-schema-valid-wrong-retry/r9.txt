@@ -1,0 +1,7 @@
+Yes—retry **once as a targeted semantic/content repair**, not as a generic identical retry.
+
+The documents treat “schema-valid-but-wrong” output as a real case: the provider can enforce format, but it does not know what is valid for your product [structured-outputs--retry-on-schema-mismatch]. If your code-side semantic check fails—e.g., the enum/tag is unsupported or inconsistent with the input type—you should retry by feeding the specific failure back into the prompt, such as: “you returned tag X, which is not a valid tag; choose from this list” [structured-outputs--retry-on-schema-mismatch].
+
+Keep it bounded. The repair pattern is to give the model one more try with the concrete error attached; if the second answer is still bad, fall back to whatever your feature does without the extraction rather than keep hammering the endpoint [llm-json-in-php--one-repair-attempt]. Also avoid blindly retrying a `200` response you cannot use: asking the same question the same way usually produces the same bad answer, so it should route to fallback unless you are changing the request with specific feedback [shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger].
+
+So: **yes, retry if you can add a specific semantic correction; otherwise fall back.**

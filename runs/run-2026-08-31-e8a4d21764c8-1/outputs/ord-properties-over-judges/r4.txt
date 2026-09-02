@@ -1,0 +1,10 @@
+Use a property check when the answer has an objective, verifiable criterion that can be checked as “present or absent,” especially when you want something cheap to write, cheap to run, and stable across runs [did-the-prompt-change-help--build-the-set-from-real-questions-including-the]. Good examples are:
+
+- valid JSON
+- a cited source is present
+- a known fact appears in the answer
+- the system refused when refusing was the right call
+
+The guidance is to lean on property checks wherever the question allows, and save model grading for answers that need real judgment [did-the-prompt-change-help--build-the-set-from-real-questions-including-the].
+
+Use model grading instead when the quality you care about has no simple string match or binary check — for example, whether an answer stayed grounded in its cited source, whether the tone fits the audience, or whether a refusal is polite and specific rather than blunt [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you]. But if being wrong is costly, such as refusals or access to restricted content, don’t make the model judge the final authority; use deterministic checks and human review [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

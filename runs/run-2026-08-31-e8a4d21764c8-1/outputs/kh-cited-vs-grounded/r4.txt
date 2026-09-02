@@ -1,0 +1,4 @@
+No—not automatically. A citation is only as good as its resolution and support:
+
+- The cited source has to resolve to a real, retrieved document or passage; if the model cites something that wasn’t in the retrieved set, that’s a failure and should be stripped or flagged before anyone sees it [rag-over-internal-docs--citations-end-to-end].
+- Grounding is judged by whether the cited passage actually supports the claim, not merely by the presence of a citation [rag-over-internal-docs--citations-end-to-end]. In evaluation terms, this means checking claims against the source text rather than assuming they are correct because they were stated confidently [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

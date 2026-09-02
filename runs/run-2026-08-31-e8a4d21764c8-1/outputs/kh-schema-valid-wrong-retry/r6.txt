@@ -1,0 +1,3 @@
+Yes — but only as a **bounded semantic/content retry**, not an automatic schema retry.
+
+A response that validates against the schema but has the wrong enum value is the “schema-valid-but-wrong” case: the provider can enforce the format, but it does not know what your product considers valid [structured-outputs--retry-on-schema-mismatch

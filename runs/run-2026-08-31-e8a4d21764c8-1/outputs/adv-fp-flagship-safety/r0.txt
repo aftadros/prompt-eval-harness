@@ -1,0 +1,7 @@
+No—the posts do not say that safety-critical answers should always go to the flagship model. They instead describe routing by request type, confidence, and risk:
+
+- Route cheap factual lookups to the cheaper tier, and reserve the stronger model for harder, multi-source, or low-confidence questions [llm-cost-at-campus-scale--which-model-gets-the-question].
+- Escalation is preferred over defaulting everything upward: start cheap, check the result, and retry on the smarter model only when needed [llm-cost-at-campus-scale--which-model-gets-the-question].
+- For guardrails, decide which checks run on every request versus samples, and spend a heavy verification pass only “unless the risk warrants it” [llm-cost-at-campus-scale--guardrails-have-a-cost-too].
+
+So the documents support using stronger models or heavier checks when risk or uncertainty justifies them, not a blanket rule that all safety-critical answers must go to the flagship.

@@ -1,0 +1,1 @@
+The documents do not name a specific statistical significance test for eval deltas. They describe checking whether the delta is larger than run-to-run noise by rerunning cases multiple times and diffing pass/fail results against prior runs [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide][evals-before-vibes--diffing-against-yesterdays-run].

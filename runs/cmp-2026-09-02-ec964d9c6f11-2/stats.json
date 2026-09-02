@@ -1,0 +1,148 @@
+{
+  "bootstrap": {
+    "ci": "[-0.206, -0.046]",
+    "ci_hi": -0.046,
+    "ci_lo": -0.20600000000000002,
+    "iterations": 10000,
+    "observed": -0.12,
+    "seed": 20260817
+  },
+  "buckets": {
+    "ALL": {
+      "b": 10,
+      "c": 2,
+      "n": 50,
+      "p": 0.03857421875,
+      "variant": "exact_binomial"
+    },
+    "adversarial": {
+      "b": 4,
+      "c": 1,
+      "n": 15,
+      "p": 0.375,
+      "variant": "exact_binomial"
+    },
+    "known_hard": {
+      "b": 3,
+      "c": 1,
+      "n": 15,
+      "p": 0.625,
+      "variant": "exact_binomial"
+    },
+    "ordinary": {
+      "b": 3,
+      "c": 0,
+      "n": 20,
+      "p": 0.25,
+      "variant": "exact_binomial"
+    }
+  },
+  "empty_a": 0,
+  "empty_b": 0,
+  "judge": {
+    "b": 1,
+    "c": 0,
+    "cases": [
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "adv-fp-flagship-safety"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "adv-fp-injection-solved"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "adv-fp-no-retries"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "kh-cache-output-tokens"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "kh-chunk-size-trap"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "kh-load-bearing-defense"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "kh-mean-hides-regressions"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "kh-refund-window-meta"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "kh-refusal-dial"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "kh-retry-count-tension"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "kh-schema-valid-wrong-retry"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "ord-enum-deletion"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "ord-log-fields"
+      },
+      {
+        "a": "pass",
+        "b": "flaky",
+        "case_id": "ord-metadata-filter"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "ord-properties-over-judges"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "ord-schema-valid-not-correct"
+      },
+      {
+        "a": "pass",
+        "b": "pass",
+        "case_id": "ord-streaming-cost"
+      }
+    ],
+    "min_achievable_p": 1.0,
+    "n": 17,
+    "p": 1.0
+  },
+  "mde": 0.2,
+  "min_achievable_p": 0.00048828125,
+  "noise_floor": {
+    "max_mean_delta": 0.0282842712474619,
+    "n_cases": 50,
+    "p95_mean_delta": 0.016970562748477146,
+    "p95_vote_delta": 1.0,
+    "splits": 1000
+  },
+  "psi": 0.24,
+  "unpairable_cases": [],
+  "verdict": "A regression that survives the test: McNemar p = 0.0386, bootstrap [-0.206, -0.046] excludes zero. Read the per-case table before acting on it, and check the correction family in METRICS.md before calling it significant."
+}

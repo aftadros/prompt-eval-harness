@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents describe the cost formula using separate input, cache-read, and output rates, but they do not give any specific numerical per-token rate values.

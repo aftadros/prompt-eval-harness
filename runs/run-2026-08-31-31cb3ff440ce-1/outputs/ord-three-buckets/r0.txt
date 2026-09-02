@@ -1,0 +1,7 @@
+Split it into three labeled buckets:
+
+- **Ordinary questions** that should just work  
+- **Known-hard questions** that exposed a bug once  
+- **Adversarial questions** that try to pull the model off its guardrails  
+
+[evals-before-vibes--the-golden-set]

@@ -1,0 +1,8 @@
+Decide it by working backward from the user’s tolerance and the server’s connection ceiling [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from]. For an interactive HTTP request, give the model only the time left after accounting for retrieval, guardrails, and serialization [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+For streaming responses, use two timeouts instead of one:
+
+- **Time-to-first-token**
+- **Total wall time**
+
+A long total is acceptable if tokens keep arriving. If there are five seconds with no data on the wire, treat it as a stall and kill the call [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from]. Watching inter-token gaps helps distinguish a slow but healthy response from a dead connection; total time alone is not enough [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].

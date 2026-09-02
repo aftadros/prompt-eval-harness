@@ -1,0 +1,3 @@
+The provided sources do not prescribe one fixed chunk size for internal documentation. They caution that fixed windows—such as the 512-token window mentioned in the example—are problematic when applied uniformly to non-uniform corpora, because a decade of internal docs includes policies, wikis, tables, guides, and OCR’d memos [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+Instead, they recommend chunking along the document’s own structure first—splitting on headings, keeping list items with their parent, and keeping tables with captions—and using a token limit only as a fallback when a single section is genuinely too long [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].

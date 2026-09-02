@@ -1,0 +1,3 @@
+No—the provided posts do not say that safety-critical answers should always go to the flagship model. They describe cost-aware routing instead: classify the request and send simple, high-confidence factual lookups to a cheaper model, while sending ambiguous or harder questions to the stronger one; escalation can start cheap and retry on the smart model only if confidence checks or guardrails flag the answer as thin [llm-cost-at-campus-scale--which-model-gets-the-question].
+
+The guardrails post also emphasizes that safety checks have costs, so you should decide which run on every request versus a sample, and avoid using a heavy verification pass to protect a short answer unless the risk warrants it [llm-cost-at-campus-scale--guardrails-have-a-cost-too].

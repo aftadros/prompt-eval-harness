@@ -1,0 +1,8 @@
+The pattern is **classify the request first, then route it**: send simple, well-grounded questions to a cheap model and reserve the expensive model for harder cases [llm-cost-at-campus-scale--which-model-gets-the-question].
+
+In practice:
+
+- **Cheap tier:** direct factual answers that can be grounded in one high-confidence retrieved passage, where the model is mostly reformatting retrieved text [llm-cost-at-campus-scale--which-model-gets-the-question].
+- **Smart/expensive tier:** questions that span multiple documents, require reasoning over conflicting sources, or come from weak retrieval and need more real work from the model [llm-cost-at-campus-scale--which-model-gets-the-question].
+- **Routing decision:** use a cheap classifier, often just a small model or even a rules check on retrieval confidence, so routing costs almost nothing [llm-cost-at-campus-scale--which-model-gets-the-question].
+- **Escalation pattern:** start with the cheap model, then retry once on the smart model if a confidence check or guardrail flags the answer as thin — rather than sending everything to the expensive model by default [llm-cost-at-campus-scale--which-model-gets-the-question].

@@ -1,0 +1,5 @@
+You missed an overall deadline for the whole retry sequence, separate from each individual API call’s timeout.
+
+With retries, your worst-case latency is multiplied: three attempts against a 30-second per-call timeout can take about 90 seconds plus backoff before any fallback fires [llm-api-from-php-in-production--a-deadline-on-the-whole-operation]. Retries improve the odds that one call succeeds, but they do not protect the user waiting for the response [llm-api-from-php-in-production--a-deadline-on-the-whole-operation].
+
+The fix is to wrap the entire operation—including retries and backoff—in a total deadline. When that overall deadline passes, stop retrying and degrade gracefully [llm-api-from-php-in-production--a-deadline-on-the-whole-operation].

@@ -1,0 +1,5 @@
+Yes—structured outputs reduce some validation work, but you still need to validate.
+
+They guarantee shape, not correctness or semantic sanity [structured-outputs--what-it-didnt-fix]. A response can be perfectly typed and still be wrong: for example, it might return a `confidence` of 0.95 on an incorrect answer, or pick a valid enum value that is the wrong category for the input [structured-outputs--what-it-didnt-fix]. Free-form string fields are especially risky because they can pass the schema even if the model invents a plausible but unsupported tag; you may need to constrain them with enums or check them against your own list afterward [structured-outputs--what-it-didnt-fix].
+
+You should also still handle parsing robustly. Even when a schema is attached, a model under load or an older endpoint can wrap the JSON in prose or a markdown fence, so decoding should be defensive and treat malformed responses as catchable, retryable errors rather than fatal failures [llm-json-in-php--send-the-schema].

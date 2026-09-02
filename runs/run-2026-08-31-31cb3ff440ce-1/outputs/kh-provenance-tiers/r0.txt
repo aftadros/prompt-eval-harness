@@ -1,0 +1,3 @@
+No. Retrieved chunks from different sources should not be flattened into the same level of trust in the prompt; provenance matters, and the system prompt should reflect differences between sources [prompt-injection-is-untrusted-input--retrieved-content-is-hostile-input]. A curated, write-restricted knowledge base can earn more trust than a recently indexed user-uploaded file [prompt-injection-is-untrusted-input--retrieved-content-is-hostile-input].
+
+You should also keep provenance attached to each chunk so lower-trust sources draw more suspicion, and enforce access permissions before restricted material enters the prompt context [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].

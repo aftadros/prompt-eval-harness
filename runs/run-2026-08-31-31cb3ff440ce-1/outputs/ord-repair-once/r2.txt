@@ -1,0 +1,3 @@
+For malformed JSON output, give the model **one more try** — so two attempts total. If the first response fails parsing or validation, send back the specific error and ask again; if the second answer is still bad, stop and fall back to the feature’s non-LLLM behavior [llm-json-in-php--one-repair-attempt].
+
+That is different from retrying transient API failures such as timeouts, `429`, or `5xx` responses, which can be retried up to a hard cap of **3 attempts** [llm-api-from-php-in-production--which-failures-to-retry].

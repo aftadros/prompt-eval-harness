@@ -1,0 +1,1 @@
+The provided sources don’t confirm whether your specific account is verified; they only say that account status appears in the top right of the dashboard [support-article-verification]. Check there to see its current state [support-article-verification].

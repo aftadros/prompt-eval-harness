@@ -1,0 +1,1 @@
+No—not as the final authority. The documents say that refusals should not have a model as the final word: they “go through deterministic checks and human review,” while an LLM judge is better at pointing out where to look than at signing off on high-stakes cases [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

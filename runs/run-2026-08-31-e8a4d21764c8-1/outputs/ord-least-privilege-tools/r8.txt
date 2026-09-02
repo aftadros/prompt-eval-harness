@@ -1,0 +1,12 @@
+Treat each tool as a narrowly scoped capability for the model—like scoping a service account—because an injected instruction becomes dangerous in proportion to what the tools allow [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+
+For a model that reads retrieved documents, you should:
+
+- **Give each tool only the minimum scope needed.** A document-search or retrieval tool can be read-only; it does not need a write path “just in case” [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Separate high-risk actions from normal reading.** Put destructive, mutating, or outbound actions—such as sending email, deleting records, making authenticated API calls, or exfiltrating data—behind controls that prevent a silent injection from triggering them [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Require user-visible confirmation for sensitive operations.** This stops an attacker-planted instruction in retrieved content from quietly causing damage by itself [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Validate tool arguments as untrusted input.** Treat the model’s generated arguments as if a stranger typed them, checking for path traversal, injection, and other unvalidated-input failure modes [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Keep high-trust tools away from untrusted retrieved content when possible.** The risk is greatest when the same turn both reads attacker-controllable text and has a loaded tool capable of acting on it [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Break the exfiltration loop.** Avoid combining: a model reading untrusted content, a tool that can send data outward, and an unattended runtime. Gate the risky tool or sanitize what reaches it to defuse most realistic attacks [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+
+If the system also returns cited answers, make sure citations resolve only to documents actually retrieved; strip or flag citations that do not, because unsupported sources manufacture false confidence [rag-over-internal-docs--citations-end-to-end].

@@ -1,0 +1,1 @@
+Fail closed and ship nothing—do not return an unchecked answer, since that is worse than no answer [shipping-llm-features-safely--what-the-user-sees-when-the-model-is-down].

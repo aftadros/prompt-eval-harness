@@ -1,0 +1,3 @@
+None of the techniques described here fully solves prompt injection. They are only partial mitigations: marking the data/instruction boundary, escaping outputs, using least-privilege tools, and applying defense in depth can reduce risk or limit damage, but they do not make the problem go away [prompt-injection-is-untrusted-input--the-data-instruction-boundary] [prompt-injection-is-untrusted-input--defense-in-depth] [prompt-injection-in-rag--the-prompt-and-the-output].
+
+The documents explicitly say prompt injection remains “a real, open problem” and that no single layer should be trusted with the whole job [prompt-injection-is-untrusted-input--defense-in-depth].

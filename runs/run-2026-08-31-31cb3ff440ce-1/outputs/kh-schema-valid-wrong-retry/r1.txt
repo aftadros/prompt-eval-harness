@@ -1,0 +1,5 @@
+Yes—retry it as a **content/semantic repair**, not as a schema-mismatch recovery.
+
+Provider-side validation can enforce the format, but it does not know what “valid” means for your product; so after the response validates against the schema, you run your own semantic check and retry with the failure fed back into the prompt, e.g., “you returned tag X, which is not valid—choose from this list” [structured-outputs--retry-on-schema-mismatch].
+
+Keep it bounded: feed the model the specific error and ask once more; if that second answer is still bad, fall back instead of hammering the endpoint [llm-json-in-php--one-repair-attempt]. Do not treat it as a transient retry or resend the same request unchanged—a 200 with unusable output is not a default retry candidate unless you change the prompt with the failure, because asking the same question the same way usually gets the same bad answer [shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger].

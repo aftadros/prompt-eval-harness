@@ -1,0 +1,15 @@
+You missed an **operation-level deadline** separate from each individual call’s timeout.
+
+Retries multiply the worst-case wait: three attempts against a 30-second per-call timeout can become roughly **90 seconds plus backoff** before you finally fall back or fail [llm-api-from-php-in-production--a-deadline-on-the-whole-operation]. The retry loop improves the odds that one call succeeds, but it does not protect the user from waiting through every attempt [llm-api-from-php-in-production--a-deadline-on-the-whole-operation].
+
+So you need two layers:
+
+1. **Per-call timeouts**
+   - A short connect timeout for unreachable providers.
+   - A longer total timeout for slow generation.  
+   The docs suggest something like `connect_timeout => 2` and `timeout => 30` [llm-api-from-php-in-production--two-timeouts].
+
+2. **Whole-operation deadline**
+   - Wrap the entire retry sequence in a budget/deadline.
+   - When that deadline passes, stop retrying and degrade to a fallback.  
+   That prevents retries from turning one slow call into many slow calls [llm-api-from-php-in-production--a-deadline-on-the-whole-operation].

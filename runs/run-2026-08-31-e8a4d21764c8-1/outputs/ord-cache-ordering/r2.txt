@@ -1,0 +1,8 @@
+Order the prompt so everything that stays the same comes first, and only what changes between requests comes last:
+
+1. **Static system prompt**  
+2. **Tool definitions**  
+3. **Retrieved context**  
+4. **User’s question**  
+
+The provider can cache a stable prefix up to the first point where content varies [llm-cost-at-campus-scale--caching-the-stable-prefix]. To keep that working, avoid putting timestamps, per-user tokens, or other changing values near the top of the prompt; doing so shrinks the cacheable prefix and makes the savings disappear [llm-cost-at-campus-scale--caching-the-stable-prefix].

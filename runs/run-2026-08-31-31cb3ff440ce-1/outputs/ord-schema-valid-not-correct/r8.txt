@@ -1,0 +1,3 @@
+Yes. Structured outputs guarantee the response’s **shape**, not its correctness [structured-outputs--what-it-didnt-fix]. The model can return well-formed JSON with a wrong value, such as an incorrect enum choice or a plausible-looking invented string [structured-outputs--what-it-didnt-fix]. So you still need to validate whether the content is sane and matches your own constraints, not just whether it parses [structured-outputs--what-it-didnt-fix].
+
+Even when you attach a schema, you should decode defensively because some responses may still be wrapped in prose or markdown fences, especially under load or with older endpoints [llm-json-in-php--send-the-schema].

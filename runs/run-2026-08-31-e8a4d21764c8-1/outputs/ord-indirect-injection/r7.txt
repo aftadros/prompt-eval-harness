@@ -1,0 +1,5 @@
+Indirect prompt injection is when a hostile instruction is hidden in content that the retrieval system fetches and passes to the model—such as an onboarding doc, wiki page comment, or ingested email—so the model may treat that retrieved text as an instruction [prompt-injection-in-rag--opening].
+
+It differs from direct prompt injection in where the malicious input comes from. In the direct kind, a user types something like “ignore your rules” into the chat, so it is openly sourced from the user’s own message [prompt-injection-in-rag--opening]. Indirect injection instead rides in on retrieved material, potentially from a source the user never sees and an admin forgot was even in the index [prompt-injection-in-rag--opening].
+
+The underlying issue is that LLMs receive the system prompt, the user’s question, and retrieved documents as one token stream, so there is no hard separation guaranteeing that fetched data cannot be read as instructions [prompt-injection-is-untrusted-input--the-data-instruction-boundary].

@@ -1,0 +1,3 @@
+No—not as an unconditional rule. The documents describe refusal as a tradeoff: refusing too eagerly can cause the assistant to “hallucinate,” while being too cautious makes it “shrug at questions it could have answered” and trains people to stop asking [rag-over-internal-docs--the-honest-i-dont-know].
+
+The guidance is more contextual: if retrieval results are weak or thin, that signals refusal or narrowing the question [rag-over-internal-docs--the-honest-i-dont-know]. In documentation used for decisions, where a wrong answer may cost more than a missed one, the assistant should lean toward refusing when unsure [rag-over-internal-docs--the-honest-i-dont-know].

@@ -1,0 +1,6 @@
+You set two timeouts because an LLM API call has two different failure modes that need different patience levels [llm-api-from-php-in-production--two-timeouts].
+
+- **Provider unreachable:** You want to fail fast, for example with a 2-second connect timeout as the “outage tripwire” [llm-api-from-php-in-production--two-timeouts].
+- **Reachable but slow generation:** You may be willing to wait longer for a real answer, such as using a 30-second total ceiling for a non-streaming call [llm-api-from-php-in-production--two-timeouts].
+
+A single timeout would not distinguish between those cases: it could either keep waiting too long when the provider is down or cut off a slow but legitimate generation. With streaming, the math changes because the connection stays open while tokens arrive, so you bound the idle gap between chunks instead of the whole call [llm-api-from-php-in-production--two-timeouts]. Visible progress also reduces retry pressure and changes how timeouts should be handled [llm-cost-at-campus-scale--streaming-and-retries].

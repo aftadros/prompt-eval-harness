@@ -1,0 +1,17 @@
+Order the prompt with stable material first and volatile material last: static system prompt, then tool definitions, retrieved context, question? Wait document says "static system prompt, then tool definitions, then retrieved context, then the question." But also earlier says "the system instructions and formatting rules and guardrail preamble, with only user's question and retrieved passages changing between requests." It says order deliberately: static system prompt, then tool definitions, then retrieved context, then the question. Need note that cached prefix can cover up to first point where content varies. Also avoid injecting timestamp or per-user token near top; keep stable parts stable. Maybe mention monitor cost. Cite doc id exactly.
+
+Need final answer direct. Ensure every claim from document has citation. Could say: "Put the parts of your prompt that are identical call-to-call at the front, and the changing parts at the end — e.g., static system prompt, then tool definitions, then retrieved context, then the user's question." That is doc. Add "The cached prefix extends up to first variation; if you insert timestamp/per-user token near top, cacheable prefix shrinks to nothing and savings evaporate." Cite. Maybe mention this applies because providers charge fraction of normal input price for stable reused prefix [same]. Need maybe include per-request cost? Not necessary but could cite second doc: "This matters because cached tokens bill at a lower rate than uncached input" from llm-cost-per-request--one-line-item-per-call and caching doc. But every claim with source. Could combine citations if both support.
+
+Question asks how should I order my prompt so prefix caching actually pays off? Answer in one paragraph maybe bullet list. Need no general outside knowledge. Ensure not overclaim "tool definitions" stable? Document says tool definitions as second. Good.
+</think>
+
+Order the prompt with stable material first and volatile material last, so the cacheable prefix is as long as possible:
+
+1. **Static system prompt** — instructions, formatting rules, guardrail preamble  
+2. **Tool definitions**  
+3. **Retrieved context / passages**  
+4. **User’s question**  
+
+The provider can cache a stable prefix of the prompt and charge less for reusing it; the cached prefix covers everything up to the first point where content varies [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+To keep it working, avoid putting anything that changes per request—such as timestamps or per-user tokens—near the top, because that shrinks the cacheable prefix and can make the savings disappear [llm-cost-at-campus-scale--caching-the-stable-prefix].

@@ -1,0 +1,9 @@
+None of the techniques described here fully solves prompt injection [prompt-injection-is-untrusted-input--the-data-instruction-boundary][prompt-injection-is-untrusted-input--defense-in-depth]. The author explicitly says we have not solved it, and that claims of a simple regex fix are snake oil [prompt-injection-is-untrusted-input--the-data-instruction-boundary].
+
+The described techniques are mitigations:
+
+- **Delimiting retrieved documents** marks the data/instruction boundary but is not immunity; a determined injection can still work [prompt-injection-is-untrusted-input--the-data-instruction-boundary], and it only lowers success rate without guaranteeing safety [prompt-injection-in-rag--the-prompt-and-the-output].
+- **Defense in depth**—delimiters, provenance checks, least-privilege tools, output escaping, and logging—means no single layer has to hold the whole job [prompt-injection-is-untrusted-input--defense-in-depth].
+- **Output escaping, scoped read-only tools, and keeping retrieval away from outbound actions** reduce what a planted instruction can do; the permission filter is load-bearing because it limits reach, but this still does not make arbitrary text safe [prompt-injection-in-rag--the-prompt-and-the-output].
+
+So the documents establish that no single technique fully solves prompt injection; the goal is to make an injected instruction less likely and less damaging.

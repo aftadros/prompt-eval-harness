@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents do not give a specific recommended chunk size; they advise structure-based chunking with a token limit only as a fallback, while mentioning 512 tokens as an example of fixed windows.

@@ -1,0 +1,8 @@
+In practice, a kill switch for an AI feature is **a coarse configuration flag that can turn the feature off without requiring a new deploy** [shipping-llm-features-safely--the-kill-switch]. It should be:
+
+- **Read on every request**, with no caching layer delaying its effect by minutes [shipping-llm-features-safely--the-kill-switch].
+- **Simple and boring**: one flag, not a complex control plane [shipping-llm-features-safely--the-kill-switch].
+- **A graceful fallback path, not an error state**. When the switch is off, the feature behaves like its known degradation mode—for example, the assistant says the summarized answer is unavailable while retrieval and the rest of the app keep working [shipping-llm-features-safely--the-kill-switch].
+- **Rehearsed/tested**, because a kill switch you have never flipped is just a guess [shipping-llm-features-safely--the-kill-switch].
+
+The goal is to stop harm quickly when something goes wrong—such as a bad prompt change, unsafe provider output, a runaway cost loop, or a guardrail regression—and then debug calmly afterward [shipping-llm-features-safely--the-kill-switch].

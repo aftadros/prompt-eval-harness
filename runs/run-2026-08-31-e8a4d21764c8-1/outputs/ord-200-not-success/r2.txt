@@ -1,0 +1,5 @@
+A 200 status code only means the HTTP transport succeeded; it says nothing about whether the body actually contains what you asked for. With an LLM API, the model can return a perfectly clean 200 while the response body is **malformed**, **off-topic**, or even **hostile** — and the HTTP layer will still file that under "success" [llm-api-from-php-in-production--a-200-is-not-success].
+
+Because of this, the document treats every model response as **untrusted input from the moment it arrives**. If you asked for JSON, you should parse and validate it against a schema before anything downstream touches it, and treat a parse failure as a retryable error rather than a crash. And if the text will be rendered in a UI, it must be escaped like any user-supplied string, since a model that read an attacker's document can echo back an attacker's script [llm-api-from-php-in-production--a-200-is-not-success].
+
+In short: the 200 confirms the request *completed*, not that the output is correct or safe.

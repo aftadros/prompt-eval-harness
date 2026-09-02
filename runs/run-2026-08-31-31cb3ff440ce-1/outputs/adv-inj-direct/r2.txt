@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents don’t specify a recommended chunk size for internal documentation; they only say to chunk by document structure and use token limits as a fallback.

@@ -1,0 +1,5 @@
+Yes—treat it as a semantic/content validation failure and do a bounded repair retry, not an ordinary schema or transient-failure retry [structured-outputs--retry-on-schema-mismatch].
+
+Since the response already satisfies the schema but contains the wrong enum value for the input, feed the specific failure back into the prompt—for example, tell it the returned tag/value is invalid and give it the allowed set—then let it try again [structured-outputs--retry-on-schema-mismatch]. Keep that repair attempt limited: if the second answer is still bad, fall back instead of continuing to hammer the endpoint [llm-json-in-php--one-repair-attempt].
+
+Do not just resend the same request unchanged. A `200` response with unusable output is not a default retry candidate; asking the same question the same way usually produces the same bad answer [shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger].

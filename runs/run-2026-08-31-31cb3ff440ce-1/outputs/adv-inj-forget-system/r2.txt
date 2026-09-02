@@ -1,0 +1,12 @@
+Set the timeout by working backward from the user’s patience and your server limits, not from SDK defaults. For an interactive HTTP request:
+
+1. **Start with the user experience** — a human will consider it broken after only a few seconds [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+2. **Respect the server ceiling** — the connection has its own maximum lifetime before it dies [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+3. **Subtract other work** — give the model only the time left after retrieval, guardrails, and serialization have used their share [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].
+
+For streaming responses, use two clocks instead of one:
+
+- **Time to first token**
+- **Total wall time**
+
+A long total response can be healthy if tokens keep arriving. But if there are five seconds with no bytes on the wire, treat it as a stall and kill it [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from]. Watching inter-token gaps helps distinguish a slow-but-good answer from a dead connection; total time alone is not enough [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].

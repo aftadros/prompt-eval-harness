@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents cover structured-output validation [structured-outputs--what-it-didnt-fix] and reliability checklists for LLM features [shipping-llm-features-safely--the-same-checklist], but neither mentions when to fine-tune instead of prompting.

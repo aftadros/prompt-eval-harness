@@ -1,0 +1,3 @@
+Retry the model **once**—so at most **two attempts total** for malformed JSON output. If the parse or validation fails, give it another try with the specific error attached; if that second answer is still bad, stop and fall back to whatever your feature does without extraction [llm-json-in-php--one-repair-attempt].
+
+This is separate from ordinary HTTP retries: the other guidance uses a hard cap of 3 attempts only for transient API failures such as connection errors, timeouts, 429s, or 5xx responses [llm-api-from-php-in-production--which-failures-to-retry].

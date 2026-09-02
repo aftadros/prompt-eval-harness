@@ -1,0 +1,7 @@
+You track cost per request instead of just watching the monthly bill for two main reasons: **immediacy** and **diagnostic power**.
+
+1. **It's actionable the same day.** A code or config change either moved the per-call number or it didn't, so you see the effect immediately rather than waiting weeks for an invoice that arrives with everything averaged together [llm-cost-per-request--why-the-unit-is-the-request]. The monthly bill "averages everything together and hides the offender" [llm-cost-at-campus-scale--tokens-are-the-row-count].
+
+2. **It survives growth.** If traffic doubles, the total bill roughly doubles and tells you nothing went wrong. But if cost per request drifts upward while traffic stays flat, that signals a specific feature got more expensive, and it points you straight at it [llm-cost-per-request--why-the-unit-is-the-request].
+
+Once you have that per-request number, you can also slice it by labels the request already carries—grouping by feature names the expensive feature, grouping by endpoint surfaces the one screen building a bloated prompt, and grouping by tenant reveals a customer whose traffic all goes to the flagship model when half of it could ride the cheap model [llm-cost-per-request--why-the-unit-is-the-request]. That level of granularity is simply unavailable from a single monthly total.

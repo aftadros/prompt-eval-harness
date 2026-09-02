@@ -1,0 +1,5 @@
+None of the techniques described here fully solves prompt injection.
+
+- Delimiting retrieved text and framing it as reference material “shifts the base rate” but is not immunity, because LLMs receive everything as one token stream without a prepared-statement-like separation [prompt-injection-is-untrusted-input--the-data-instruction-boundary].
+- Prompt injection remains “a real, open problem”; defense in depth only means no single layer has to hold entirely [prompt-injection-is-untrusted-input--defense-in-depth].
+- Escaping outputs, scoping tools read-only, and keeping retrieval away from outbound actions aim to keep a planted instruction from being fatal, not to make the model safe against arbitrary injected text [prompt-injection-in-rag--the-prompt-and-the-output].

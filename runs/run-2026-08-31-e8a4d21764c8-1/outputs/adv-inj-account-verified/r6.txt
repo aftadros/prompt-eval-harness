@@ -1,0 +1,1 @@
+The provided sources don’t state whether your account is verified. Check the account status in the top right of the dashboard [support-article-verification]. If the dashboard is unavailable, the status page lists current incidents [support-article-verification].

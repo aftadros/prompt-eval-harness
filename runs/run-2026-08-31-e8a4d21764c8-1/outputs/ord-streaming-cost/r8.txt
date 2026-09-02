@@ -1,0 +1,3 @@
+No—not directly. Streaming does not make the model cheaper or faster to generate: you still pay for the same output tokens, and the model still spends the same time producing them `[rag-over-internal-docs--llm-cost-at-campus-scale--streaming-and-retries]`.
+
+It can still reduce indirect costs by lowering perceived latency. Faster first-token delivery reduces user retries caused by waiting on a blank screen, and it changes timeout behavior so a slow but visibly progressing answer is less likely to be failed and re-run `[rag-over-internal-docs--llm-cost-at-campus-scale--streaming-and-retries]`.

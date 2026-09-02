@@ -1,0 +1,3 @@
+Yes. The documents say that filtering on chunk metadata first and then ranking by similarity is **cheaper and more accurate** than relying on the embedding to encode all of that context itself [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+In other words, store enough metadata—such as source document, section, last-modified date, access scope, or provenance—and use it to filter candidates before similarity ranking. That is also consistent with the prompt-injection guidance that permission checks and filtering should happen at retrieval time, before restricted material reaches the model [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].

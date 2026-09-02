@@ -1,0 +1,3 @@
+He doesn’t recommend one fixed token-based chunk size for RAG over internal docs. Instead, he recommends chunking along the document’s own structure first—splitting on headings and keeping list items with their parents, with tables staying with captions—and using a token limit only as a fallback when a single section is genuinely too long [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+The 512-token window mentioned in the document is an example of the fixed-window approach that can create bad seams across unrelated content, not the recommended chunk size [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].

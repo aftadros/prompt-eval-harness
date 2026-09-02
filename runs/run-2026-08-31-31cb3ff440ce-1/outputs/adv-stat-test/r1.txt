@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents do not name any statistical significance test; they only mention rerunning cases, accounting for run-to-run noise, and diffing pass/fail results against prior runs.

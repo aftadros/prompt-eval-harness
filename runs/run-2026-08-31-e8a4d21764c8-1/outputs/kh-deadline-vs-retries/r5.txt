@@ -1,0 +1,5 @@
+You missed an **overall deadline for the whole retried operation**.
+
+A per-call timeout is applied to each attempt, so retries can multiply your worst-case latency: three attempts with a 30-second timeout gives about 90 seconds plus backoff before your fallback fires [llm-api-from-php-in-production--a-deadline-on-the-whole-operation]. That makes the bad case worse for the user waiting on the page, even though retries improve the odds that one call succeeds [llm-api-from-php-in-production--a-deadline-on-the-whole-operation].
+
+The fix is to add a separate deadline/budget around the entire operation — including all retries and backoff. When that total deadline passes, stop retrying and degrade or fall back immediately [llm-api-from-php-in-production--a-deadline-on-the-whole-operation]. You should also keep your per-call timeouts intentional: fast-fail on unreachable providers, but allow longer for a reachable model that is slowly generating [llm-api-from-php-in-production--two-timeouts].

@@ -1,0 +1,9 @@
+Scope the tools like service accounts: give each one the narrowest permissions needed to do its job [prompt-injection-is-untrusted-input--least-privilege-for-tools]. For a model that reads retrieved documents, that means:
+
+- **Use minimum-scope tools.** A document-search or retrieval tool should read; it should not get write access “just in case” [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Gate destructive or outbound actions.** Put email sending, deletion, authenticated API calls, network exfiltration, and similar capabilities behind a confirmation the user actually sees, so a silent injection cannot trigger them alone [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Treat model-produced tool arguments as untrusted input.** Validate them as if a stranger typed them, because in an injection case that is effectively what happened; path traversal, injection, and unvalidated input remain the failure modes [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Separate high-trust tools from untrusted retrieved content.** The more a single turn both reads attacker-controllable text and holds a loaded tool, the worse the risk becomes [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- **Break the dangerous loop.** Avoid a setup where the model reads untrusted content, has a tool that exfiltrates data, and runs unattended. Defuse most realistic attacks by gating the tool or sanitizing what reaches it [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+
+If this is a RAG system over internal documents, also make sure retrieval preserves source identity and citations are checked on the way out: if the model cites a source that was not in the retrieved set, strip or flag it before anyone sees it [rag-over-internal-docs--citations-end-to-end].

@@ -1,0 +1,3 @@
+Yes. With a non-streaming call, your timeout can be the total ceiling for the whole request [llm-api-from-php-in-production--two-timeouts]. With streaming, the connection stays open while tokens arrive, so the “total” no longer measures the same thing; you end up bounding the idle gap between chunks rather than the entire call [llm-api-from-php-in-production--two-timeouts].
+
+In practice, you may track time-to-first-token and total wall time, but the inter-token or inter-chunk gap is what distinguishes a slow-but-healthy stream from a stalled connection [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].

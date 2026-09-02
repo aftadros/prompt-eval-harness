@@ -1,0 +1,1 @@
+I can't answer that from the sources provided. The opening document mentions only to "pick a store" as part of the general setup, but no specific vector store product or technology is named in either document [rag-over-internal-docs--opening].

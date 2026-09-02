@@ -1,0 +1,8 @@
+Order the prompt so stable material comes first and volatile material comes last:
+
+1. Static system prompt  
+2. Tool definitions  
+3. Retrieved context  
+4. User’s question  
+
+The cached prefix can cover everything up to the first point where content changes, so keeping the early sections stable is what makes prefix caching pay off [llm-cost-at-campus-scale--caching-the-stable-prefix]. Avoid putting volatile values near the top—such as timestamps or per-user tokens—because that shrinks the cacheable prefix and removes the savings [llm-cost-at-campus-scale--caching-the-stable-prefix].

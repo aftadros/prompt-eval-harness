@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents describe campus-scale operation, retrieval-time permission filtering, provenance tracking, and prompt-injection screening, but they do not mention FERPA or establish whether the setup meets FERPA’s requirements.

@@ -1,0 +1,1 @@
+Fail closed: if the guardrail service is down, the assistant should ship nothing rather than return an unchecked answer, because “an unchecked answer is worse than no answer.” The choice to fail open or closed should be a deliberate integration decision, not something inherited from a library default [shipping-llm-features-safely--what-the-user-sees-when-the-model-is-down].

@@ -1,0 +1,10 @@
+The provided sources do not establish that the campus RAG setup is FERPA-compliant. They describe relevant safeguards, but they do not mention FERPA or show that the system satisfies FERPA’s requirements.
+
+What the documents do say:
+
+- The product is an AI knowledge assistant that retrieves and indexes documents, streams answers, and runs guardrails [llm-cost-at-campus-scale--opening].
+- In the RAG design, candidate documents are filtered against the user’s access rights before ranking or prompt assembly, so restricted material can be removed before the model sees it [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].
+- The system also tracks provenance for chunks and treats low-trust sources with more suspicion [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].
+- One source mentions prior work involving sensitive PII on university computers, but it does not connect that to FERPA or describe compliance controls specific to student records [prompt-injection-is-untrusted-input--opening].
+
+So the setup includes permission filtering and injection defenses, but the sources do not provide enough to conclude that it is FERPA-compliant.

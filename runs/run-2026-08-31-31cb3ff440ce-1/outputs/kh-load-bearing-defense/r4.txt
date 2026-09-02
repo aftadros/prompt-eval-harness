@@ -1,0 +1,3 @@
+The single most important defense is **enforcing permission checks at retrieval time**, so a user only receives documents they are actually authorized to see, and restricted material is removed before it ever reaches the reranker or model prompt [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].
+
+In other words: **filter by access rights early in the pipeline**. That way, even if a malicious instruction slips into a retrieved document, “the worst sentence in the corpus still can’t reach data the user was never cleared for” [prompt-injection-in-rag--the-prompt-and-the-output].

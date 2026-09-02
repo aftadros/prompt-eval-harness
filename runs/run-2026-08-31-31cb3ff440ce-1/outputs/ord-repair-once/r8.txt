@@ -1,0 +1,3 @@
+For malformed JSON returned by the model, retry once: give it one more try with the specific parse or validation error attached, and if that second answer is still bad, fall back instead of continuing [llm-json-in-php--one-repair-attempt]. That means at most two model responses total — the original plus one repair attempt.
+
+This is separate from transient API/network failures, where the provided guidance caps retries at three attempts [llm-api-from-php-in-production--which-failures-to-retry].

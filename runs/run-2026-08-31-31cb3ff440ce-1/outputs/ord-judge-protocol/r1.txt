@@ -1,0 +1,7 @@
+Phrase each LLM judge call as **one narrow yes-or-no question** with the criterion spelled out, and include:
+
+- the relevant source text;
+- an instruction to check claims against that source rather than the model’s own beliefs;
+- a requirement that the verdict comes before any explanation.
+
+Avoid asking for a bare 1-to-10 score [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

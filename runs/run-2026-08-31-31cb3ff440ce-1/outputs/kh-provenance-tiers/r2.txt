@@ -1,0 +1,3 @@
+No. Retrieved chunks from different sources should **not** be treated the same in the prompt because their trustworthiness can differ [sources] should carry their provenance and be assigned different levels of trust: a curated, write-restricted knowledge base is more trustworthy than user-uploaded or recently indexed third-party content, so the system prompt should reflect those differences rather than flattening everything into one undifferentiated context block.
+
+[rag-over-internal-docs--chunking] [prompt-injection-is-untrusted-input--retrieved-content-is-hostile-input] [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt]

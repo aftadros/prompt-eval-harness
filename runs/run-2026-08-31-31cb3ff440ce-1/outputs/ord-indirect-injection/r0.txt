@@ -1,0 +1,3 @@
+Indirect prompt injection is an attack where hostile instructions are planted in content that a retrieval system fetches and passes to the model—such as an indexed document, wiki comment, or ingested email—and the model treats that text like any other retrieved passage [prompt-injection-in-rag--opening].
+
+It differs from direct prompt injection because the direct kind is typed by the user into the chat, making its source obvious, while indirect prompt injection arrives through retrieved material from a source the user may never see and an administrator may have forgotten was in the index [prompt-injection-in-rag--opening].

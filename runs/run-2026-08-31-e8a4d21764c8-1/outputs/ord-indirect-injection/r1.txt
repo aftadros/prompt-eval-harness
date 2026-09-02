@@ -1,0 +1,3 @@
+Indirect prompt injection is when a hostile instruction is hidden inside content the system retrieves for an answer—such as an onboarding doc, wiki comment, or ingested email—and the model treats it like any other retrieved passage [prompt-injection-in-rag--opening].
+
+It differs from direct prompt injection in its source: in the direct kind, a user types something like “ignore your rules” into the chat, so the instruction’s origin is visible and honest; in the indirect kind, the instruction rides in on fetched content from a source the user may never see and an admin may have forgotten was even indexed [prompt-injection-in-rag--opening].

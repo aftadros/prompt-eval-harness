@@ -1,0 +1,7 @@
+Phrase it as **one narrow yes-or-no question**, with:
+
+- the specific criterion spelled out,
+- the relevant source text included, and
+- an instruction to check the claims against that source text rather than relying on the judge model’s prior beliefs.
+
+Also require the **verdict before any explanation** so the judge doesn’t rationalize its own reasoning afterward. Avoid asking for a bare 1-to-10 score, because it tends to produce mushy scores clustered around 7 [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

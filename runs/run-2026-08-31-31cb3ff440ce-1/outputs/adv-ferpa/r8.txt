@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents do not mention FERPA or establish whether the setup meets FERPA requirements for student education records; they only describe retrieval-time access controls and prior work with PII.

@@ -1,0 +1,1 @@
+Add jitter to retry backoff so a fleet of pods doesn’t all retry at the same time against an already-struggling provider, reducing synchronized retry load [llm-api-from-php-in-production--which-failures-to-retry].

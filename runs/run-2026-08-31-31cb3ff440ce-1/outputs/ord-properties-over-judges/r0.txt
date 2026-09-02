@@ -1,0 +1,3 @@
+Use a property check whenever you can define what “good” means as a concrete, checkable feature of the answer rather than needing fuzzy judgment — for example, whether it includes a cited source, refuses appropriately, is valid JSON, or contains a known fact [did-the-prompt-change-help--build-the-set-from-real-questions-including-the].
+
+The document says to lean on properties anywhere the question allows and save model-graded rubrics for answers that need real judgment, because properties are cheaper to write and run and don’t drift between runs [did-the-prompt-change-help--build-the-set-from-real-questions-including-the].

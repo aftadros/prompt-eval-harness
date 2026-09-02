@@ -1,0 +1,3 @@
+Use a property check whenever the answer has a clear, checkable criterion you can define directly—such as “has a cited source,” “is valid JSON,” “includes this known fact,” or “refuses when refusing was correct.” Properties are cheaper to write and run than model-graded rubrics, and they don’t drift between runs [did-the-prompt-change-help--build-the-set-from-real-questions-including-the].
+
+Save model grading for the fuzzy cases where there is no simple string match or binary property—like whether an answer stayed grounded in its cited source, matched the right tone, or produced a polite and specific refusal [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you][did-the-prompt-change-help--build-the-set-from-real-questions-including-the].

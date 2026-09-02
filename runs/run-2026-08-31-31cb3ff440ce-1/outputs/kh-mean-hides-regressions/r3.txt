@@ -1,0 +1,5 @@
+No—by itself it is not enough to ship. An overall average can hide a regression: a prompt change can lift the mean while making an important category worse, such as improving open-ended answers but eroding the model’s willingness to say it doesn’t know [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+You should check the per-category or per-case breakdown and account for noise. Model output and LLM-judge scores vary run to run, so a one- or two-point move on a small set may mean nothing. Don’t ship on a delta you can’t distinguish from running the same prompt twice; if the change matters and the set is small, rerun it several times to confirm the improvement holds [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+Also check for tradeoffs your harness reveals. For example, a prompt can make answers more concise while grounding drops because shorter answers stop citing sources; you’d want to adjust until both conciseness and grounding hold before shipping [evals-before-vibes--what-this-looks-like-on-a-normal-week].

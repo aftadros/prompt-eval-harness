@@ -1,0 +1,7 @@
+You should split your golden set into **three labeled buckets**:
+
+1. **Ordinary questions** – ones that should just work.
+2. **Known-hard ones** – cases that exposed a bug once.
+3. **Adversarial ones** – cases that try to pull the model off its guardrails.
+
+The document notes that fifty good cases across these buckets beat five hundred lazy ones, and every case has to be able to fail or it's decoration [evals-before-vibes--the-golden-set].

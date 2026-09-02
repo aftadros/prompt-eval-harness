@@ -1,0 +1,1 @@
+They recommend bounding retries to about **two retry attempts**, meaning up to **three total calls** for a model request. The PHP example uses a hard cap at `attempt >= 3`, and the other post says retries are “bounded, usually at two.” [llm-api-from-php-in-production--which-failures-to-retry] [shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger]

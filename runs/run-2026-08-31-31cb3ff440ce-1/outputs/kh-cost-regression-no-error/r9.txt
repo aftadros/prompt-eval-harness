@@ -1,0 +1,10 @@
+Look first at **per-request cost by feature or endpoint**, especially the **cache-hit / cached-prefix behavior** on the refactored path [llm-cost-per-request--what-it-catches][llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+A refactor can move a per-request value near the top of the prompt, causing the cacheable prefix to stop matching; reuse then drops and cost climbs with no error or crash [llm-cost-per-request--what-it-catches][llm-cost-at-campus-scale--caching-the-stable-prefix]. That kind of cache break is invisible by design: it just charges full freight for input you used to get at a discount, so the main symptom is a dashboard number if you built one [llm-cost-per-request--what-it-catches].
+
+Check these first:
+
+- Request logs or dashboards showing **cost per request next to latency and status code**, sliced by feature/endpoint [llm-cost-per-request--what-it-catches].
+- Whether the prompt still has **stable material first and volatile material last**: static system prompt, tool definitions, retrieved context, then question [llm-cost-at-campus-scale--caching-the-stable-prefix].
+- Whether a refactor injected something like a **timestamp or per-user token near the top**, shrinking the cacheable prefix to nothing [llm-cost-at-campus-scale--caching-the-stable-prefix].
+- Whether prompt size grew by accretion, for example an oversized system message, or whether spend is structural from retrieval-heavy prompts that pack in passages and ask for a short answer back [llm-cost-per-request--what-it-catches].

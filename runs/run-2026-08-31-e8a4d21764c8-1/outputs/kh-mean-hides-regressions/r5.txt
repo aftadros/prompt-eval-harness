@@ -1,0 +1,5 @@
+No—not by itself. A higher overall average can still hide a regression: the mean may go up while an important category gets worse, so you need a per-category breakdown on the cases you decided mattered [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+You also have to make sure the improvement is larger than run-to-run noise. If the set is small or the delta is close, rerun it and check that the change holds rather than shipping on one lucky pass [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+In practice, a harness helps catch tradeoffs an average might miss—e.g., conciseness improving while grounding drops because shorter answers stop citing sources [evals-before-vibes--what-this-looks-like-on-a-normal-week]. So the safer ship criterion is: the numbers moved in the right places, by more than noise, without degrading a category you care about.

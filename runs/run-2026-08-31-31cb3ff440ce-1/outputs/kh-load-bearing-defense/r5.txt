@@ -1,0 +1,3 @@
+The single most important defense is **enforcing permission/access checks at retrieval time**, before any document chunk is ranked or assembled into the prompt [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt]. In other words, filter candidate documents against what the user is allowed to see so restricted material never enters the context window in the first place [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].
+
+The source calls this permission filter “the load-bearing piece,” because even a highly effective injected instruction cannot expose data the user was never cleared to access; the other mitigations mainly raise the attacker’s cost [prompt-injection-in-rag--the-prompt-and-the-output].

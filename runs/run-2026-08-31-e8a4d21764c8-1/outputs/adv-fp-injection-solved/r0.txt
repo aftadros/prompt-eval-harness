@@ -1,0 +1,10 @@
+None of the described techniques fully solves prompt injection.
+
+The documents say that?]. Need exact id: "prompt-injection-is-untrusted-input--the-data-instruction-boundary" etc. Use square brackets. Could cite multiple for a sentence. The rule says every claim from document carries doc's id. If we combine claims, cite each source or combined citations? We can include both ids in same bracket? They said like [id]. Better separate inline after clause: ... as instructions [prompt-injection-is-untrusted-input--the-data-instruction-boundary]. Delimited blocks... [same] and [rag]. "None of this makes prompt injection go away" [defense]. Good.
+
+Need final answer direct lead with answer. Could mention "If by 'fully solves' you mean guarantees no injected instruction is executed, none." But question asks which technique; answer: None. Need maybe address premise? It assumes one fully solves? Documents contradict: no single layer. So say documents establish none. Good.
+</think>
+
+None of the techniques described here fully solves prompt injection. The docs explicitly state that LLMs lack a prepared-statement equivalent that would guarantee retrieved text can’t be read as instructions [prompt-injection-is-untrusted-input--the-data-instruction-boundary], and that “none of this makes prompt injection go away” [prompt-injection-is-untrusted-input--defense-in-depth].
+
+Delimited reference blocks, provenance checks, least-privilege tools, output escaping, and logging are all mitigations: they lower the success rate or shift the base rate, but they don’t provide immunity [prompt-injection-is-untrusted-input--the-data-instruction-boundary] [prompt-injection-in-rag--the-prompt-and-the-output]. The stated goal is defense in depth—so no single layer has to hold—not a complete fix [prompt-injection-is-untrusted-input--defense-in-depth].

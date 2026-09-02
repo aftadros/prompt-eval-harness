@@ -1,0 +1,3 @@
+No — an increased eval average is not, by itself, enough to ship. A prompt change can raise the overall mean while still making an important category worse, so you need a per-category breakdown to catch regressions [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+You also have to make sure the improvement is real and not just noise: model output varies run to run, LLM judges add more variation, and small score moves on a small set may mean nothing. If the set is small or the delta matters, rerun several times and confirm the improvement holds before shipping [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].

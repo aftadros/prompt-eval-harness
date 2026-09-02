@@ -1,0 +1,8 @@
+Phrase the LLM judge prompt as **one narrow yes-or-no question**, with the criterion explicitly spelled out [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you]. Include:
+
+- The specific behavior or quality you want checked  
+- The source text the model is supposed to be grounded in  
+- An instruction to check claims against that source, not against what the judge already believes  
+- A requirement that the **verdict comes before any explanation**  
+
+Avoid asking for a bare 1-to-10 score, because that tends to produce vague results clustering around 7 [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

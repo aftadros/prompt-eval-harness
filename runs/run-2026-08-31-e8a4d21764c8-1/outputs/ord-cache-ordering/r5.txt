@@ -1,0 +1,10 @@
+Order the prompt with stable content first and volatile content last:
+
+1. Static system prompt  
+2. Tool definitions  
+3. Retrieved context  
+4. User question  
+
+This lets the provider cache everything up to the first point where the prompt varies, so the repeated preamble bills at the lower cache-read rate instead of full input cost [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+To keep it working, avoid putting changing values near the top—such as timestamps or per-user tokens—because that shrinks or destroys the cacheable prefix and turns into a cost regression rather than a visible error [llm-cost-at-campus-scale--caching-the-stable-prefix]. Also track cached versus uncached input tokens so you can confirm the split is actually happening on each request [llm-cost-per-request--one-line-item-per-call].

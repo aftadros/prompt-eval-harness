@@ -1,0 +1,3 @@
+Order the prompt so stable material comes first and volatile material comes last: **static system prompt → tool definitions → retrieved context → user’s question** [llm-cost-at-campus-scale--caching-the-stable-prefix]. The cached prefix can then cover everything up to the first point where content varies, letting repeated preambles bill at the cache rate instead of the full input rate [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+Also avoid putting changing values—like timestamps or per-user tokens—near the top of the prompt, because that shrinks or destroys the cacheable prefix and makes the savings disappear [llm-cost-at-campus-scale--caching-the-stable-prefix].

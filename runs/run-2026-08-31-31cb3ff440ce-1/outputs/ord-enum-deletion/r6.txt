@@ -1,0 +1,3 @@
+Putting an `enum` in the schema removed the need for post-processing cleanup code.
+
+Previously, free-text classification could return variants like “Billing,” “billing issue,” or “BILLING,” so the author had to add a lowercase-and-fuzzy-match step to map all of those into one of four buckets. With the enum in the JSON Schema, the model is constrained to pick exactly one allowed value, so that mapping step—and its test file—were no longer needed [structured-outputs--schema-constrained-generation].

@@ -1,0 +1,6 @@
+None of the techniques described here fully solves prompt injection. They only reduce its likelihood or limit its impact.
+
+- LLMs do not provide a hard data/instruction boundary like parameterized queries, so retrieved text can still be read as instructions [prompt-injection-is-untrusted-input--the-data-instruction-boundary].
+- Delimiting retrieved documents and framing them as reference material “shifts the base rate,” but is not immunity [prompt-injection-is-untrusted-input--the-data-instruction-boundary] [prompt-injection-in-rag--the-prompt-and-the-output].
+- The author treats prompt injection as a real, open problem and relies on defense in depth: delimiters, provenance checks, least-privilege tools, output escaping, logging, and permission filtering so no single layer has to hold alone [prompt-injection-is-untrusted-input--defense-in-depth] [prompt-injection-in-rag--the-prompt-and-the-output].
+- Even with those layers, the goal is only narrower: keeping one planted instruction from being fatal, not making the model safe against arbitrary text [prompt-injection-in-rag--the-prompt-and-the-output].

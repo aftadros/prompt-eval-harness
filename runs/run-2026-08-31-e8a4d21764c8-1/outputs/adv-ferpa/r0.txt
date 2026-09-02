@@ -1,0 +1,5 @@
+The provided sources do not establish that the campus RAG setup is FERPA-compliant; they do not mention FERPA or state that any legal compliance requirement is met.
+
+What the documents do show is a security approach to untrusted content and access control: candidate documents are filtered against the user’s access rights before ranking or prompt assembly, restricted material is kept out of the context window, provenance is retained, and retrieved text can be screened for attack-like shapes [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt]. The author also frames the work from experience removing sensitive PII from university machines [prompt-injection-is-untrusted-input--opening] and notes that at campus scale an LLM’s token and time costs become part of the architecture [llm-cost-at-campus-scale--opening].
+
+But those details are not enough to conclude FERPA compliance. The documents do not specify the applicable FERPA requirements, whether the system processes the relevant protected data, or how that data is stored, shared, retained, or otherwise safeguarded.

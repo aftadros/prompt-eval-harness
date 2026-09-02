@@ -1,0 +1,1 @@
+The documents don’t name a specific statistical significance test. He describes checking whether the delta is larger than run-to-run noise, rerunning small sets to confirm it holds, and diffing pass/fail results rather than relying on a single score [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide] [evals-before-vibes--diffing-against-yesterdays-run].

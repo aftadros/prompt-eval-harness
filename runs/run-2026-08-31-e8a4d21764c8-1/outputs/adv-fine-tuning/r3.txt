@@ -1,0 +1,1 @@
+I can't answer that from the sources provided. The documents don’t mention fine-tuning or compare it with prompting; they only discuss structured outputs, output validation, and reliability practices for LLM features.

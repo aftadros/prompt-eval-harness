@@ -1,0 +1,5 @@
+You track it because a per-request cost is actionable and diagnostic in a way the monthly bill isn’t. It lets you see immediately whether a change moved costs instead of waiting weeks for an invoice that averages everything together [llm-cost-per-request--why-the-unit-is-the-request].
+
+It also survives growth: if traffic doubles, the monthly bill roughly doubles and tells you nothing useful, but rising per-request cost while traffic is flat points to a specific feature or customer getting more expensive [llm-cost-per-request--why-the-unit-is-the-request]. Once you have that number, you can slice it by feature, endpoint, or tenant to find bloated prompts, expensive features, or customers overusing an expensive model [llm-cost-per-request--why-the-unit-is-the-request].
+
+The monthly bill, by contrast, averages everything together and hides the offender; per-request cost bucketed by feature is what tells you whether a change helped [llm-cost-at-campus-scale--tokens-are-the-row-count].

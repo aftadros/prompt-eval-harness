@@ -1,0 +1,3 @@
+The provided documents do not state a refund window for enterprise plans. In fact, the only mention of this question appears as an example test case in a golden set, where it's used specifically because **the corpus has no enterprise refund policy**. The expected behavior for that case is `must_refuse: true`, and the answer must not contain invented numbers like "30 days" or "60 days" [evals-before-vibes--the-golden-set].
+
+So according to these posts, there is no documented refund window for enterprise plans — the question is a known case where an assistant should decline rather than guess.

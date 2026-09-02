@@ -1,0 +1,3 @@
+Putting an `enum` in the schema deleted code by removing the need to normalize free-text responses afterward. Before, the model could return variants like `"Billing"`, `"billing"`, `"billing issue"`, or even prose such as `"this looks like a billing question to me."`, so the author had to lowercase and fuzzy-match them into one of four categories [structured-outputs--schema-constrained-generation].
+
+With the enum declared in the JSON Schema, generation is constrained to the allowed values, so the model can only pick one of the four buckets. That eliminated both the mapping/cleanup step and the test file that covered it [structured-outputs--schema-constrained-generation].

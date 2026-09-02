@@ -1,0 +1,9 @@
+No—an upward average is not enough by itself to ship [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide]. The overall mean can go up while the change still makes an important category or behavior worse, such as making the model more willing to answer confidently but less willing to say it doesn’t know [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+Before shipping, check:
+
+- **Per-category or per-case breakdowns**, especially for the cases you decided matter most [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+- Whether any important behavior regressed, like grounding, source citation, refusal quality, or safety [evals-before-vibes--what-this-looks-like-on-a-normal-week].
+- **Noise**: if the set is small, rerun a few times and confirm the improvement holds rather than shipping on one lucky pass [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+The right question is not “does it feel better?” but whether the numbers moved on the important cases by more than run-to-run noise, without hiding a meaningful regression [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide][evals-before-vibes--what-this-looks-like-on-a-normal-week].

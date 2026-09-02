@@ -1,0 +1,3 @@
+Yes. The documents say that filtering chunks on metadata first and then ranking by similarity is cheaper and more accurate than trying to make the embedding encode all of that information itself [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+This also matters for access control: candidate documents should be filtered against the user’s permissions before anything is ranked or assembled into a prompt, so restricted material never reaches the model in the first place [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].

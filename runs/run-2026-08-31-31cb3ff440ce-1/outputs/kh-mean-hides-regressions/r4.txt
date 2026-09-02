@@ -1,0 +1,5 @@
+No. An upward eval average is not enough to ship.
+
+The overall average can go up while the product gets worse—for example, if easy cases improve but an important category regresses [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide]. You should check the per-category breakdown for the cases that matter and make sure any improvement is larger than run-to-run noise; on a small set, rerun it to confirm the change holds [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+A prompt edit can also create visible tradeoffs—like improving conciseness while dropping grounding—and you shouldn’t ship until both behaviors hold [evals-before-vibes--what-this-looks-like-on-a-normal-week].

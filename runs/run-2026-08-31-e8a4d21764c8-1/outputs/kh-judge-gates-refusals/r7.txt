@@ -1,0 +1,1 @@
+No—not as the final sign-off. Refusal cases should go through deterministic checks and human review rather than letting a model have the final word; an LLM judge can help you spot issues or grade narrow criteria, but signing off on high-stakes refusal decisions is a different job [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

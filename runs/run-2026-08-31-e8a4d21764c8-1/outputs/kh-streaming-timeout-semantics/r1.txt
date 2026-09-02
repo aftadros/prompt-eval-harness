@@ -1,0 +1,3 @@
+Yes. With a non-streaming call, the total timeout is essentially the ceiling for finishing generation [llm-api-from-php-in-production--two-timeouts]. With streaming, “total” changes meaning because the connection stays open while tokens arrive, so you’re effectively bounding idle gaps between chunks rather than the whole call [llm-api-from-php-in-production--two-timeouts].
+
+That’s why a streamed response can run long in total and still be healthy as long as tokens keep arriving; what matters is also tracking time-to-first-token and inter-token gaps to distinguish a slow but alive connection from a stall [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].

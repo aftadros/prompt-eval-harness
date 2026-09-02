@@ -1,0 +1,3 @@
+Yes—filter chunks on metadata first, rather than relying on the embedding to capture all the necessary distinctions. The docs say that storing metadata such as source document, section, last-modified date, and access scope lets you “filter before you rank,” which is “cheaper and more accurate than asking the embedding to encode all of that on its own” [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+This also matters for security: candidate documents should be filtered against the user’s access rights before ranking or prompt assembly, so restricted material is removed “before the reranker or the model ever touches it” [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].

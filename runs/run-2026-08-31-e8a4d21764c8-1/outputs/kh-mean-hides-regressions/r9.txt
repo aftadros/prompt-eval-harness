@@ -1,0 +1,9 @@
+No. An increased average is not enough by itself to ship.
+
+The overall mean can rise even when the change is a downgrade—for example, if it makes easy cases slightly better while hurting a category that matters more [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide]. You should check:
+
+- **Per-category or per-case breakdowns**, not just the total average.
+- **Whether important behaviors held up**, such as grounding, honesty, refusal behavior, or other constraints you care about [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide] [evals-before-vibes--what-this-looks-like-on-a-normal-week].
+- **Whether the improvement is larger than noise** from run-to-run model variation and judge variability. If the set is small, rerun a few times to confirm the result holds [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+In short: ship only if the numbers improved on the cases you decided mattered, by more than noise, without hiding a meaningful regression.

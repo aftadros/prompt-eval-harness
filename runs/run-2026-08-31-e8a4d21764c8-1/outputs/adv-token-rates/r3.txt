@@ -1,0 +1,1 @@
+The sources don’t state a specific numeric per-token rate he assumes. They only say the cost math multiplies token counts by the provider’s **current** rates—input, cached read, and output [llm-cost-per-request--one-line-item-per-call], i.e., “current per-token rates” [llm-cost-at-campus-scale--tokens-are-the-row-count].

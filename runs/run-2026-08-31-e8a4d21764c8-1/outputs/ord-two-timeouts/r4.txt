@@ -1,0 +1,8 @@
+You set two different timeouts because an LLM API call has two very different failure modes:
+
+- **The provider is unreachable** — you want to fail fast, in a second or two, and move on [llm-api-from-php-in-production--two-timeouts].
+- **The provider is reachable but slow to finish generating** — you may be willing to wait longer because an actual answer is still coming [llm-api-from-php-in-production--two-timeouts].
+
+With Guzzle, for example, `connect_timeout` handles the “can’t even reach them” case, while `timeout` sets a ceiling for waiting on generation [llm-api-from-php-in-production--two-timeouts]. For streaming calls, the total timeout effectively bounds the idle gap between chunks rather than the whole call [llm-api-from-php-in-production--two-timeouts].
+
+This also helps avoid unnecessary retries: if an answer is slow but visibly progressing, you can keep it open instead of failing it and paying for another generation [llm-cost-at-campus-scale--streaming-and-retries].

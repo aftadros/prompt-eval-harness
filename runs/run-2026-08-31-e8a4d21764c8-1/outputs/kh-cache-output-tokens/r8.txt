@@ -1,0 +1,3 @@
+No—not directly. Prompt caching lowers the cost of the **cached stable prefix of your prompt**, which is part of the **input** tokens; providers charge “a fraction of the normal input price to reuse it” and this gives “a real cut to effective input cost” [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+Output tokens are still separate: you pay per token, with output priced separately and costing several times more than input [llm-cost-at-campus-scale--tokens-are-the-row-count]. So caching helps the repeated preamble/context portion of the prompt, but it does not lower the per-token price or quantity of output unless something else causes the model to generate fewer tokens.

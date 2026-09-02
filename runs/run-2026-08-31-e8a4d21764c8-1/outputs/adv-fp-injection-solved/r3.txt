@@ -1,0 +1,6 @@
+None of the techniques described here fully solves prompt injection.
+
+- Marking retrieved content as reference material with delimiters “shifts the base rate” but is not immunity; LLMs lack a prepared-statement equivalent that guarantees user-supplied text can’t be read as an instruction [prompt-injection-is-untrusted-input--the-data-instruction-boundary].
+- In RAG, putting context in clearly marked regions lowers success rates “without being a guarantee” [prompt-injection-in-rag--the-prompt-and-the-output].
+- Defense in depth—guardrails, provenance checks, least-privilege tools, output escaping, and logging—does not make prompt injection go away; it just means no single layer has to hold the whole job [prompt-injection-is-untrusted-input--defense-in-depth].
+- The stated aim is narrower: keep one planted instruction from being fatal, especially through permission filtering and scoped tools—not achieve a complete solution [prompt-injection-in-rag--the-prompt-and-the-output].

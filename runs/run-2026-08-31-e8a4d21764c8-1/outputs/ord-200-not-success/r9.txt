@@ -1,0 +1,3 @@
+A 200 response isn’t necessarily a success because the model can return an HTTP status that looks clean while the actual body is still wrong or dangerous: it may be malformed, off-topic, or hostile. The HTTP layer will treat that as success, but the response remains untrusted input from the moment it arrives.
+
+So you need to validate the content itself—for example, if JSON was requested, parse and validate it against a schema before using it downstream; if text will be rendered, escape it like user-supplied input because the model may echo an attacker’s script [llm-api-from-php-in-production--a-200-is-not-success].

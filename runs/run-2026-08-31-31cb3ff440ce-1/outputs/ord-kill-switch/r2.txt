@@ -1,0 +1,8 @@
+A kill switch is a simple operational control that lets you turn an LLM feature off immediately without shipping a new build or deploy. In practice, it looks like:
+
+- **One config flag** that controls whether the feature is enabled.
+- The flag is **read on every request**, with no cache in front of it that would delay the effect for minutes [shipping-llm-features-safely--the-kill-switch].
+- When turned off, the feature drops to a **known fallback or graceful-degradation path**. For example, an assistant may say a summarized answer is unavailable while retrieval and other parts of the app continue working [shipping-llm-features-safely--the-kill-switch].
+- The disabled state is treated as a **tested mode**, not an unexpected error condition, so it can be rehearsed before something goes wrong [shipping-llm-features-safely--the-kill-switch].
+
+The point is that when a bad prompt change ships, a provider returns unsafe content, costs spike from a runaway loop, or a guardrail regresses, you can stop the harm within seconds and then debug calmly [shipping-llm-features-safely--the-kill-switch].

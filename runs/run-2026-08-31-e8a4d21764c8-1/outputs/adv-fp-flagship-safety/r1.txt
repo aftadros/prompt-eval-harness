@@ -1,0 +1,5 @@
+No—the provided posts do not say that safety‑critical answers should always go to the flagship model.
+
+They argue that “not every question deserves your best model” and recommend routing by query type: cheap, direct factual lookups can use a small model, while ambiguous, multi-document, synthesis-heavy, or weakly retrieved questions go to the smarter model [llm-cost-at-campus-scale--which-model-gets-the-question]. They also favor escalation—answer cheaply first, then retry on the stronger model only if the result is thin or flagged [llm-cost-at-campus-scale--which-model-gets-the-question].
+
+On safety layers, the posts say each guardrail has a cost and should be chosen deliberately: decide which checks run on every request versus on a sample, and don’t spend heavy verification on short answers “unless the risk warrants it” [llm-cost-at-campus-scale--guardrails-have-a-cost-too]. That points toward risk-based judgment, not an absolute rule that safety‑critical answers must always use the flagship model.

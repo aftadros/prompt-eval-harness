@@ -1,0 +1,3 @@
+Yes—structured outputs do not remove the need to validate the response. They guarantee shape, not correctness: a response can be perfectly typed JSON while still containing wrong values, invented strings, or nonsensical categories [structured-outputs--what-it-didnt-fix].
+
+Your validation shifts from “does it parse?” to “is it sane and within your domain rules?”, such as checking whether a category makes sense or whether a tag is actually supported [structured-outputs--what-it-didnt-fix]. In PHP, even when you attach a schema, decode defensively because the model or an older endpoint may still wrap JSON in prose or markdown fences; use error-promoting decoding so malformed responses become caught and retryable conditions [llm-json-in-php--send-the-schema].

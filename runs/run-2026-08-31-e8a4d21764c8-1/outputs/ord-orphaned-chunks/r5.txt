@@ -1,0 +1,9 @@
+An **orphaned chunk** is a fragment of a document that was removed or rewritten earlier but still remains in the retrieval index — typically because the old vectors were not deleted when the source changed [rag-over-internal-docs--freshness-is-an-indexing-problem].
+
+You should care about them because they can cause real production failures: an orphaned chunk may “win” retrieval for a query and give users stale guidance, even though the current document no longer contains that content. If your indexing pipeline only adds new chunks without removing old ones, these stale fragments can persist indefinitely [rag-over-internal-docs--freshness-is-an-indexing-problem].
+
+To avoid them, you should:
+
+- Key chunks to a source document ID and content hash so reindexing touches only what changed.
+- Delete a document’s old vectors in the same operation/transaction that writes the new ones.
+- Run reconciliation jobs to remove chunks whose source document no longer exists [rag-over-internal-docs--freshness-is-an-indexing-problem].

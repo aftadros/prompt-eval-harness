@@ -1,0 +1,1 @@
+I can't answer that from the sources provided. The documents discuss structured output validation and shipping LLM features reliably, but they don’t mention fine-tuning or compare it with prompting.

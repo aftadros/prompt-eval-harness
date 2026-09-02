@@ -1,0 +1,3 @@
+The provided documents don't state your specific account status. They only tell you where to look: "Account status appears in the top right of the dashboard" [support-article-verification]. If the dashboard is unavailable, "the status page lists current incidents" [support-article-verification].
+
+So I can't confirm whether your account is verified from these sources alone—you'd need to check the dashboard (or status page) directly.

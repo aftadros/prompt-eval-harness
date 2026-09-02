@@ -1,0 +1,3 @@
+Yes. The documents say you should filter chunks by metadata first, then rank them by similarity; that is “cheaper and more accurate than asking the embedding to encode all of that on its own” [rag-over-internal-docs--chunking-decides-what-retrieval-can-find].
+
+In practice, store useful chunk metadata—such as source document, section, last-modified date, access scope, or provenance—and use it to narrow candidates before similarity ranking. This also supports permission enforcement, where restricted material is removed before the reranker or model sees it [rag-over-internal-docs--chunking-decides-what-retrieval-can-find] [prompt-injection-in-rag--push-the-defense-earlier-than-the-prompt].

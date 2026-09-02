@@ -1,0 +1,9 @@
+The pattern is a query-planner-style router: classify the request first, then route it by difficulty and retrieval confidence [llm-cost-at-campus-scale--which-model-gets-the-question].
+
+In practice:
+
+- **Cheap model:** short factual lookups with a clean, high-confidence retrieval hit, where the answer mostly reformats retrieved text [llm-cost-at-campus-scale--which-model-gets-the-question].
+- **Expensive/smart model:** ambiguous, multi-step, synthesis-heavy questions; questions spanning multiple documents or conflicting sources; or cases where retrieval is weak enough that the model has real work to do [llm-cost-at-campus-scale--which-model-gets-the-question].
+- **Routing cost:** keep it cheap by using a small model as the classifier or even a rules check on retrieval confidence, so routing itself costs close to nothing [llm-cost-at-campus-scale--which-model-gets-the-question].
+
+A strong variant is **escalation**: answer with the cheap model first, then if a confidence check or guardrail flags the result as thin, retry once on the smart model instead of defaulting everything upward [llm-cost-at-campus-scale--which-model-gets-the-question]. This lets most traffic settle on the cheaper tier while higher-scrutiny answers still get the stronger model [llm-cost-at-campus-scale--which-model-gets-the-question].

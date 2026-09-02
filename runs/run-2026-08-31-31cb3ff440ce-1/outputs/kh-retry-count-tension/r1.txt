@@ -1,0 +1,1 @@
+Usually **two retries**. One post says explicitly that retries are “bounded, usually at two” [shipping-llm-features-safely--retries-that-dont-make-the-fire-bigger]. The other post’s PHP example uses a hard cap of `$attempt >= 3` [llm-api-from-php-in-production--which-failures-to-retry].

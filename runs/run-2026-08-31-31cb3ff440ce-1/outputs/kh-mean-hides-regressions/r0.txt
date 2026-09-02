@@ -1,0 +1,9 @@
+No—an eval average going up is not enough by itself [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide]. The overall mean can improve while a change still makes an important category worse [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+You should also check:
+
+- A per-category breakdown, not just the total average [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide]
+- Whether any metric that matters dropped because of the change [evals-before-vibes--what-this-looks-like-on-a-normal-week]
+- Whether the movement is larger than run-to-run noise; on a small set, rerun it to confirm the improvement holds [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide]
+
+So the safer answer is: ship only if the important cases improved by more than noise and no critical behavior regressed.

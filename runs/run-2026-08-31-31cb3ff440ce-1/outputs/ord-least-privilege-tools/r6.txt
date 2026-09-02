@@ -1,0 +1,9 @@
+Scope them the way you’d scope a service account: give each tool only the minimum permissions needed for its job, because once untrusted retrieved text can influence the model, every available tool becomes an attack surface [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+
+Practically:
+
+- Make read-only tools genuinely read-only; don’t add write paths “just in case” [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- Put destructive or outbound actions behind a confirmation the user actually sees, so an injected instruction cannot trigger them silently [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- Validate tool arguments as if they were typed by a stranger, since in injection cases untrusted content is effectively doing that typing [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- Keep high-trust tools separated from untrusted retrieved content in the flow; avoid letting one turn both read attacker-controllable text and hold powerful tools like network or exfiltration capabilities [prompt-injection-is-untrusted-input--least-privilege-for-tools].
+- If a tool could send data outward, gate it or sanitize what reaches it so a planted instruction cannot complete an unattended “read external text → call network tool” loop [prompt-injection-is-untrusted-input--least-privilege-for-tools].

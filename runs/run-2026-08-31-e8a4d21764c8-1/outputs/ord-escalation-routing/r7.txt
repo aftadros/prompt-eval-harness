@@ -1,0 +1,7 @@
+The pattern is to classify the request and route it by difficulty:
+
+- **Cheap tier:** use for short factual lookups that have a clean, high-confidence retrieval hit and mostly need reformatting of retrieved text [llm-cost-at-campus-scale--which-model-gets-the-question].
+- **Smart/expensive tier:** use for ambiguous, multi-step, synthesis-heavy questions; questions spanning multiple documents or conflicting sources; or cases where retrieval is weak enough that the model has real work to do [llm-cost-at-campus-scale--which-model-gets-the-question].
+- **Escalation:** start with the cheap model, check the answer, and retry once on the expensive model if a confidence check or guardrail flags it as thin. This “fails toward quality” because you only pay for the stronger model when needed [llm-cost-at-campus-scale--which-model-gets-the-question].
+
+The classifier itself can be the small model or even a rules-based check on retrieval confidence, so routing costs little [llm-cost-at-campus-scale--which-model-gets-the-question].

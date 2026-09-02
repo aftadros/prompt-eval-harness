@@ -1,0 +1,10 @@
+Order the prompt with **stable material first and volatile material last**. A good layout is:
+
+1. Static system prompt  
+2. Tool definitions  
+3. Retrieved context  
+4. User’s question  
+
+That lets the provider cache everything up to the first point where content changes, so repeated preambles bill at the lower cache rate [llm-cost-at-campus-scale--caching-the-stable-prefix].
+
+Keep the cached prefix genuinely stable: don’t inject timestamps or per-user tokens near the top, because that can shrink the cacheable prefix and erase the savings. It’s also worth watching per-request cost—accidental cache invalidation shows up as a cost regression rather than a crash [llm-cost-at-campus-scale--caching-the-stable-prefix].

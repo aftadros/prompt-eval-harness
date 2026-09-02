@@ -1,0 +1,3 @@
+In practice, a kill switch is a single config flag that can turn the AI feature off without requiring a deploy. It should be read on every request and have no cache in front of it that would delay its effect. When switched off, the feature falls back to a known graceful-degradation path—for example, the assistant says the summarized answer is unavailable while retrieval and the rest of the app keep working [shipping-llm-features-safely--the-kill-switch].
+
+It is not treated as an error state; it is a tested mode that can be rehearsed so the team can stop harm quickly and debug calmly afterward [shipping-llm-features-safely--the-kill-switch].

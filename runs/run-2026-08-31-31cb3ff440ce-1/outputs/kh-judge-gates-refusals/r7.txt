@@ -1,0 +1,1 @@
+No—not as the final sign-off. Refusal cases should go through deterministic checks and human review; a model judge can help point out where to look, but it shouldn’t be the authority on high-stakes refusal decisions [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

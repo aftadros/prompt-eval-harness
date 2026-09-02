@@ -1,0 +1,3 @@
+Yes. With a non-streaming call, the timeout can be a total ceiling for the whole request [llm-api-from-php-in-production--two-timeouts]. Streaming changes that because the connection stays open while tokens arrive, so you end up bounding the idle gap between chunks instead of the entire call [llm-api-from-php-in-production--two-timeouts].
+
+In practice, streaming means tracking more than one clock: time-to-first-token and total wall time. A long overall duration can still be healthy if bytes keep flowing, but a period with nothing on the wire indicates a stall. Watching the inter-token gap helps distinguish a slow-but-working response from a dead connection [shipping-llm-features-safely--timeouts-and-where-the-number-comes-from].

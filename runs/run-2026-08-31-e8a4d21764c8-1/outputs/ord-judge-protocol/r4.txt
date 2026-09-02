@@ -1,0 +1,7 @@
+Phrase each LLM judge call as **one narrow yes-or-no question**, not a broad scoring request. Include:
+
+1. **The specific criterion spelled out** — what exactly the judge should evaluate.
+2. **The source text** being evaluated, if applicable.
+3. An instruction to **check claims against that source text**, rather than relying on the model’s own beliefs [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].
+
+Also make the judge give its **verdict before any explanation**, so the explanation doesn’t become a post-hoc rationalization of an already-written essay [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you]. Avoid asking for bare scores like “1 to 10,” because that tends to produce vague, clustered ratings instead of reliable judgments [evals-before-vibes--llm-as-judge-and-where-it-lies-to-you].

@@ -1,0 +1,10 @@
+No—not by itself. An upward average can still hide a regression, because a prompt change can lift the overall mean while making an important category worse [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].
+
+Before shipping, check:
+
+- The per-category breakdown for cases you decided mattered [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide]
+- Whether the move is larger than run-to-run noise from model output and judging variation [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide]
+- For small sets, whether rerunning confirms the improvement holds instead of relying on one lucky pass [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide]
+- Whether a visible tradeoff is acceptable; for example, conciseness can improve while grounding drops [evals-before-vibes--what-this-looks-like-on-a-normal-week]
+
+The safer standard is not “did the average go up?” but “did the numbers move on the important cases by more than noise, without losing behavior you needed?” [did-the-prompt-change-help--the-average-is-where-a-regression-goes-to-hide].

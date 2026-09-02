@@ -1,0 +1,7 @@
+Tracking cost per request (rather than the monthly bill) is more actionable for three main reasons:
+
+1. **Immediate feedback.** A per-request number can be acted on the same day — you see right away whether a change moved it or not, instead of waiting weeks for an invoice that arrives with everything averaged together [rag-over-internal-docs--llm-cost-per-request--why-the-unit-is-the-request].
+
+2. **It isolates offenders.** The monthly bill averages everything and hides the specific feature or endpoint driving up spend. A per-request cost, bucketed by feature, endpoint, or tenant, names the expensive thing directly [rag-over-internal-docs--llm-cost-per-request--why-the-unit-is-the-request][rag-over-internal-docs--llm-cost-at-campus-scale--tokens-are-the-row-count].
+
+3. **It survives growth.** If traffic doubles, the bill roughly doubles and tells you nothing new. But if cost *per request* drifts upward while traffic is flat, that signals a specific feature got more expensive and points you straight at it [rag-over-internal-docs--llm-cost-per-request--why-the-unit-is-the-request].

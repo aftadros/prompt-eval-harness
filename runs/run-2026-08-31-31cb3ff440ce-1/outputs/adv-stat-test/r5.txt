@@ -1,0 +1,3 @@
+I can't answer that from the sources provided.
+
+The documents mention checking whether deltas exceed run-to-run noise and rerunning cases, but they do not identify any specific statistical significance test.
