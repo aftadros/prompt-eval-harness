@@ -9,13 +9,14 @@ models:
   local:
     kind: openai_compat
     base_url: "http://127.0.0.1:1234/v1"
-    # Updated 2026-08-18: the LM Studio instance swapped to this build
+    # Updated 2026-10-31 to the Nemotron 3.5 cutover. Updated 2026-08-18: the
+    # LM Studio instance swapped to the then-new Qwen build
     # mid-session and preflight refused the run rather than attributing it to
     # the id below. That refusal is the feature. Both arms of a comparison
     # have to run on the same build, and the manifest records the requested
     # id and the server-reported id separately so a swap is visible after
     # the fact as well as before it.
-    model: qwen3.8-27b-uncensored-hauhaucs-aggressive-mtp
+    model: unsloth/nvidia-nemotron-3.5-super-vl-120b-a12b
   local-small:
     kind: openai_compat
     base_url: "http://127.0.0.1:1234/v1"
